@@ -17,7 +17,9 @@
                     </t>
                 </Dropdown>
             </div>
+        </xpath>
 
+        <xpath expr="//div[@id='filter_rounding_unit']" position="after">
             <t t-if="'curr_conversion' in this.controller.options">
                 <div id="filter_multicurrency">
                     <t t-call="account_dual_currency.MulticurrencyReport"/>
