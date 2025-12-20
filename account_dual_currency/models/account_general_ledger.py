@@ -14,9 +14,9 @@ from collections import defaultdict
 class GeneralLedgerCustomHandler(models.AbstractModel):
     _inherit = 'account.general.ledger.report.handler'
 
-    def _custom_line_postprocessor(self, report, options, lines, warnings=None):
+    def _custom_line_postprocessor(self, report, options, lines):
         """ Postprocesses the result of the report's _get_lines() before returning it. """
-        lines = super()._custom_line_postprocessor(report, options, lines, warnings)
+        lines = super()._custom_line_postprocessor(report, options, lines)
 
         currencies = options.get('currencies', {})
         currency_selected = next((c for c in currencies.values() if c['currency_selected']), None)
