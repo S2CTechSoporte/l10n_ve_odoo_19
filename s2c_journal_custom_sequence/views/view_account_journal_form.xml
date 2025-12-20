@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="journal_custom_sequence_view" model="ir.ui.view">
+            <field name="name">journal_custom_sequence_view</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group" position="inside">
+                    <group>
+                        <field name="custom_sequence_id" string="Secuencia de diario o factura"/>
+                    </group>
+
+                    <group>
+                        <field name="nro_ctrl_sequence_id" />
+                        <field name="number_initial" />
+                        <field name="number_final" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        
+
+        
+
+    </data>
+</odoo>

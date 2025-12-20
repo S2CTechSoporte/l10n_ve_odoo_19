@@ -1,0 +1,712 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_ve_withholding_muni
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e-20200417\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-24 21:43+0000\n"
+"PO-Revision-Date: 2020-06-24 17:49-0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: es\n"
+"X-Generator: Poedit 2.3.1\n"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "'Withholding accounts receivable"
+msgstr "Retención de cuentas por cobrar"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "<b>Totales</b>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid ""
+"<br/>\n"
+"                                            <b>Firma Recepción</b>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid ""
+"<br/>\n"
+"                                            <b>Usuario Autorizado</b>\n"
+"                                            <br/>\n"
+"                                            <b>Nombre de Usuario</b>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view_form
+msgid "<span class=\"o_form_label\" style=\"font-weight:bold;\">Fiscal period</span>"
+msgstr "Periodo fiscal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view_form
+msgid "<span class=\"o_form_label\" style=\"font-weight:bold;\">Voucher Number</span>"
+msgstr "Número de Comprobante"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "<strong>Correo Electrónico</strong>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "<strong>DIRECCIÓN DEL AGENTE DE RETENCIÓN</strong>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "<strong>DIRECCIÓN FISCAL DEL SUJETO RETENIDO</strong>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "<strong>NOMBRE O RAZÓN SOCIAL DEL SUJETO RETENIDO</strong>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "<strong>N° de NIFG</strong>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "<strong>RIF del Sujeto Retenido</strong>"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Account Withholding to pay (Suppliers)"
+msgstr "Cuenta Retenciones a pagar (Proveedores)"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__move_id
+msgid "Account entry"
+msgstr "Asiento contable"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__act_code_ids
+msgid "Activities code"
+msgstr "Código de actividades"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__code
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__code
+msgid "Activity code"
+msgstr "Código de Actividad"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__address
+msgid "Address"
+msgstr "Dirección"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__aliquot
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__aliquot
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Aliquot"
+msgstr "Alícuota"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__amount
+msgid "Amount"
+msgstr "Importe"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__base_tax
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Base Tax"
+msgstr "Base Imponible"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "COMPROBANTE DE RETENCION DEL IMPUESTO SOBRE ACTIVIDADES ECONOMICAS"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields.selection,name:l10n_ve_withholding_muni.selection__l10n_ve_withholding_muni__state__cancel
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__city
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "City"
+msgstr "Ciudad"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__company_id
+msgid "Company"
+msgstr "Compañia"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.actions.act_window,name:l10n_ve_withholding_muni.action_municipality_line_tax_concepts
+#: model:ir.ui.menu,name:l10n_ve_withholding_muni.menu_l10n_ve_withholding_muni_concepts
+msgid "Concepts of Municipal Tax Application"
+msgstr "Conceptos de Aplicación de Retención Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Control Number"
+msgstr "Número de Control"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Country"
+msgstr "País"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__create_uid
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__create_uid
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__create_uid
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month__create_uid
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_year__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__create_date
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__create_date
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__create_date
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month__create_date
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_year__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_partner__account_ret_muni_receivable_id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_users__account_ret_muni_receivable_id
+msgid "Cuenta Retencion Clientes"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_partner__account_ret_muni_payable_id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_users__account_ret_muni_payable_id
+msgid "Cuenta Retencion Proveedores"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields.selection,name:l10n_ve_withholding_muni.selection__l10n_ve_withholding_muni__type__out_invoice
+msgid "Customer Invoice"
+msgstr "Factura de Cliente"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "DATE"
+msgstr "FECHA"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid ""
+"DECRETO 037 GACETA MUNICIPAL - Art 02: Responsabilidad: Los agentes de retención estan obligados a retenerla totalidad del impuesto  que se genere\n"
+"                                                        al momento del pago o abono en cuenta, de conformidad con lo establecido en el articulo 119 y 124 de la Reforma Ordenanza de Impuesto sobre Actividades \n"
+"                                                        Económicas de Industria, Comercio, Servicio o de Indole Similar,\n"
+"                                                        Gaceta Municipal N° 039 Ordinario de Fecha 23 de Febrero de 2015 y en el articulo 210, 211, 214, de la ley Orgánica del Poder Público Municipal."
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__date_end
+msgid "Date end"
+msgstr "Fecha de culminación"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__date_start
+msgid "Date start"
+msgstr "Fecha de inicio"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__name
+msgid "Description"
+msgstr "Descripción"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__display_name
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__display_name
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__display_name
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month__display_name
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_year__display_name
+msgid "Display Name"
+msgstr "Mostrar nombre"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields.selection,name:l10n_ve_withholding_muni.selection__l10n_ve_withholding_muni_line__type__dont_apply
+msgid "Does not apply"
+msgstr "No aplica"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields.selection,name:l10n_ve_withholding_muni.selection__l10n_ve_withholding_muni__state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "ESPACIO"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Economic Activity Carried Out"
+msgstr "Actividad económica realizada"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_company__econ_act_license
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_partner__econ_act_license
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_users__econ_act_license
+msgid "Economic activity license number"
+msgstr "Número de licencia de actividades económicas"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Empresa"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "FISCAL PERIOD"
+msgstr "PERIODO FISCAL"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month__id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_year__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__move_id
+msgid "Id del movimiento"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__invoice_id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__invoice_id
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__invoice_ctrl_number
+msgid "Invoice Control Number"
+msgstr "Número de Control de Factura"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__invoice_date
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Invoice Date"
+msgstr "Fecha de  la factura"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__invoice_number
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Invoice Number"
+msgstr "Número de Factura"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_account_move
+msgid "Journal Entries"
+msgstr "Asientos contables"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept____last_update
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni____last_update
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line____last_update
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month____last_update
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_year____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__write_uid
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__write_uid
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month__write_uid
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_year__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__write_date
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__write_date
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__write_date
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month__write_date
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_year__write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_company__econ_act_license
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_partner__econ_act_license
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_users__econ_act_license
+msgid "License number"
+msgstr "Número de Licencia  de activdades económicas"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Month:"
+msgstr "Mes"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month__name
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.period_month_view_tree
+msgid "Months"
+msgstr "Meses"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_account_move_line__concept_id
+msgid "Municipal Tax"
+msgstr "Impuesto Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_company_view
+msgid "Municipal Tax Tax Information"
+msgstr "Información Fiscal Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Municipal Tax Withheld"
+msgstr "Impuesto Municipal Retenido"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Municipal Tax Withholding"
+msgstr "Retencion de Impuesto Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Municipal Taxes"
+msgstr "Impuesto Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Municipal withholding agent"
+msgstr "Agente de rentención municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__municipality_id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__l10n_ve_withholding_muni_id
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Municipality"
+msgstr "Municipalidad"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.municipality_line_tax_view_form
+msgid "Municipality Retention Concept"
+msgstr "Conceptos de Retención Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view_tree
+msgid "Municipality Tax"
+msgstr "Impuesto Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_line_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_line_view_tree
+msgid "Municipality Tax Line"
+msgstr "Línea de Impuesto Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.actions.act_window,name:l10n_ve_withholding_muni.action_l10n_ve_withholding_muni_customer
+msgid "Municipality Tax for Customers"
+msgstr "Impuesto Municipal para Clientes"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.actions.act_window,name:l10n_ve_withholding_muni.action_l10n_ve_withholding_muni_suppliers
+msgid "Municipality Tax for Suppliers"
+msgstr "Impuesto Municipal para Proveedores"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_company__nifg
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_partner__nifg
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_users__nifg
+msgid "NIFG"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_company__nit
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_partner__nit
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_users__nit
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "NIT"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "NOMBRE O RAZÓN SOCIAL DEL AGENTE DE RETENCION"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_month__months_number
+msgid "Number"
+msgstr "Númber"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_company__nifg
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_partner__nifg
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_users__nifg
+msgid "Number assigned by Satrin"
+msgstr "Número asignado por el Satrin"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "N° de Licencia de Actividades Económicas"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_company__nit
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_partner__nit
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_users__nit
+msgid "Old tax identification number replaced by the current RIF"
+msgstr "Antiguo número de identificación fiscal reemplazado por el actual RIF"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__type
+msgid "Origin"
+msgstr "Origen"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Other Information"
+msgstr "Otra Información"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Parish"
+msgstr "Parroquia"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__partner_id
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields.selection,name:l10n_ve_withholding_muni.selection__l10n_ve_withholding_muni__state__posted
+msgid "Posted"
+msgstr "Publicado"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields.selection,name:l10n_ve_withholding_muni.selection__l10n_ve_withholding_muni_line__type__purchase
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Purchase"
+msgstr "Compra"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_partner__purchase_jrl_id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_users__purchase_jrl_id
+msgid "Purchase journal"
+msgstr "Diario de Compra"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__rif
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "RIF"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "RIF Agente Retención"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.acc_move_muni_tax_view_form
+msgid "Retención Municipal"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_partner__muni_wh_agent
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_users__muni_wh_agent
+msgid "Retention agent"
+msgstr "Agente de retención"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__concept_id
+msgid "Retention concept"
+msgstr "Concepto de retención"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Sale"
+msgstr "Venta"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_partner__sale_jrl_id
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_res_users__sale_jrl_id
+msgid "Sales journal"
+msgstr "Diario de Venta"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields.selection,name:l10n_ve_withholding_muni.selection__l10n_ve_withholding_muni_line__type__service
+msgid "Service"
+msgstr "Servicio"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__state_id
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__state
+msgid "Status"
+msgstr "Estatus"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Street 2..."
+msgstr "Calle 2..."
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "Street..."
+msgstr "Calle..."
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Total Impuesto Municipal Retenido"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__transaction_date
+msgid "Transacción Date"
+msgstr "Fecha de Transacción"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_partner__muni_wh_agent
+#: model:ir.model.fields,help:l10n_ve_withholding_muni.field_res_users__muni_wh_agent
+msgid "True if your partner is a municipal retention agent"
+msgstr "Verdadero si su asociado es un agente de retención municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__type
+msgid "Type of transaction"
+msgstr "Tipo de transacción"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__month_ucim
+msgid "UCIM per month"
+msgstr "UCIM por mes"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_muni_wh_concept__year_ucim
+msgid "UCIM per year"
+msgstr "UCIM por año"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "VOUCHER NUMBER"
+msgstr "NÚMERO DE COMPROBANTE"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields.selection,name:l10n_ve_withholding_muni.selection__l10n_ve_withholding_muni__type__in_invoice
+msgid "Vendor Bill"
+msgstr "Factura de Proveedor"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__name
+msgid "Voucher number"
+msgstr "Número de Comprobante"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.actions.report,name:l10n_ve_withholding_muni.action_report_l10n_ve_withholding_muni
+msgid "Voucher of Municipal Withholding"
+msgstr "Comprobante de Retención Municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni__withheld_amount
+msgid "Withheld Amount"
+msgstr "Importe retenido"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_l10n_ve_withholding_muni_line__wh_amount
+msgid "Withholding Amount"
+msgstr "Importe de Retención"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.ui.menu,name:l10n_ve_withholding_muni.menu_l10n_ve_withholding_muni_customers
+msgid "Withholding Municipal Tax for Customers"
+msgstr "Retención de Impuesto  Municipal para Clientes"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.ui.menu,name:l10n_ve_withholding_muni.menu_l10n_ve_withholding_muni_suppliers
+msgid "Withholding Municipal Tax for Suppliers"
+msgstr "Retención de Impuesto Municipal para Proveedores"
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_account_move__wh_muni_id
+msgid "Withholding municipal tax"
+msgstr "Retención de impuesto municipal"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni
+msgid "Year:"
+msgstr "Año"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.period_year_view_tree
+msgid "Years"
+msgstr "Años"
+
+#. module: l10n_ve_withholding_muni
+#: model_terms:ir.ui.view,arch_db:l10n_ve_withholding_muni.l10n_ve_withholding_muni_view
+msgid "ZIP"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_muni_wh_concept
+msgid "muni.wh.concept"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_l10n_ve_withholding_muni
+msgid "municipality.tax"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_l10n_ve_withholding_muni_line
+msgid "municipality.tax.line"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_period_month
+msgid "period.month"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model,name:l10n_ve_withholding_muni.model_period_year
+msgid "period.year"
+msgstr ""
+
+#. module: l10n_ve_withholding_muni
+#: model:ir.model.fields,field_description:l10n_ve_withholding_muni.field_period_year__name
+msgid "year"
+msgstr "año"

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  
+    <record id="acc_move_muni_tax_view_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//group[@id='header_right_group']" position="inside">
+                <field name="wh_muni_id"  invisible="wh_muni_id == False"/>
+            </xpath> -->
+            <xpath expr="//field[@name='invoice_line_ids']//field[@name='tax_ids']" position="before">
+                <field name="wh_concept_id" string="Retención Municipal"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="acc_move_line_muni_view_form" model="ir.ui.view">
+        <field name="name">acc.move.muni.tax.view.form</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="before">
+                <!-- <field name="wh_concept_id_aux" invisible="0"/> -->
+                <field name="wh_concept_id"/>
+                
+            </xpath>
+        </field>
+    </record>
+
+    <record id="extra_account_move_muni" model="ir.ui.view">
+        <field name="name">Extra account.move Venezuela</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_ve_full.extra_account_move_venezuela"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='islr_group']"  position="after">
+                <group string="Retención Municipal">
+                    <field name="wh_muni_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

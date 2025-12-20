@@ -1,0 +1,9 @@
+<odoo>
+    <template id="onboarding_container_inherit" inherit_id="onboarding.onboarding_container">
+        <xpath expr="//div[1]" position="before">
+            <div t-if="orders_without_invoice != 0 and orders_without_invoice != None" class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Advertencia!</strong> Existen <span t-esc="orders_without_invoice" /> orden(es) de entrega sin facturar del mes anterior
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="extra_company_muni_setting" model="ir.ui.view">
+            <field name="name">Extra company municipal setting</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="l10n_ve_full.extra_company_venezuela_setting"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='representante_settings']" position="after">
+
+                    <div class="col-12 col-lg-6 o_setting_box" id="igtf_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="muni_wh_agent" widget="upgrade_boolean"/>
+                        </div>
+                        <div class="o_setting_right_pane" name="account_igtf_right_pane">
+                            <label for="muni_wh_agent" string="Retención Municipal" />
+                            <div class="text-muted">
+                                Se realiza retención municipal automática si se escoge el concepto en la línea de factura
+                            </div>     
+                            <div class="content-group" invisible="muni_wh_agent  == False">
+                                <div class="row mt16">
+                                    <label for="purchase_jrl_id" class="col-lg-3 o_light_label"/>
+                                    <field name="purchase_jrl_id" required="muni_wh_agent == True" />
+                                </div>
+                                <div class="row mt16">
+                                    <label for="sale_jrl_id" class="col-lg-3 o_light_label"/>
+                                    <field name="sale_jrl_id" options="{'no_create_edit': True, 'no_open': True}" />
+                                </div>
+                                <div class="row mt16">
+                                    <label for="account_ret_muni_receivable_id" class="col-lg-3 o_light_label"/>
+                                    <field name="account_ret_muni_receivable_id" options="{'no_create_edit': True, 'no_open': True}" />
+                                </div>
+                                    <div class="row mt16">
+                                    <label for="account_ret_muni_payable_id" class="col-lg-3 o_light_label"/>
+                                    <field name="account_ret_muni_payable_id" required="muni_wh_agent == True" />
+                                </div>
+                                <div class="row mt16">
+                                    <label for="nit" class="col-lg-3 o_light_label"/>
+                                    <field name="nit" required="muni_wh_agent == True"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="econ_act_license" class="col-lg-3 o_light_label"/>
+                                    <field name="econ_act_license" required="muni_wh_agent == True"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="nifg" class="col-lg-3 o_light_label"/>
+                                    <field name="nifg" required="muni_wh_agent == True"/>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

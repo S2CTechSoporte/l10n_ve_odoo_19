@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="ir_sequence_inherit" model="ir.ui.view">
+            <field name="name">ir.sequence.inherit</field>
+            <field name="model">ir.sequence</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <!-- <xpath expr="//field[@name='number_increment']" position="after">
+                    <field name="number_final"/>
+                </xpath> -->
+                
+            </field>
+        </record>
+
+       
+    </data>
+</odoo>

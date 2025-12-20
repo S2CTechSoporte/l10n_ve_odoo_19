@@ -1,0 +1,24 @@
+<?xml version="1.0"  encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="view_low_stock_config_notification" model="ir.ui.view">
+			<field name="name">view.low.stock.notification</field>
+			<field name="model">low.stock.notification</field>
+			<field name="arch" type="xml">
+                <form string="Low Stock Notification">
+                    <sheet>
+                        <group string="Low Stock Info">
+                        	<field name='low_stock_products_ids' invisible ='1' >
+							<list>
+									<field name="name"/>
+									<field name="stock_quantity"/>
+									<field name="limit_quantity"/>
+							</list>
+					        </field>
+					    </group>
+					</sheet>
+			    </form>
+			</field>
+	    </record>
+	</data>
+</odoo>

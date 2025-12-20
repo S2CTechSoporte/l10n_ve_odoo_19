@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>  
+    <record id="low_stock_email_template" model="mail.template">
+      <field name="name">Low Stock e-mail template</field>
+      <field name="subject">Low stock of your products </field>
+      <field name="model_id" ref="bi_product_low_stock_notification.model_low_stock_notification"/>
+      <field name="lang">{{ object.env.user.lang }}</field>
+      <field name="auto_delete" eval="True"/>
+	    <field name="body_html">
+        <![CDATA[
+
+        <p>Hello,</p> <br/><br/>
+        <br/>
+      <t t-if="object.env.company.notification_products == 'for_all'">
+        <t t-if="object.env.company.notification_base == 'on_hand'">
+            <p>List of product which have less on hand quantity  then global quantity <t t-out="object.env.company.min_quantity"> are:</p><br/>
+        </t>
+        <t t-if="object.env.company.notification_base == 'fore_cast'">
+            <p>List of product which have less forecast quantity then global quantity <t t-out="object.env.company.min_quantity"> are:</p><br/>
+        </t>
+        
+        <table class="table table-bordered" style="width: 50%; border: 2px solid black;">
+          <tr> 
+            <th>Product Name</th>
+            <th>Product Quantity</th>
+            <th>Required Quantity</th>
+          </tr>
+        
+        <t t-foreach="object.env.company.low_stock_products_ids" t-as="product">
+             
+          
+          <tr>
+          <td><t t-out="product.name"></td>
+          <td><t t-out="product.stock_quantity"></td>
+          <td><t t-out="object.env.company.min_quantity - product.stock_quantity"></td>
+        </tr>
+        </t>
+      </table>
+      </t>
+
+      <t t-if="object.env.company.notification_products == 'fore_product'">
+        <t t-if="object.env.company.notification_base == 'on_hand'">
+           <p>List of product which have less on hand quantity  then individual minimum quantity are:</p><br/>
+        </t>
+        <t t-if="object.env.company.notification_base == 'fore_cast'">
+           <p>List of product which have less forecast quantity  then individual minimum quantity are:</p><br/>
+        </t>
+         <table class="table table-bordered" style="width: 50%; border: 2px solid black;">
+          <tr>
+            <th>Product Name</th>
+            <th>Individual Minimum Quantity</th>
+            <t t-if="object.env.company.notification_base == 'on_hand'">
+              <th>Product Quantity</th>
+            </t>
+            <t t-if="object.env.company.notification_base == 'fore_cast'">
+              <th>Product Forecast Quantity</th>
+            </t>
+            <th>Required Quantity</th>
+          </tr>
+           <t t-foreach="object.env.company.low_stock_products_ids" t-as="product">
+          <tr>
+          <td><t t-out="product.name"></td>
+          <td><t t-out="product.limit_quantity"></td>
+          <td><t t-out="product.stock_quantity"></td>
+          <td><t t-out="product.limit_quantity - product.stock_quantity"></td>
+        </tr>
+        </t>
+      </table>
+      </t>
+
+      <t t-if="object.env.company.notification_products == 'reorder'">
+        <t t-if="object.env.company.notification_base == 'on_hand'">
+           <p>List of product which have less on hand quantity  then individual minimum quantity on reorder rules specified are:</p><br/>
+        </t>
+        <t t-if="object.env.company.notification_base == 'fore_cast'">
+           <p>List of product which have less forecast quantity  then individual minimum quantity on reorder rules specified are:</p><br/>
+        </t>
+         <table class="table table-bordered" style="width: 50%; border: 2px solid black;">
+          <tr>
+            <th>Product Name</th>
+            <th>Minimum Quantity Stock</th>
+            <t t-if="object.env.company.notification_base == 'on_hand'">
+              <th>Product Quantity</th>
+            </t>
+            <t t-if="object.env.company.notification_base == 'fore_cast'">
+              <th>Product Forecast Quantity</th>
+            </t>
+            <th>Required Quantity</th>
+          </tr>
+           <t t-foreach="object.env.company.low_stock_products_ids" t-as="product">
+          <tr>
+          <td><t t-out="product.name"></td>
+          <td><t t-out="product.limit_quantity"></td>
+          <td><t t-out="product.stock_quantity"></td>
+          <td><t t-out="product.limit_quantity - product.stock_quantity"></td>
+        </tr>
+        </t>
+      </table>
+      </t>
+      ]]>
+	  </field>
+  </record>
+  </data> 
+</odoo>

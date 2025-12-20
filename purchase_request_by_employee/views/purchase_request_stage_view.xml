@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>    
+    <record id="purchase_request_stage_action" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.request.stage</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <record model="ir.ui.view" id="view_purchase_request_stage_tree">
+        <field name="name">purchase.request.stage.tree</field>
+        <field name="model">purchase.request.stage</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Agreement Stages">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="create_po" />
+                <field name="parent_id" />
+                <field name="final_stage" optional="show"/>
+                <field name="group_ids" widget="many2many_tags" optional="show"/>
+                <field name="sequence" readonly="True" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_purchase_request_stage_form">
+        <field name="name">purchase.request.stage.form</field>
+        <field name="model">purchase.request.stage</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Agreement Stages">
+            <sheet>
+                <group>
+                    <group >
+                        <field name="name"/>
+                        <field name="create_po" />
+                    </group>
+                    <group>
+                        <field name="final_stage" />
+                        <field name="parent_id" invisible="final_stage == True" required="final_stage == False"/>
+                        <field name="group_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="menu_purchase_request_stage" name="Stages"
+            action = "purchase_request_stage_action"
+            parent="menu_purchase_request" />
+</odoo>

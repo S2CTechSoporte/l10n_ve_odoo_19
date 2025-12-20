@@ -83,21 +83,6 @@ class AccountReport(models.AbstractModel):
         return domain
     
     def _init_options_account_type(self, options, previous_options=None):
-        res = super()._init_options_account_type(options, previous_options=previous_options)
-
-        account_type = options.get('account_type')
-        previous_account_ids = previous_options and previous_options.get('account_ids') or []
-
-        selected_account_ids = [int(account) for account in previous_account_ids]
-        selected_accounts = selected_account_ids and self.env['account.account'].with_context(active_test=False).search([('id', 'in', selected_account_ids)]) \
-            or self.env['account.account'].search([
-                ('company_ids', 'in', [self.env.company.id]),
-                ('account_type', '=', account_type),
-            ])
-        options['selected_account_ids'] = selected_accounts.mapped('display_name')
-        options['account_ids'] = selected_accounts.ids
-
-        
-        return res 
+        return super()._init_options_account_type(options, previous_options=previous_options)
 
 
