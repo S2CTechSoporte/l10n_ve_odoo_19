@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="account_move_line_form_inherit_views_dual" model="ir.ui.view">
+            <field name="name">account_move_line_form_inherit_views dual</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='credit']" position="after">
+                    <field name="tax_today" string="Tasa"/>
+                    <field name="fcurrency_id" readonly="1" invisible="1" column_invisible="True"/>
+                    <field name="debit_fcurrency"  sum="Débito Total ¤" />
+                    <field name="credit_fcurrency"  sum="Crédito Total ¤"/>
+                    <field name="balance_fcurrency" invisible="1" column_invisible="True"/>
+                    <field name="amount_residual_fcurrency"  optional="hide" readonly="1" widget='monetary' options="{'currency_field': 'fcurrency_id'}"/>
+                    <field name="amount_residual"  readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_line_payment_tree_inherit_dual" model="ir.ui.view">
+            <field name="name">view.move.line.payment.tree.inherit.dual</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_payment_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_residual']" position="after">
+                    <field name="fcurrency_id" readonly="1" invisible="1" column_invisible="True"/>
+                    <field name="amount_residual_fcurrency" sum="Total Amount Residual ¤" optional="show" readonly="1" widget='monetary' options="{'currency_field': 'fcurrency_id'}"/>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_line_form_inherit_views_dual" model="ir.ui.view">
+            <field name="name">view_move_line_form_inherit_views dual</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='balance']" position="after">
+                    <field name="tax_today" string="Tasa"/>
+                    <field name="fcurrency_id" readonly="1" invisible="1"/>
+                    <field name="debit_fcurrency" readonly="1"/>
+                    <field name="credit_fcurrency" readonly="1"/>
+                    <field name="balance_fcurrency" readonly="1"/>
+                    <field name="amount_residual_fcurrency" optional="hide" readonly="1" widget='monetary' options="{'currency_field': 'fcurrency_id'}"/>
+                    <field name="amount_residual"  readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<record id="account_move_line_tree_grouped_inherit_views" model="ir.ui.view">
+            <field name="name">account_move_line_tree_grouped_inherit_views</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='credit']" position="after">
+                    <field name="tax_today" string="Tasa"></field>
+                    <field name="fcurrency_id" readonly="1" invisible="1"></field>
+                    <field name="debit_fcurrency"  sum="Débito Total $" ></field>
+                    <field name="credit_fcurrency"  sum="Crédito Total $"></field>
+                </xpath>
+                <xpath expr="//field[@name='amount_currency']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>-->
+    </data>
+</odoo>

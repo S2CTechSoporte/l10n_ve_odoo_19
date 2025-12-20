@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_partner_credit_limit" model="ir.ui.view">
+            <field name="name">Extra partner Venezuela</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='credit_limit']" position="after">
+                    <field name="credit_limit_currency" class="oe_inline" invisible="use_partner_credit_limit == False" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

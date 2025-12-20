@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="account_payment_register_dual_currency" model="ir.ui.view">
+            <field name="name">Dual Currency: account.payment.register.form</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='amount']" position="before">
+                     <field name="fcurrency_id" invisible="1"/>
+                     <field name="amount_residual_fcurrency" readonly="1"/>
+                     <field name="tax_invoice" readonly="1"/>
+                     <field name="tax_today"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_difference_handling']" position="after">
+                    <label for="journal_id_dif" invisible="payment_difference_handling =='open'"/>
+                    <field name="journal_id_dif" invisible="payment_difference_handling =='open'"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_date']" position="before">
+                    <field name="currency_id_name" invisible="1"/>
+                    <field name="aplicar_igtf_divisa" invisible="currency_id_name == 'VES'" />
+                    <field name="journal_igtf_id" widget="selection"  domain="[('type', 'in', ('bank', 'cash'))]"  invisible="(aplicar_igtf_divisa == False) or (currency_id_name == 'VES')" />
+                    <field name="igtf_divisa_porcentage" invisible="(aplicar_igtf_divisa == False) or (currency_id_name == 'VES')"/>
+                    <field name="mount_igtf" invisible="(aplicar_igtf_divisa == False) or (currency_id_name == 'VES')" readonly="1" force_save="1"/>
+                    <field name="amount_total_pagar" style="color: red;" invisible="(aplicar_igtf_divisa == False) or (currency_id_name == 'VES')" />
+                </xpath>
+                <xpath expr="//label[@for='payment_difference']/following-sibling::div[1]" position="attributes">
+                    <attribute name="invisible">not show_payment_difference or (payment_difference == 0.0) or (payment_difference_bs == 0.0)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='payment_difference']" position="attributes">
+                    <attribute name="invisible">payment_difference == 0.0</attribute>
+                    <attribute name="style">color: red;</attribute>
+                </xpath>
+                <xpath expr="//field[@name='payment_difference']" position="before">
+                      <field name="payment_difference_bs" readonly="1" force_save="1" invisible="((payment_difference != 0.0) or (currency_id_name == 'VES')) and (payment_difference_bs == 0.0)" />
+                </xpath>
+                <xpath expr="//field[@name='payment_difference']" position="after">
+                      <field name="fcurrency_id" invisible="1"/>
+                      <field name="payment_difference_fcurrency" readonly="1" force_save="1" 
+                      invisible="(currency_id_name == 'VES') and (payment_difference &lt; 0.0)" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

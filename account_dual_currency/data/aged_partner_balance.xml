@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- For Adding last_payment_date and last_payment_amt column in the account.report.column -->
+    <record id="aged_receivable_report_fcurrency" model="account.report.column">
+        <field name="name">Moneda ¤</field>
+        <field name="expression_label">fcurrency</field>
+        <field name="figure_type">string</field>
+        <field name="report_id" ref="account_reports.aged_receivable_report"/>
+    </record>
+    <record id="aged_receivable_report_total_fcurrency" model="account.report.column">
+        <field name="name">Total Moneda ¤</field>
+        <field name="expression_label">total_fcurrency</field>
+        <field name="figure_type">float</field>
+        <field name="report_id" ref="account_reports.aged_receivable_report"/>
+    </record>
+    <record id="aged_payable_report_fcurrency" model="account.report.column">
+        <field name="name">Moneda ¤</field>
+        <field name="expression_label">fcurrency</field>
+        <field name="figure_type">string</field>
+        <field name="report_id" ref="account_reports.aged_payable_report"/>
+    </record>
+    <record id="aged_payable_report_total_fcurrency" model="account.report.column">
+        <field name="name">Total Moneda ¤</field>
+        <field name="expression_label">total_fcurrency</field>
+        <field name="figure_type">float</field>
+        <field name="report_id" ref="account_reports.aged_payable_report"/>
+    </record>
+
+    <!-- For last_payment_date and last_payment_amt in the account.report.expression -->
+    <record id="aged_payable_line_fcurrency" model="account.report.expression">
+        <field name="label">fcurrency</field>
+        <field name="engine">custom</field>
+        <field name="report_line_id" ref="account_reports.aged_payable_line"/>
+        <field name="formula">_report_custom_engine_aged_payable</field>
+        <field name="subformula">fcurrency</field>
+        <field name="auditable" eval="False"/>
+    </record>
+    <record id="aged_payable_line_total_fcurrency" model="account.report.expression">
+        <field name="label">total_fcurrency</field>
+        <field name="engine">custom</field>
+        <field name="report_line_id" ref="account_reports.aged_payable_line"/>
+        <field name="formula">_report_custom_engine_aged_payable</field>
+        <field name="subformula">total_fcurrency</field>
+        <field name="auditable" eval="False"/>
+    </record>
+    <record id="aged_receivable_line_fcurrency" model="account.report.expression">
+        <field name="label">fcurrency</field>
+        <field name="engine">custom</field>
+        <field name="report_line_id" ref="account_reports.aged_receivable_line"/>
+        <field name="formula">_report_custom_engine_aged_receivable</field>
+        <field name="subformula">fcurrency</field>
+        <field name="auditable" eval="False"/>
+    </record>
+    <record id="aged_receivable_line_total_fcurrency" model="account.report.expression">
+        <field name="label">total_fcurrency</field>
+        <field name="engine">custom</field>
+        <field name="report_line_id" ref="account_reports.aged_receivable_line"/>
+        <field name="formula">_report_custom_engine_aged_receivable</field>
+        <field name="subformula">total_fcurrency</field>
+        <field name="auditable" eval="False"/>
+    </record>
+</odoo>
