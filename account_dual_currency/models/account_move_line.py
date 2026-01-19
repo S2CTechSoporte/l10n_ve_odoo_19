@@ -8,22 +8,17 @@ class AccountMoveLine(models.Model):
     tax_today = fields.Float(related="move_id.tax_today", store=True, digits='Dual_Currency_rate')
     edit_trm =  fields.Boolean(related="move_id.edit_trm")
 
-    # conversion_rate = fields.Monetary(
-    #     compute='_compute_conversion_rate',
-    #     help="Currency rate from company currency to document currency.",
-    #     store=True,
-    #     currency_field='company_currency_id',
-    #     copy=False
-    # )
-
-    debit_fcurrency = fields.Float(
+    debit_fcurrency = fields.Monetary(
         string='Débito ¤', 
         store=True, 
+        currency_field='fcurrency_id',
         compute="_compute_debit_credit", 
         readonly=False, digits=(12,4))
 
-    credit_fcurrency = fields.Float(
-        string='Crédito ¤', store=True,
+    credit_fcurrency = fields.Monetary(
+        string='Crédito ¤', 
+        store=True,
+        currency_field='fcurrency_id',
         compute="_compute_debit_credit", 
         readonly=False, 
         digits=(12,4))

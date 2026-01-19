@@ -36,8 +36,13 @@
                     <attribute name="string">Total</attribute>
                 </xpath>
 
-
-
+                <xpath expr="/form/sheet/notebook/page[@id='aml_tab']/field[@name='journal_line_ids']/list//field[@name='credit']" position="after">
+                    <!-- vista de factura -->
+                    <field name="fcurrency_id" invisible="1" column_invisible="True"/>
+                    <field name="debit_fcurrency" optional="show" widget="monetary" options="{'currency_field':'fcurrency_id'}" sum="debit_fcurrency"/>
+                    <field name="credit_fcurrency" optional="show" widget="monetary" options="{'currency_field':'fcurrency_id'}" sum="credit_fcurrency"/>
+                </xpath>
+                
                 <xpath expr="//field[@name='narration']/.." position="attributes">
                     <attribute name="colspan">4</attribute>
                 </xpath>
