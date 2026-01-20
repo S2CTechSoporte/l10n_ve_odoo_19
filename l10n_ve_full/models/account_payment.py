@@ -169,13 +169,14 @@ class AccountPaymentInnerit(models.Model):
         if self.move_itf_id:
             self.move_itf_id.button_cancel()
     
-    @api.constrains('ref')
+    @api.constrains('payment_reference')
     def validation_constrains_ref(self):
         for record in self:
-            self.validation_ref(company_id=record.company_id.id, ref=record.ref, id=record.id )
+            if record.payment_reference:
+                self.validation_ref(company_id=record.company_id.id, ref=record.payment_reference, id=record.id )
            
     def validation_ref(self, company_id=None, ref=None, id=None):
-        domain = [('company_id','=',company_id),('ref','=',ref)]
+        domain = [('company_id','=',company_id),('payment_reference','=',ref)]
         if ref:
             if id:
                 domain.append(('id','!=',id))
@@ -196,9 +197,13 @@ class AccountPaymentInnerit(models.Model):
 
             # if 'company_id' in vals:
             #     company_id = vals['company_id'] 
-            if 'ref' in vals and 'company_id' in vals:
-                company_id=vals['company_id']
-                ref=vals['ref']
+            if 'ref' in vals and 'payment_reference' not in vals:
+                vals['payment_reference'] = vals.pop('ref')
+            elif 'ref' in vals and 'payment_reference' in vals:
+                vals.pop('ref')
+            if 'payment_reference' in vals and 'company_id' in vals:
+                company_id = vals['company_id']
+                ref = vals['payment_reference']
                 self.validation_ref(company_id, ref)
                 
         return super().create(vals_list)       

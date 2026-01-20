@@ -98,13 +98,14 @@ class AccountMove(models.Model):
         '''Este método realiza el asiento contable de la comisión según el porcentaje que indica la compañia'''
         #self.env['ir.sequence'].with_context(ir_sequence_date=self.date_advance).next_by_code(sequence_code)
         diario = self.journal_igtf_id or self.journal_id
+        payment_ref = self.payment_reference or self.name
         vals = {
             'date': self.date,
             'journal_id': diario.id,
             'currency_id': self.currency_id.id,
             'state': 'draft',
             'tax_today':self.tax_today,
-            'ref':self.ref,
+            'ref': payment_ref,
             'move_type': 'entry',
             'line_ids': []
         }
