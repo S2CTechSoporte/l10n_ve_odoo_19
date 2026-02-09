@@ -20,7 +20,7 @@ class InternalRequisition(models.Model):
     name = fields.Char(
         string='Number',
         index=True,
-        readonly=1,
+        readonly=True,
     )
     state = fields.Selection([
         ('draft', 'New'),
@@ -180,33 +180,158 @@ class InternalRequisition(models.Model):
         string='Picking Type',
         copy=False,
     )
-    
+
+    def init(self):
+        super().init()
+        self._fix_legacy_mail_templates()
+
     @api.model
-    def create(self, vals):
-        #name = self.env['ir.sequence'].next_by_code('internal.requisition.seq')
+    def _fix_legacy_mail_templates(self):
+        module = 'material_internal_requisitions'
 
+        xmlids = [
+            f'{module}.email_confirm_irrequisition',
+            f'{module}.email_ir_requisition',
+            f'{module}.email_internal_requisition_iruser_custom',
+        ]
+
+        Imd = self.env['ir.model.data'].sudo()
+        imd_recs = Imd.search([
+            ('module', '=', module),
+            ('name', 'in', [
+                'email_confirm_irrequisition',
+                'email_ir_requisition',
+                'email_internal_requisition_iruser_custom',
+            ]),
+            ('model', '=', 'mail.template'),
+        ])
+        if imd_recs:
+            imd_recs.write({'noupdate': False})
+
+        values_by_xmlid = {
+            f'{module}.email_confirm_irrequisition': {
+                'email_from': "{{ object.request_emp.work_email }}",
+                'subject': "Request for Internal Requisition - {{ object.name }}",
+                'email_to': "{{ object.request_emp.parent_id.sudo().work_email or object.request_emp.department_id.sudo().manager_id.work_email }}",
+                'lang': "{{ object.request_emp.user_id.lang or user.lang }}",
+                'body_html': """
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+    <p>Dear {{ object.request_emp.parent_id.sudo().name or object.request_emp.department_id.sudo().manager_id.name }},</p>
+    <p>Approve request for Internal Requistion - {{ object.name }}.</p>
+    <p>Thank you,</p>
+    <br/>
+    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
+            <strong style="text-transform:uppercase;">{{ user.company_id.name }}</strong>
+        </h3>
+    </div>
+    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+        <span style="color: #222; margin-bottom: 5px; display: block; ">
+            {{ user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe }}
+        </span>
+        {% if user.company_id.phone %}
+            <div style="margin: 0; padding: 0;">Phone:&nbsp; {{ user.company_id.phone }}</div>
+        {% endif %}
+        {% if user.company_id.website %}
+            <div>Web :&nbsp;<a href="{{ user.company_id.website }}">{{ user.company_id.website }}</a></div>
+        {% endif %}
+        <p></p>
+    </div>
+</div>
+""",
+            },
+            f'{module}.email_ir_requisition': {
+                'email_from': "{{ object.request_emp.work_email }}",
+                'subject': "Approval Request for Internal Requisition to IR User - {{ object.name }}",
+                'email_to': "{{ object.requisiton_responsible_id.work_email }}",
+                'lang': "{{ object.requisiton_responsible_id.user_id.lang or user.lang }}",
+                'body_html': """
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+    <p>Dear {{ object.requisiton_responsible_id.name }},</p>
+    <p>Approve request for Internal Requistion - {{ object.name }}.</p>
+    <p>Thank you,</p>
+    <br/>
+    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
+            <strong style="text-transform:uppercase;">{{ user.company_id.name }}</strong>
+        </h3>
+    </div>
+    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+        <span style="color: #222; margin-bottom: 5px; display: block; ">
+            {{ user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe }}
+        </span>
+        {% if user.company_id.phone %}
+            <div style="margin: 0; padding: 0;">Phone:&nbsp; {{ user.company_id.phone }}</div>
+        {% endif %}
+        {% if user.company_id.website %}
+            <div>Web :&nbsp;<a href="{{ user.company_id.website }}">{{ user.company_id.website }}</a></div>
+        {% endif %}
+        <p></p>
+    </div>
+</div>
+""",
+            },
+            f'{module}.email_internal_requisition_iruser_custom': {
+                'email_from': "{{ object.approve_manager.work_email }}",
+                'subject': "Department Approval Internal Requisition - {{ object.name }}",
+                'email_to': "{{ object.request_emp.work_email }}",
+                'lang': "{{ object.request_emp.user_id.lang or user.lang }}",
+            },
+        }
+
+        for xmlid, values in values_by_xmlid.items():
+            template = self.env.ref(xmlid, raise_if_not_found=False)
+            if not template:
+                continue
+
+            needs_fix = any(
+                isinstance(getattr(template, key, False), str) and '${' in getattr(template, key)
+                for key in ('lang', 'subject', 'email_from', 'email_to')
+            )
+            needs_fix = needs_fix or (isinstance(template.lang, str) and template.lang.strip() == '${object.lang}')
+
+            if needs_fix:
+                template.sudo().write(values)
+    
+    @api.model_create_multi
+    def create(self, vals_list):
         SEQUENCE_CODE = 'internal.requisition.seq'
-        company_id = self.company_id or self.env.company
-        IrSequence = self.env['ir.sequence'].with_company(company_id)
-        name = IrSequence.next_by_code(SEQUENCE_CODE)
 
-        if not name:
-            IrSequence.sudo().create({
-                'prefix': 'IR',
-                'name': SEQUENCE_CODE,
-                'code': SEQUENCE_CODE,
-                'implementation': 'standard',
-                'padding': 5,
-                'number_increment': 1,
-                'company_id': company_id.id,
-            })
-            name = IrSequence.next_by_code(SEQUENCE_CODE)
+        if isinstance(vals_list, dict):
+            vals_list = [vals_list]
 
-        vals.update({
-            'name': name
-            })
-        res = super(InternalRequisition, self).create(vals)
-        return res
+        IrSequence = self.env['ir.sequence']
+        ResCompany = self.env['res.company']
+
+        for vals in vals_list:
+            if vals.get('name'):
+                continue
+
+            company = (
+                ResCompany.browse(vals.get('company_id'))
+                if vals.get('company_id')
+                else self.env.company
+            )
+            company = company or self.env.company
+
+            seq = IrSequence.with_company(company)
+            name = seq.next_by_code(SEQUENCE_CODE)
+
+            if not name:
+                seq.sudo().create({
+                    'prefix': 'IR',
+                    'name': SEQUENCE_CODE,
+                    'code': SEQUENCE_CODE,
+                    'implementation': 'standard',
+                    'padding': 5,
+                    'number_increment': 1,
+                    'company_id': company.id,
+                })
+                name = seq.next_by_code(SEQUENCE_CODE)
+
+            vals['name'] = name
+
+        return super(InternalRequisition, self).create(vals_list)
         
     #@api.multi
     def requisition_confirm(self):

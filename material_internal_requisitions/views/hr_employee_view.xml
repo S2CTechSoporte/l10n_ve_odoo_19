@@ -11,7 +11,7 @@
                      <page name="ir_settings" string="Requisition Settings">
                         <group>
                             <group>
-                                <field name="desti_loca_id"/>
+                                <field name="desti_loca_id" groups="material_internal_requisitions.group_requisition_user,material_internal_requisitions.group_requisition_manager,material_internal_requisitions.group_requisition_department"/>
                             </group>
                         </group>
                      </page>
@@ -25,7 +25,7 @@
             <field name="inherit_id" ref="hr.view_department_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='parent_id']" position="after">
-                    <field name="desti_loca_id"/>
+                    <field name="desti_loca_id" groups="material_internal_requisitions.group_requisition_user,material_internal_requisitions.group_requisition_manager,material_internal_requisitions.group_requisition_department"/>
                 </xpath>
             </field>
         </record>

@@ -1,0 +1,1003 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* material_internal_requisitions
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-08 22:47+0000\n"
+"PO-Revision-Date: 2026-02-08 22:47+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_VE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: material_internal_requisitions
+#: model:mail.template,body_html:material_internal_requisitions.email_internal_requisition_iruser_custom
+msgid ""
+"<p>Dear ${object.approve_manager.name},</p>\n"
+"            <p>Your Internal Requistion - ${object.name} is approved by department.</p>\n"
+"            <p>Thank You,</p>\n"
+"            <br/>\n"
+"            <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\">${user.company_id.name}</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"                        ${user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"                    </span>\n"
+"                    % if user.company_id.phone:\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Phone:&nbsp; ${object.company_id.phone}\n"
+"                        </div>\n"
+"                    % endif\n"
+"                    % if user.company_id.website:\n"
+"                        <div>\n"
+"                            Web :&nbsp;<a href=\"${object.company_id.website}\">${user.company_id.website}</a>\n"
+"                        </div>\n"
+"                    %endif\n"
+"                    <p/>\n"
+"                </div>\n"
+"            \n"
+"            "
+msgstr ""
+"<p>Estimado/a ${object.approve_manager.name},</p>\n"
+"            <p>Su requisición interna - ${object.name} ha sido aprobada por el departamento.</p>\n"
+"            <p>Gracias,</p>\n"
+"            <br/>\n"
+"            <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\">${user.company_id.name}</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"                        ${user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"                    </span>\n"
+"                    % if user.company_id.phone:\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Teléfono:&nbsp; ${object.company_id.phone}\n"
+"                        </div>\n"
+"                    % endif\n"
+"                    % if user.company_id.website:\n"
+"                        <div>\n"
+"                            Web:&nbsp;<a href=\"${object.company_id.website}\">${user.company_id.website}</a>\n"
+"                        </div>\n"
+"                    %endif\n"
+"                    <p/>\n"
+"                </div>\n"
+"            \n"
+"            "
+
+#. module: material_internal_requisitions
+#: model:mail.template,body_html:material_internal_requisitions.email_confirm_irrequisition
+msgid ""
+"<p>Dear ${object.request_emp.parent_id.sudo().name},</p>\n"
+"                <p>Approve request for Internal Requistion - ${object.name}.</p>\n"
+"                <p>Thank you,</p> \n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\">${user.company_id.name}</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"                        ${user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"                    </span>\n"
+"                    % if user.company_id.phone:\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Phone:&nbsp; ${object.company_id.phone}\n"
+"                        </div>\n"
+"                    % endif\n"
+"                    % if user.company_id.website:\n"
+"                        <div>\n"
+"                            Web :&nbsp;<a href=\"${object.company_id.website}\">${user.company_id.website}</a>\n"
+"                        </div>\n"
+"                    %endif\n"
+"                    <p/>\n"
+"                </div>\n"
+"            \n"
+"            \n"
+"            "
+msgstr ""
+"<p>Estimado/a ${object.request_emp.parent_id.sudo().name},</p>\n"
+"                <p>Apruebe la solicitud de requisición interna - ${object.name}.</p>\n"
+"                <p>Gracias,</p> \n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\">${user.company_id.name}</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"                        ${user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"                    </span>\n"
+"                    % if user.company_id.phone:\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Teléfono:&nbsp; ${object.company_id.phone}\n"
+"                        </div>\n"
+"                    % endif\n"
+"                    % if user.company_id.website:\n"
+"                        <div>\n"
+"                            Web:&nbsp;<a href=\"${object.company_id.website}\">${user.company_id.website}</a>\n"
+"                        </div>\n"
+"                    %endif\n"
+"                    <p/>\n"
+"                </div>\n"
+"            \n"
+"            \n"
+"            "
+
+#. module: material_internal_requisitions
+#: model:mail.template,body_html:material_internal_requisitions.email_ir_requisition
+msgid ""
+"<p>Dear ${object.requisiton_responsible_id.name},</p>\n"
+"                <p>Approve request for Internal Requistion - ${object.name}.</p>\n"
+"                <p>Thank you,</p> \n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\">${user.company_id.name}</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"                        ${user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"                    </span>\n"
+"                    % if user.company_id.phone:\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Phone:&nbsp; ${object.company_id.phone}\n"
+"                        </div>\n"
+"                    % endif\n"
+"                    % if user.company_id.website:\n"
+"                        <div>\n"
+"                            Web :&nbsp;<a href=\"${object.company_id.website}\">${user.company_id.website}</a>\n"
+"                        </div>\n"
+"                    %endif\n"
+"                    <p/>\n"
+"                </div>\n"
+"            \n"
+"            \n"
+"            "
+msgstr ""
+"<p>Estimado/a ${object.requisiton_responsible_id.name},</p>\n"
+"                <p>Apruebe la solicitud de requisición interna - ${object.name}.</p>\n"
+"                <p>Gracias,</p> \n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\">${user.company_id.name}</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"                        ${user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"                    </span>\n"
+"                    % if user.company_id.phone:\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Teléfono:&nbsp; ${object.company_id.phone}\n"
+"                        </div>\n"
+"                    % endif\n"
+"                    % if user.company_id.website:\n"
+"                        <div>\n"
+"                            Web:&nbsp;<a href=\"${object.company_id.website}\">${user.company_id.website}</a>\n"
+"                        </div>\n"
+"                    %endif\n"
+"                    <p/>\n"
+"                </div>\n"
+"            \n"
+"            \n"
+"            "
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_kanban
+msgid "<span style=\"font-weight:bold\">Company:</span>"
+msgstr "<span style=\"font-weight:bold\">Compañía:</span>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_kanban
+msgid "<span style=\"font-weight:bold\">Department:</span>"
+msgstr "<span style=\"font-weight:bold\">Departamento:</span>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_kanban
+msgid "<span style=\"font-weight:bold\">Employee :</span>"
+msgstr "<span style=\"font-weight:bold\">Empleado:</span>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_kanban
+msgid "<span style=\"font-weight:bold\">Requisition Date:</span>"
+msgstr "<span style=\"font-weight:bold\">Fecha de requisición:</span>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Analytic Account</strong>"
+msgstr "<strong>Cuenta analítica</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Approve Signature:____________________</strong>"
+msgstr "<strong>Firma de aprobación:____________________</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Approved By </strong>"
+msgstr "<strong>Aprobado por </strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Approved Date </strong>"
+msgstr "<strong>Fecha de aprobación </strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Company</strong>"
+msgstr "<strong>Compañía</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Confirmed By</strong>"
+msgstr "<strong>Confirmado por</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Confirmed Date</strong>"
+msgstr "<strong>Fecha de confirmación</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Date:____________________</strong>"
+msgstr "<strong>Fecha:____________________</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Department </strong>"
+msgstr "<strong>Departamento </strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Department Approval Date</strong>"
+msgstr "<strong>Fecha de aprobación del departamento</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Department Manager</strong>"
+msgstr "<strong>Gerente de departamento</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Description</strong>"
+msgstr "<strong>Descripción</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Destination Location </strong>"
+msgstr "<strong>Ubicación de destino </strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Employee Signature:____________________</strong>"
+msgstr "<strong>Firma del empleado:____________________</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Employee</strong>"
+msgstr "<strong>Empleado</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Internal Picking</strong>"
+msgstr "<strong>Transferencia interna</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Manager Signature:____________________</strong>"
+msgstr "<strong>Firma del gerente:____________________</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Product</strong>"
+msgstr "<strong>Producto</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Quantity</strong>"
+msgstr "<strong>Cantidad</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Reason for Requisition</strong>"
+msgstr "<strong>Motivo de la requisición</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Received Date</strong>"
+msgstr "<strong>Fecha de recepción</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Rejected By </strong>"
+msgstr "<strong>Rechazado por </strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Rejected Date</strong>"
+msgstr "<strong>Fecha de rechazo</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Requisition Date</strong>"
+msgstr "<strong>Fecha de requisición</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Requisition Deadline</strong>"
+msgstr "<strong>Fecha límite de requisición</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Requisition Responsible</strong>"
+msgstr "<strong>Responsable de requisición</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Source Location</strong>"
+msgstr "<strong>Ubicación de origen</strong>"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "<strong>Unit of Measure</strong>"
+msgstr "<strong>Unidad de medida</strong>"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_needaction
+msgid "Action Needed"
+msgstr "Acción requerida"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decoración de excepción de actividad"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_state
+msgid "Activity State"
+msgstr "Estado de la actividad"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icono del tipo de actividad"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Add Reason for Internal Requistion ...."
+msgstr "Agregue el motivo de la requisición interna...."
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__account_id
+msgid "Analytic Account"
+msgstr "Cuenta analítica"
+
+#. module: material_internal_requisitions
+#: model:mail.template,subject:material_internal_requisitions.email_ir_requisition
+msgid "Approval Request for Internal Requisition to IR User - ${object.name}"
+msgstr "Solicitud de aprobación de requisición interna al usuario IR - ${object.name}"
+
+#. module: material_internal_requisitions
+#: model:mail.template,name:material_internal_requisitions.email_ir_requisition
+msgid "Approval Request for Internal Requisition to IR User - Send by Email"
+msgstr "Solicitud de aprobación de requisición interna al usuario IR - Enviar por correo"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Approve"
+msgstr "Aprobar"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields.selection,name:material_internal_requisitions.selection__internal_requisition__state__user
+msgid "Approved"
+msgstr "Aprobado"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Approved By"
+msgstr "Aprobado por"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__userrapp_date
+msgid "Approved Date"
+msgstr "Fecha de aprobación"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__approve_user
+msgid "Approved by"
+msgstr "Aprobado por"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_attachment_count
+msgid "Attachment Count"
+msgstr "Cantidad de adjuntos"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields.selection,name:material_internal_requisitions.selection__internal_requisition__state__cancel
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__company_id
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Company"
+msgstr "Compañía"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__confirm_date
+msgid "Confirmed Date"
+msgstr "Fecha de confirmación"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__confirm_id
+msgid "Confirmed by"
+msgstr "Confirmado por"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__create_uid
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__create_date
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__date_done
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Date Done"
+msgstr "Fecha de realización"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__date_done
+msgid "Date of Completion of Internal Requisition"
+msgstr "Fecha de finalización de la requisición interna"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Delivery Picking"
+msgstr "Transferencia de entrega"
+
+#. module: material_internal_requisitions
+#: model:ir.model,name:material_internal_requisitions.model_hr_department
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__department_id
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Department"
+msgstr "Departamento"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__managerapp_date
+msgid "Department Approval Date"
+msgstr "Fecha de aprobación del departamento"
+
+#. module: material_internal_requisitions
+#: model:mail.template,subject:material_internal_requisitions.email_internal_requisition_iruser_custom
+msgid "Department Approval Internal Requisition - ${object.name}"
+msgstr "Aprobación de departamento para requisición interna - ${object.name}"
+
+#. module: material_internal_requisitions
+#: model:mail.template,name:material_internal_requisitions.email_internal_requisition_iruser_custom
+msgid "Department Approval Internal Requisition - Send by Email"
+msgstr "Aprobación de departamento para requisición interna - Enviar por correo"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Department Approve"
+msgstr "Aprobación del departamento"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__approve_manager
+#: model:res.groups,name:material_internal_requisitions.group_requisition_department
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Department Manager"
+msgstr "Gerente de departamento"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__reject_manager
+msgid "Department Manager Reject"
+msgstr "Rechazo del gerente de departamento"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__manareject_date
+msgid "Department Manager Reject Date"
+msgstr "Fecha de rechazo del gerente de departamento"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__description
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "Description"
+msgstr "Descripción"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_hr_department__desti_loca_id
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_hr_employee__desti_loca_id
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__desti_loca_id
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Destination Location"
+msgstr "Ubicación de destino"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__display_name
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_hr_department__display_name
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__display_name
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_stock_picking__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid ""
+"El usuario actual no está vinculado a un empleado. Por favor, seleccione un "
+"empleado para crear una Requisición Interna."
+msgstr "El usuario actual no está vinculado a un empleado. Por favor, seleccione un empleado para crear una Requisición Interna."
+
+#. module: material_internal_requisitions
+#: model:ir.model,name:material_internal_requisitions.model_hr_employee
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__request_emp
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Contactos)"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icono Font Awesome, p. ej. fa-tasks"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__has_message
+msgid "Has Message"
+msgstr "Tiene mensaje"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__id
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_hr_department__id
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_hr_employee__id
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__id
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_stock_picking__id
+msgid "ID"
+msgstr "ID"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_exception_icon
+msgid "Icon"
+msgstr "Icono"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icono para indicar una actividad en excepción."
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si está marcado, los nuevos mensajes requieren su atención."
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__message_has_error
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si está marcado, algunos mensajes tienen un error de entrega."
+
+#. module: material_internal_requisitions
+#: model:ir.actions.report,name:material_internal_requisitions.report_internal_requisition
+msgid "Imprimir Requisición"
+msgstr "Imprimir requisición"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__delivery_picking_id
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Internal Picking"
+msgstr "Transferencia interna"
+
+#. module: material_internal_requisitions
+#: model:ir.model,name:material_internal_requisitions.model_internal_requisition
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_stock_picking__inter_requi_id
+#: model:ir.ui.menu,name:material_internal_requisitions.menu_internal_requisition
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "Internal Requisition"
+msgstr "Requisición interna"
+
+#. module: material_internal_requisitions
+#: model:ir.actions.act_window,name:material_internal_requisitions.action_material_internal_requisition
+#: model:ir.ui.menu,name:material_internal_requisitions.menu_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_pivot
+msgid "Internal Requisitions"
+msgstr "Requisiciones internas"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_is_follower
+msgid "Is Follower"
+msgstr "Es seguidor"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__write_uid
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__write_date
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__date_end
+msgid "Last date for the product to be needed"
+msgstr "Última fecha en que se necesita el producto"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Location"
+msgstr "Ubicación"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Manager Approve Date"
+msgstr "Fecha de aprobación del gerente"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_has_error
+msgid "Message Delivery error"
+msgstr "Error de entrega de mensajes"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_ids
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Vencimiento de mi actividad"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields.selection,name:material_internal_requisitions.selection__internal_requisition__state__draft
+msgid "New"
+msgstr "Nuevo"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Vencimiento de la próxima actividad"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resumen de la próxima actividad"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipo de próxima actividad"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__name
+msgid "Number"
+msgstr "Número"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de acciones"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_has_error_counter
+msgid "Number of errors"
+msgstr "Número de errores"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Número de mensajes que requieren acción"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensajes con error de entrega"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Other Information"
+msgstr "Otra información"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Picking Details"
+msgstr "Detalles de la transferencia"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__custom_picking_type_id
+msgid "Picking Type"
+msgstr "Tipo de transferencia"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__qty
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Reason"
+msgstr "Motivo"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__reason
+msgid "Reason for Requisitions"
+msgstr "Motivo de las requisiciones"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields.selection,name:material_internal_requisitions.selection__internal_requisition__state__receive
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Received"
+msgstr "Recibido"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__receive_date
+msgid "Received Date"
+msgstr "Fecha de recepción"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Reject"
+msgstr "Rechazar"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields.selection,name:material_internal_requisitions.selection__internal_requisition__state__reject
+msgid "Rejected"
+msgstr "Rechazado"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__userreject_date
+msgid "Rejected Date"
+msgstr "Fecha de rechazo"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__reject_user
+msgid "Rejected by"
+msgstr "Rechazado por"
+
+#. module: material_internal_requisitions
+#: model:mail.template,subject:material_internal_requisitions.email_confirm_irrequisition
+msgid "Request for Internal Requisition - ${object.name}"
+msgstr "Solicitud de requisición interna - ${object.name}"
+
+#. module: material_internal_requisitions
+#: model:mail.template,name:material_internal_requisitions.email_confirm_irrequisition
+msgid "Request for Internal Requisition - Send by Email"
+msgstr "Solicitud de requisición interna - Enviar por correo"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Request to Stock"
+msgstr "Solicitud a inventario"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields.selection,name:material_internal_requisitions.selection__internal_requisition__state__stock
+msgid "Requested Stock"
+msgstr "Inventario solicitado"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__request_date
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Requisition Date"
+msgstr "Fecha de requisición"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__date_end
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Requisition Deadline"
+msgstr "Fecha límite de requisición"
+
+#. module: material_internal_requisitions
+#: model:ir.model,name:material_internal_requisitions.model_custom_internal_requisition_line
+msgid "Requisition Line"
+msgstr "Línea de requisición"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition
+msgid "Requisition Lines"
+msgstr "Líneas de requisición"
+
+#. module: material_internal_requisitions
+#: model:res.groups,name:material_internal_requisitions.group_requisition_manager
+msgid "Requisition Manager"
+msgstr "Administrador de requisiciones"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__requisiton_responsible_id
+msgid "Requisition Responsible"
+msgstr "Responsable de requisición"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.internal_requisition_employee_form_view
+msgid "Requisition Settings"
+msgstr "Configuración de requisiciones"
+
+#. module: material_internal_requisitions
+#: model:res.groups,name:material_internal_requisitions.group_requisition_user
+msgid "Requisition User"
+msgstr "Usuario de requisiciones"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__requisition_id
+#: model:ir.ui.menu,name:material_internal_requisitions.menu_requisition
+msgid "Requisitions"
+msgstr "Requisiciones"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__requisition_line_ids
+msgid "Requisitions Line"
+msgstr "Línea de requisiciones"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Requisitions Lines"
+msgstr "Líneas de requisiciones"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "Reset to Draft"
+msgstr "Restablecer a borrador"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__activity_user_id
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error de entrega de SMS"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "Sale Estimate search"
+msgstr "Búsqueda de estimación de venta"
+
+#. module: material_internal_requisitions
+#. odoo-python
+#: code:addons/material_internal_requisitions/models/internal_requisition.py:0
+msgid "Select Destination Location under the picking details."
+msgstr "Seleccione la ubicación de destino en los detalles de la transferencia."
+
+#. module: material_internal_requisitions
+#. odoo-python
+#: code:addons/material_internal_requisitions/models/internal_requisition.py:0
+msgid "Select Picking Type under the picking details."
+msgstr "Seleccione el tipo de transferencia en los detalles de la transferencia."
+
+#. module: material_internal_requisitions
+#. odoo-python
+#: code:addons/material_internal_requisitions/models/internal_requisition.py:0
+msgid "Select Source Location under the picking details."
+msgstr "Seleccione la ubicación de origen en los detalles de la transferencia."
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__location
+msgid "Source Location"
+msgstr "Ubicación de origen"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__state
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "State"
+msgstr "Estado"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Estado basado en actividades\n"
+"Atrasada: la fecha de vencimiento ya pasó\n"
+"Hoy: la fecha de la actividad es hoy\n"
+"Planificada: actividades futuras."
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_hr_employee__desti_loca_id
+msgid ""
+"This field is used to set the default destination location for the employee "
+"when creating material internal requisitions."
+msgstr "Este campo se usa para definir la ubicación de destino predeterminada del empleado al crear requisiciones internas de materiales."
+
+#. module: material_internal_requisitions
+#: model:ir.model,name:material_internal_requisitions.model_stock_picking
+msgid "Transfer"
+msgstr "Transferencia"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipo de actividad en excepción en el registro."
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__uom
+msgid "Unit of Measure"
+msgstr "Unidad de medida"
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
+msgid "User Approve Date"
+msgstr "Fecha de aprobación del usuario"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields.selection,name:material_internal_requisitions.selection__internal_requisition__state__confirm
+msgid "Waiting Department Approval"
+msgstr "En espera de aprobación del departamento"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields.selection,name:material_internal_requisitions.selection__internal_requisition__state__manager
+msgid "Waiting IR Approved"
+msgstr "En espera de aprobación de requisición interna"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__website_message_ids
+msgid "Website Messages"
+msgstr "Mensajes del sitio web"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_internal_requisition__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicación del sitio web"
+
+#. module: material_internal_requisitions
+#. odoo-python
+#: code:addons/material_internal_requisitions/models/internal_requisition.py:0
+msgid ""
+"You can not delete Internal Requisition which is not in draft or cancelled "
+"or rejected state."
+msgstr "No puede eliminar una requisición interna que no esté en estado borrador, cancelado o rechazado."
+
+#. module: material_internal_requisitions
+#: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_form_view
+msgid "confirm"
+msgstr "confirmar"

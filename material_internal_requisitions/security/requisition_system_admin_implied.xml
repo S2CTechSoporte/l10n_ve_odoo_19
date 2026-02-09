@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- System Administrators are also Requisition Managers -->
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('material_internal_requisitions.group_requisition_manager'))]"/>
+        </record>
+    </data>
+</odoo>

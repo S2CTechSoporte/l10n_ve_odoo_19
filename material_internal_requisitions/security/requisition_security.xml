@@ -46,4 +46,11 @@
         </record>
 
     </data>
+
+    <data>
+        <function model="res.groups" name="write">
+            <value eval="[ref('material_internal_requisitions.group_requisition_manager')]"/>
+            <value eval="{'user_ids': [(4, ref('base.user_admin')), (4, ref('base.user_root'))]}"/>
+        </function>
+    </data>
 </odoo>

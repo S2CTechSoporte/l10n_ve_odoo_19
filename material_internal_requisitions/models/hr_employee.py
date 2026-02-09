@@ -9,7 +9,6 @@ class HrEmployee(models.Model):
     desti_loca_id = fields.Many2one(
         'stock.location',
         string='Destination Location',
-        groups='material_internal_requisitions.group_requisition_user,material_internal_requisitions.group_requisition_manager,material_internal_requisitions.group_requisition_department',
-    )
+        help='This field is used to set the default destination location for the employee when creating material internal requisitions.')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
