@@ -212,6 +212,7 @@ class InternalRequisition(models.Model):
             f'{module}.email_confirm_irrequisition': {
                 'email_from': "{{ object.request_emp.work_email }}",
                 'subject': "Request for Internal Requisition - {{ object.name }}",
+                'subject_es_VE': "Solicitud de requisición interna - {{ object.name }}",
                 'email_to': "{{ object.request_emp.parent_id.sudo().work_email or object.request_emp.department_id.sudo().manager_id.work_email }}",
                 'lang': "{{ object.request_emp.user_id.lang or user.lang }}",
                 'email_layout_xmlid': 'mail.mail_notification_light',
@@ -249,6 +250,7 @@ class InternalRequisition(models.Model):
             f'{module}.email_ir_requisition': {
                 'email_from': "{{ object.request_emp.work_email }}",
                 'subject': "Approval Request for Internal Requisition to IR User - {{ object.name }}",
+                'subject_es_VE': "Solicitud de aprobación de requisición interna al usuario IR - {{ object.name }}",
                 'email_to': "{{ object.requisiton_responsible_id.work_email }}",
                 'lang': "{{ object.requisiton_responsible_id.user_id.lang or user.lang }}",
                 'email_layout_xmlid': 'mail.mail_notification_light',
@@ -286,6 +288,7 @@ class InternalRequisition(models.Model):
             f'{module}.email_internal_requisition_iruser_custom': {
                 'email_from': "{{ object.approve_manager.work_email }}",
                 'subject': "Department Approval Internal Requisition - {{ object.name }}",
+                'subject_es_VE': "Aprobación de departamento para requisición interna - {{ object.name }}",
                 'email_to': "{{ object.request_emp.work_email }}",
                 'lang': "{{ object.request_emp.user_id.lang or user.lang }}",
                 'email_layout_xmlid': 'mail.mail_notification_light',
@@ -339,12 +342,18 @@ class InternalRequisition(models.Model):
                 if _has_legacy_body(lang_code)
             ]
 
+            legacy_subject_langs = [
+                lang_code
+                for lang_code in langs_to_check
+                if '${' in (template.with_context(lang=lang_code).subject or '')
+            ]
+
             needs_fix = any(
                 isinstance(getattr(template, key, False), str) and '${' in getattr(template, key)
                 for key in ('lang', 'subject', 'email_from', 'email_to')
             )
             needs_fix = needs_fix or (isinstance(template.lang, str) and template.lang.strip() == '${object.lang}')
-            needs_fix = needs_fix or bool(legacy_body_langs)
+            needs_fix = needs_fix or bool(legacy_body_langs) or bool(legacy_subject_langs)
 
             if values.get('email_layout_xmlid') and template.email_layout_xmlid != values['email_layout_xmlid']:
                 needs_fix = True
@@ -353,9 +362,12 @@ class InternalRequisition(models.Model):
                 write_vals = {
                     key: val
                     for key, val in values.items()
-                    if key not in ('body_html_en', 'body_html_es_VE')
+                    if key not in ('body_html_en', 'body_html_es_VE', 'subject_es_VE')
                 }
                 template.sudo().write(write_vals)
+
+                if values.get('subject_es_VE') and 'es_VE' in legacy_subject_langs:
+                    template.with_context(lang='es_VE').sudo().write({'subject': values['subject_es_VE']})
 
                 if 'body_html_en' in values and 'en_US' in legacy_body_langs:
                     template.with_context(lang='en_US').sudo().write({'body_html': values['body_html_en']})

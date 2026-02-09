@@ -304,8 +304,8 @@ msgstr "Cuenta analítica"
 
 #. module: material_internal_requisitions
 #: model:mail.template,subject:material_internal_requisitions.email_ir_requisition
-msgid "Approval Request for Internal Requisition to IR User - ${object.name}"
-msgstr "Solicitud de aprobación de requisición interna al usuario IR - ${object.name}"
+msgid "Approval Request for Internal Requisition to IR User - {{ object.name }}"
+msgstr "Solicitud de aprobación de requisición interna al usuario IR - {{ object.name }}"
 
 #. module: material_internal_requisitions
 #: model:mail.template,name:material_internal_requisitions.email_ir_requisition
@@ -415,8 +415,8 @@ msgstr "Fecha de aprobación del departamento"
 
 #. module: material_internal_requisitions
 #: model:mail.template,subject:material_internal_requisitions.email_internal_requisition_iruser_custom
-msgid "Department Approval Internal Requisition - ${object.name}"
-msgstr "Aprobación de departamento para requisición interna - ${object.name}"
+msgid "Department Approval Internal Requisition - {{ object.name }}"
+msgstr "Aprobación de departamento para requisición interna - {{ object.name }}"
 
 #. module: material_internal_requisitions
 #: model:mail.template,name:material_internal_requisitions.email_internal_requisition_iruser_custom
@@ -720,8 +720,8 @@ msgstr "Rechazado por"
 
 #. module: material_internal_requisitions
 #: model:mail.template,subject:material_internal_requisitions.email_confirm_irrequisition
-msgid "Request for Internal Requisition - ${object.name}"
-msgstr "Solicitud de requisición interna - ${object.name}"
+msgid "Request for Internal Requisition - {{ object.name }}"
+msgstr "Solicitud de requisición interna - {{ object.name }}"
 
 #. module: material_internal_requisitions
 #: model:mail.template,name:material_internal_requisitions.email_confirm_irrequisition
