@@ -214,68 +214,109 @@ class InternalRequisition(models.Model):
                 'subject': "Request for Internal Requisition - {{ object.name }}",
                 'email_to': "{{ object.request_emp.parent_id.sudo().work_email or object.request_emp.department_id.sudo().manager_id.work_email }}",
                 'lang': "{{ object.request_emp.user_id.lang or user.lang }}",
-                'body_html': """
-<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-    <p>Dear {{ object.request_emp.parent_id.sudo().name or object.request_emp.department_id.sudo().manager_id.name }},</p>
-    <p>Approve request for Internal Requistion - {{ object.name }}.</p>
-    <p>Thank you,</p>
-    <br/>
-    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
-        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
-            <strong style="text-transform:uppercase;">{{ user.company_id.name }}</strong>
-        </h3>
-    </div>
-    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
-        <span style="color: #222; margin-bottom: 5px; display: block; ">
-            {{ user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe }}
-        </span>
-        {% if user.company_id.phone %}
-            <div style="margin: 0; padding: 0;">Phone:&nbsp; {{ user.company_id.phone }}</div>
-        {% endif %}
-        {% if user.company_id.website %}
-            <div>Web :&nbsp;<a href="{{ user.company_id.website }}">{{ user.company_id.website }}</a></div>
-        {% endif %}
-        <p></p>
-    </div>
-</div>
-""",
+                'email_layout_xmlid': 'mail.mail_notification_light',
+                'body_html_en': """
+<p>Dear <t t-out="object.request_emp.parent_id.sudo().name or object.request_emp.department_id.sudo().manager_id.name"/>,</p>
+
+<p>You have a new internal requisition request awaiting your approval:</p>
+<ul>
+    <li><strong>Requisition</strong>: <t t-out="object.name"/></li>
+    <li><strong>Requested by</strong>: <t t-out="object.request_emp.name"/></li>
+    <li><strong>Department</strong>: <t t-out="object.request_emp.department_id.name or ''"/></li>
+</ul>
+
+<t t-set="base_url" t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+<p>
+    <a t-att-href="'%s/web#id=%s&model=%s&view_type=form' % (base_url, object.id, object._name)">Open in Odoo</a>
+</p>
+""".strip(),
+                'body_html_es_VE': """
+<p>Estimado/a <t t-out="object.request_emp.parent_id.sudo().name or object.request_emp.department_id.sudo().manager_id.name"/>,</p>
+
+<p>Tiene una nueva requisición interna pendiente por su aprobación:</p>
+<ul>
+    <li><strong>Requisición</strong>: <t t-out="object.name"/></li>
+    <li><strong>Solicitada por</strong>: <t t-out="object.request_emp.name"/></li>
+    <li><strong>Departamento</strong>: <t t-out="object.request_emp.department_id.name or ''"/></li>
+</ul>
+
+<t t-set="base_url" t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+<p>
+    <a t-att-href="'%s/web#id=%s&model=%s&view_type=form' % (base_url, object.id, object._name)">Abrir en Odoo</a>
+</p>
+""".strip(),
             },
             f'{module}.email_ir_requisition': {
                 'email_from': "{{ object.request_emp.work_email }}",
                 'subject': "Approval Request for Internal Requisition to IR User - {{ object.name }}",
                 'email_to': "{{ object.requisiton_responsible_id.work_email }}",
                 'lang': "{{ object.requisiton_responsible_id.user_id.lang or user.lang }}",
-                'body_html': """
-<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-    <p>Dear {{ object.requisiton_responsible_id.name }},</p>
-    <p>Approve request for Internal Requistion - {{ object.name }}.</p>
-    <p>Thank you,</p>
-    <br/>
-    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
-        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
-            <strong style="text-transform:uppercase;">{{ user.company_id.name }}</strong>
-        </h3>
-    </div>
-    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
-        <span style="color: #222; margin-bottom: 5px; display: block; ">
-            {{ user.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe }}
-        </span>
-        {% if user.company_id.phone %}
-            <div style="margin: 0; padding: 0;">Phone:&nbsp; {{ user.company_id.phone }}</div>
-        {% endif %}
-        {% if user.company_id.website %}
-            <div>Web :&nbsp;<a href="{{ user.company_id.website }}">{{ user.company_id.website }}</a></div>
-        {% endif %}
-        <p></p>
-    </div>
-</div>
-""",
+                'email_layout_xmlid': 'mail.mail_notification_light',
+                'body_html_en': """
+<p>Dear <t t-out="object.requisiton_responsible_id.name"/>,</p>
+
+<p>An internal requisition has been submitted and requires your approval:</p>
+<ul>
+    <li><strong>Requisition</strong>: <t t-out="object.name"/></li>
+    <li><strong>Requested by</strong>: <t t-out="object.request_emp.name"/></li>
+    <li><strong>Department</strong>: <t t-out="object.request_emp.department_id.name or ''"/></li>
+</ul>
+
+<t t-set="base_url" t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+<p>
+    <a t-att-href="'%s/web#id=%s&model=%s&view_type=form' % (base_url, object.id, object._name)">Open in Odoo</a>
+</p>
+""".strip(),
+                'body_html_es_VE': """
+<p>Estimado/a <t t-out="object.requisiton_responsible_id.name"/>,</p>
+
+<p>Se ha registrado una requisición interna y requiere su aprobación:</p>
+<ul>
+    <li><strong>Requisición</strong>: <t t-out="object.name"/></li>
+    <li><strong>Solicitada por</strong>: <t t-out="object.request_emp.name"/></li>
+    <li><strong>Departamento</strong>: <t t-out="object.request_emp.department_id.name or ''"/></li>
+</ul>
+
+<t t-set="base_url" t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+<p>
+    <a t-att-href="'%s/web#id=%s&model=%s&view_type=form' % (base_url, object.id, object._name)">Abrir en Odoo</a>
+</p>
+""".strip(),
             },
             f'{module}.email_internal_requisition_iruser_custom': {
                 'email_from': "{{ object.approve_manager.work_email }}",
                 'subject': "Department Approval Internal Requisition - {{ object.name }}",
                 'email_to': "{{ object.request_emp.work_email }}",
                 'lang': "{{ object.request_emp.user_id.lang or user.lang }}",
+                'email_layout_xmlid': 'mail.mail_notification_light',
+                'body_html_en': """
+<p>Dear <t t-out="object.request_emp.name"/>,</p>
+
+<p>Your internal requisition has been approved by your department:</p>
+<ul>
+    <li><strong>Requisition</strong>: <t t-out="object.name"/></li>
+    <li><strong>Approved by</strong>: <t t-out="object.approve_manager.name"/></li>
+</ul>
+
+<t t-set="base_url" t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+<p>
+    <a t-att-href="'%s/web#id=%s&model=%s&view_type=form' % (base_url, object.id, object._name)">Open in Odoo</a>
+</p>
+""".strip(),
+                'body_html_es_VE': """
+<p>Estimado/a <t t-out="object.request_emp.name"/>,</p>
+
+<p>Su requisición interna ha sido aprobada por su departamento:</p>
+<ul>
+    <li><strong>Requisición</strong>: <t t-out="object.name"/></li>
+    <li><strong>Aprobada por</strong>: <t t-out="object.approve_manager.name"/></li>
+</ul>
+
+<t t-set="base_url" t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+<p>
+    <a t-att-href="'%s/web#id=%s&model=%s&view_type=form' % (base_url, object.id, object._name)">Abrir en Odoo</a>
+</p>
+""".strip(),
             },
         }
 
@@ -284,14 +325,42 @@ class InternalRequisition(models.Model):
             if not template:
                 continue
 
+            def _has_legacy_body(lang_code):
+                body = (template.with_context(lang=lang_code).body_html or '')
+                return any(token in body for token in ('${', '% if', '{%', '{{', '#8E0000'))
+
+            langs_to_check = ['en_US']
+            if self.env['res.lang']._get_data(code='es_VE'):
+                langs_to_check.append('es_VE')
+
+            legacy_body_langs = [
+                lang_code
+                for lang_code in langs_to_check
+                if _has_legacy_body(lang_code)
+            ]
+
             needs_fix = any(
                 isinstance(getattr(template, key, False), str) and '${' in getattr(template, key)
                 for key in ('lang', 'subject', 'email_from', 'email_to')
             )
             needs_fix = needs_fix or (isinstance(template.lang, str) and template.lang.strip() == '${object.lang}')
+            needs_fix = needs_fix or bool(legacy_body_langs)
+
+            if values.get('email_layout_xmlid') and template.email_layout_xmlid != values['email_layout_xmlid']:
+                needs_fix = True
 
             if needs_fix:
-                template.sudo().write(values)
+                write_vals = {
+                    key: val
+                    for key, val in values.items()
+                    if key not in ('body_html_en', 'body_html_es_VE')
+                }
+                template.sudo().write(write_vals)
+
+                if 'body_html_en' in values and 'en_US' in legacy_body_langs:
+                    template.with_context(lang='en_US').sudo().write({'body_html': values['body_html_en']})
+                if 'body_html_es_VE' in values and 'es_VE' in legacy_body_langs:
+                    template.with_context(lang='es_VE').sudo().write({'body_html': values['body_html_es_VE']})
     
     @api.model_create_multi
     def create(self, vals_list):

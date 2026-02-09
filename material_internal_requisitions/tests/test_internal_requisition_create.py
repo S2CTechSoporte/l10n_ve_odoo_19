@@ -57,6 +57,14 @@ class TestInternalRequisitionCreate(TransactionCase):
         self.assertNotEqual(requisitions[0].name, requisitions[1].name)
 
     def test_requisition_confirm_does_not_fail_on_lang(self):
+        confirm_tmpl = self.env.ref('material_internal_requisitions.email_confirm_irrequisition')
+        ir_user_tmpl = self.env.ref('material_internal_requisitions.email_ir_requisition')
+        dept_approved_tmpl = self.env.ref('material_internal_requisitions.email_internal_requisition_iruser_custom')
+
+        self.assertEqual(confirm_tmpl.email_layout_xmlid, 'mail.mail_notification_light')
+        self.assertEqual(ir_user_tmpl.email_layout_xmlid, 'mail.mail_notification_light')
+        self.assertEqual(dept_approved_tmpl.email_layout_xmlid, 'mail.mail_notification_light')
+
         Requisition = self.env['internal.requisition'].sudo()
         requisition = Requisition.create({
             'request_emp': self.employee.id,
@@ -67,3 +75,19 @@ class TestInternalRequisitionCreate(TransactionCase):
         requisition.requisition_confirm()
 
         self.assertEqual(requisition.state, 'confirm')
+
+        mails = self.env['mail.mail'].sudo().search([
+            ('model', '=', requisition._name),
+            ('res_id', '=', requisition.id),
+        ], order='id desc')
+        self.assertTrue(mails, 'Expected at least one outgoing email to be queued')
+
+        mail = mails[0]
+        body = mail.body_html or ''
+        self.assertIn('background-color: #F1F1F1', body)
+        self.assertNotIn('#8E0000', body)
+        self.assertNotIn('${', body)
+        self.assertNotIn('{{', body)
+        self.assertNotIn('{%', body)
+        self.assertNotIn('<t ', body)
+        self.assertIn(f'/web#id={requisition.id}', body)
