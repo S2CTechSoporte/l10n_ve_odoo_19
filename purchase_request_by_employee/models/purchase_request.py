@@ -16,6 +16,7 @@ class PurchaseRequest(models.Model):
     name = fields.Char('Request Reference', required=True, index=True, copy=False, default='New')
     request_by = fields.Selection([('user', 'User'),('employee', 'Employee') ],default='user')
     date_order = fields.Datetime('Request Date', index=True, copy=False, default=fields.Datetime.now)
+    approval_date = fields.Datetime('Approval date', readonly=True)
     date_approve = fields.Date('Approval Date', index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor')
     line_ids = fields.One2many('purchase.request.line', 'request_id', string='Request Lines',tracking=True)
@@ -65,6 +66,13 @@ class PurchaseRequest(models.Model):
         self.approve_btn_visible = flag
         if self.state == 'cancelled':
             self.approve_btn_visible = True
+
+    @api.onchange('stage_id')
+    def _onchange_approval_date(self):
+        if self.stage_id.final_stage and not self.stage_id.parent_id:
+            self.approval_date = fields.Datetime.now()
+        else:
+            self.approval_date = False
 
     @api.onchange('stage_id')
     def _btn_create_po_compute(self):
@@ -118,6 +126,11 @@ class PurchaseRequest(models.Model):
         
         if self.stage_id.sequence > 1 and self.state != 'cancelled':
             self.state = 'approved'
+
+        if self.stage_id.final_stage and not self.stage_id.parent_id:
+            self.approval_date = fields.Datetime.now()
+        else:
+            self.approval_date = False
             
         self.get_view()
     
