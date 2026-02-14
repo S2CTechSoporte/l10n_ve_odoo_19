@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-    
+
         <record id="material_internal_requisition_form_view" model="ir.ui.view">
             <field name="name">internal.requisition.form.view</field>
             <field name="model">internal.requisition</field>
@@ -13,45 +13,49 @@
                         <button name="user_approve" type="object" string="Approve" invisible="state != 'manager'" class="btn-primary" groups="material_internal_requisitions.group_requisition_user"/>
                         <button name="request_stock" type="object" string="Request to Stock" invisible="state != 'user'" class="btn-primary" groups="material_internal_requisitions.group_requisition_user"/>
                         <button name="action_received" type="object" string="Received" invisible="state != 'stock'" class="btn-primary"/>
-                        <button name="requisition_reject" type="object" string="Reject" groups="material_internal_requisitions.group_requisition_department,material_internal_requisitions.group_requisition_user" invisible="state not in ('confirm','user','manager')" />
-<!--                        <button name="action_done" type="object" string="Done" states="receive" class="btn-primary"/-->
+                        <button name="requisition_reject" type="object" string="Reject" groups="material_internal_requisitions.group_requisition_department,material_internal_requisitions.group_requisition_user" invisible="state not in ('confirm','user','manager')"/>
+                        <!--                        <button name="action_done" type="object" string="Done" states="receive" class="btn-primary"/-->
                         <button name="action_cancel" type="object" invisible="state != 'draft'" string="Cancel" groups="base.group_user"/>
                         <button name="reset_draft" type="object" string="Reset to Draft" invisible="state not in ('cancel','reject','receive')" class="btn-primary"/>
-                        <field name="state" widget="statusbar" string="confirm"  
-                                        statusbar_visible="draft,confirm,manager,user,stock,receive"/>
+                        <field name="state" widget="statusbar" string="confirm" statusbar_visible="draft,confirm,manager,user,stock,receive"/>
                     </header>
+
                     <div class="alert alert-warning oe_edit_only" role="alert" name="warning_user_id" invisible="request_emp">
                         El usuario actual no está vinculado a un empleado. Por favor, seleccione un empleado para crear una Requisición Interna.
                     </div>
+
                     <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" icon="fa-truck"
-                                name="show_picking" string="Internal Picking" groups="base.group_user"/>
-                    </div>
-                    <div class="oe_title">
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" icon="fa-truck" name="show_picking" string="Internal Picking" groups="base.group_user"/>
+                        </div>
+
                         <div class="oe_title">
-                        <h1>
-                            <field name="name"/><br/>
-                        </h1>
-                    </div>
-                    </div>
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="name"/>
+                                    <br/>
+                                </h1>
+                            </div>
+                        </div>
+
                         <group>
-                                <group>
-                                    <field name="request_emp" readonly="state != 'draft'"  />
-                                    <field name="department_id" readonly="state != 'draft'"  />
-                                    <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"  />
-                                    <field name="requisiton_responsible_id" readonly="state != 'draft'"  />
-                                </group>
-                                <group>
-                                    <field name="request_date" readonly="state != 'draft'"  />
-                                    <field name="receive_date" readonly="state  in ('reject','cancel','receive')"/>
-                                    <field name="date_end" readonly="state  in ('reject','cancel','receive')"/>
-                                    <field name="account_id" groups="analytic.group_analytic_accounting" readonly="state  in ('reject','cancel','receive')"/>
-                                </group>
-                             </group>
+                            <group>
+                                <field name="request_emp" readonly="state != 'draft'"/>
+                                <field name="department_id" readonly="state != 'draft'"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                                <field name="requisiton_responsible_id" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="request_date" readonly="state != 'draft'"/>
+                                <field name="receive_date" readonly="state in ('reject','cancel','receive')"/>
+                                <field name="date_end" readonly="state in ('reject','cancel','receive')"/>
+                                <field name="account_id" groups="analytic.group_analytic_accounting" readonly="state in ('reject','cancel','receive')"/>
+                            </group>
+                        </group>
+
                         <notebook>
                             <page string="Requisitions Lines">
-                                <field name="requisition_line_ids" readonly="state != 'draft'"  >
+                                <field name="requisition_line_ids" readonly="state != 'draft'">
                                     <list editable="bottom">
                                         <field name="product_id"/>
                                         <field name="description"/>
@@ -60,23 +64,23 @@
                                     </list>
                                 </field>
                                 <group>
-                                    <field name="reason" readonly="state  in ('reject','cancel','receive')" placeholder="Add Reason for Internal Requistion ...."/>
+                                    <field name="reason" readonly="state in ('reject','cancel','receive')" placeholder="Add Reason for Internal Requistion ...."/>
                                 </group>
                             </page>
+
                             <page groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" string="Picking Details" readonly="state == 'done'">
                                 <group>
                                     <group>
-                                            <field name="location"
-                                                   groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user"
-                                                   domain="[('usage','!=', 'view')]" readonly="state  in ('reject','cancel','receive')"/>
+                                        <field name="location" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" domain="[('usage','!=', 'view')]" readonly="state in ('reject','cancel','receive')"/>
                                     </group>
                                     <group>
-                                        <field name="desti_loca_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" readonly="state  in ('reject','cancel','receive')"/>
+                                        <field name="desti_loca_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" readonly="state in ('reject','cancel','receive')"/>
                                         <field name="delivery_picking_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user"/>
-                                        <field name="custom_picking_type_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" readonly="state  in ('reject','cancel','receive')"/>
+                                        <field name="custom_picking_type_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" readonly="state in ('reject','cancel','receive')"/>
                                     </group>
                                 </group>
                             </page>
+
                             <page string="Other Information">
                                 <group>
                                     <group>
@@ -93,13 +97,14 @@
                                     </group>
                                 </group>
                             </page>
-                    </notebook>
+                        </notebook>
                     </sheet>
+
                     <chatter/>
                 </form>
             </field>
         </record>
-        
+
         <record id="material_internal_requisition_tree_view" model="ir.ui.view">
             <field name="name">internal.requisition.view.tree</field>
             <field name="model">internal.requisition</field>
@@ -120,9 +125,9 @@
             <field name="name">internal.requisition.view.kanban</field>
             <field name="model">internal.requisition</field>
             <field name="arch" type="xml">
-                <kanban default_group_by='state'>
+                <kanban default_group_by="state">
                     <field name="name"/>
-                    <field name='request_emp'/>
+                    <field name="request_emp"/>
                     <field name="department_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="request_date"/>
@@ -143,19 +148,19 @@
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban">
                                         <span style="font-weight:bold">Department:</span>
-                                            <field name="department_id"/>
+                                        <field name="department_id"/>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban">
                                         <span style="font-weight:bold">Company:</span>
-                                            <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="company_id" groups="base.group_multi_company"/>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban">
                                         <span style="font-weight:bold">Requisition Date:</span>
-                                            <field name="request_date"/>
+                                        <field name="request_date"/>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +175,7 @@
             <field name="model">internal.requisition</field>
             <field name="arch" type="xml">
                 <pivot string="Internal Requisitions">
-                    <field name='department_id' type="row"/>
+                    <field name="department_id" type="row"/>
                     <field name="state" type="col"/>
                 </pivot>
             </field>
@@ -180,13 +185,13 @@
             <field name="name">material.internal.requisition.graph</field>
             <field name="model">internal.requisition</field>
             <field name="arch" type="xml">
-                 <graph>
-                    <field name='department_id'/>
+                <graph>
+                    <field name="department_id"/>
                     <field name="state"/>
-                 </graph>
+                </graph>
             </field>
         </record>
-        
+
         <record id="material_internal_requisition_search_view" model="ir.ui.view">
             <field name="name">internal.requisition search</field>
             <field name="model">internal.requisition</field>
@@ -228,17 +233,16 @@
                 </search>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_material_internal_requisition">
             <field name="name">Internal Requisitions</field>
             <field name="res_model">internal.requisition</field>
             <field name="view_mode">list,form,pivot,graph,kanban</field>
         </record>
-        
-        <menuitem id="menu_requisition" name = "Requisitions" groups="base.group_user" web_icon="material_internal_requisitions,static/description/icon.png"
- />
-        <menuitem id="menu_internal_requisition" name = "Internal Requisition" parent="menu_requisition"/>
-        <menuitem id="menu_internal_requisitions" name = "Internal Requisitions" parent="menu_internal_requisition" action="action_material_internal_requisition"/>
-        
-           </data>
-        </odoo>
+
+        <menuitem id="menu_requisition" name="Requisitions" groups="base.group_user" web_icon="material_internal_requisitions,static/description/icon.png"/>
+        <menuitem id="menu_internal_requisition" name="Internal Requisition" parent="menu_requisition"/>
+        <menuitem id="menu_internal_requisitions" name="Internal Requisitions" parent="menu_internal_requisition" action="action_material_internal_requisition"/>
+
+    </data>
+</odoo>

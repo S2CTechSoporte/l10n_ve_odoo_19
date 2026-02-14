@@ -20,7 +20,7 @@ class PurchaseRequest(models.Model):
     partner_id = fields.Many2one('res.partner', string='Vendor')
     line_ids = fields.One2many('purchase.request.line', 'request_id', string='Request Lines',tracking=True)
     stage_id = fields.Many2one('purchase.request.stage', copy=False, string="Etapa", default=lambda self: self._get_stage_id(), tracking=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', default=lambda self: self.env['hr.employee'].search([('user_id','=',self._uid)],limit=1, order='id desc'))
+    employee_id = fields.Many2one('hr.employee', string='Employee', default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1, order='id desc'))
     user_id = fields.Many2one('res.users', string='User', index=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', 'Company', index=True,  default=lambda self: self.env.company.id)
     description = fields.Text('Description')
@@ -90,15 +90,16 @@ class PurchaseRequest(models.Model):
     
  
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            if 'company_id' in vals:
-                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('purchase.request') or _('New')
-            else:
-                vals['name'] = self.env['ir.sequence'].next_by_code('purchase.request') or _('New')
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                if vals.get('company_id'):
+                    vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('purchase.request') or _('New')
+                else:
+                    vals['name'] = self.env['ir.sequence'].next_by_code('purchase.request') or _('New')
 
-        return super(PurchaseRequest, self).create(vals)
+        return super(PurchaseRequest, self).create(vals_list)
 
     
     def copy(self, default=None):
@@ -175,13 +176,13 @@ class PurchaseRequest(models.Model):
         })
         for line in self.line_ids:
             
-            purchase_qty_uom = line.product_uom._compute_quantity(line.product_qty, line.product_id.uom_po_id)
+            purchase_qty_uom = line.product_uom._compute_quantity(line.product_qty, line.product_id.uom_id)
 
             supplierinfo = line.product_id._select_seller(
                 partner_id=purchase_order.partner_id,
                 quantity=purchase_qty_uom,
                 date=purchase_order.date_order and purchase_order.date_order.date(), 
-                uom_id=line.product_id.uom_po_id
+                uom_id=line.product_id.uom_id
             )
             fpos = purchase_order.fiscal_position_id
             taxes = fpos.map_tax(line.product_id.supplier_taxes_id) if fpos else line.product_id.supplier_taxes_id
@@ -213,11 +214,11 @@ class PurchaseRequest(models.Model):
                 'name': line.name,
                 'product_qty': purchase_qty_uom,
                 'product_id': line.product_id.id,
-                'product_uom': line.product_id.uom_po_id.id,
+                'product_uom_id': line.product_id.uom_id.id,
                 'price_unit': price_unit,
                 'order_id' : purchase_order.id,
-                'date_planned': fields.Date.from_string(purchase_order.date_order) + relativedelta(days=int(supplierinfo.delay)),
-                'taxes_id': [(6, 0, taxes.ids)],
+                'date_planned': self.env['purchase.order.line']._get_date_planned(supplierinfo, purchase_order),
+                'tax_ids': [(6, 0, taxes.ids)],
             })
         result['res_id'] = purchase_order.id or False
         return result

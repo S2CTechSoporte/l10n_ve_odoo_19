@@ -15,6 +15,7 @@
         'security/group_security.xml',
         'security/ir.model.access.csv',
         'data/sequence.xml',
+        'data/purchase_request_stage_data.xml',
         'views/purchase_request.xml',
         'views/po.xml',
         'views/purchase_request_stage_view.xml'

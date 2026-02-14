@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="purchase_request_stage_pending_approval" model="purchase.request.stage">
+            <field name="name">Por aprobacion</field>
+            <field name="sequence">1</field>
+            <field name="create_po">0</field>
+            <field name="final_stage">0</field>
+            <field name="parent_id" ref="purchase_request_stage_approved"/>
+            <field name="group_ids" eval="[(6, 0, [ref('purchase.group_purchase_user')])]"/>
+        </record>
+
+        <record id="purchase_request_stage_approved" model="purchase.request.stage">
+            <field name="name">Aprobado</field>
+            <field name="sequence">2</field>
+            <field name="create_po">1</field>
+            <field name="final_stage">1</field>
+            <field name="group_ids" eval="[(6, 0, [ref('purchase.group_purchase_manager')])]"/>
+        </record>
+
+       
+    </data>
+</odoo>
