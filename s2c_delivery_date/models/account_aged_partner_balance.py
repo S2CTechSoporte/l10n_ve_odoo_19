@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # vencida por cobrar
-from odoo import models, fields
-
-from dateutil.relativedelta import relativedelta
-from itertools import chain
+from odoo import models
 
 from datetime import date
-from datetime import datetime
 
 
 class AgedPartnerBalanceCustomHandler(models.AbstractModel):
@@ -17,7 +13,7 @@ class AgedPartnerBalanceCustomHandler(models.AbstractModel):
     #     return result
 
     def _custom_line_postprocessor(self, report, options, lines, warnings=None):
-        lines = super()._custom_line_postprocessor(report, options, lines, warnings)
+        lines = super()._custom_line_postprocessor(report, options, lines)
         
         report = self.env['account.report'].browse(options['report_id'])
         for line in lines:
@@ -70,27 +66,18 @@ class AgedPartnerBalanceCustomHandler(models.AbstractModel):
                 'invoice_date_due': None,
                 'remaining_days': None
             })
-        return columns    
-    
-    def _prepare_partner_values(self):
-        columns = super()._prepare_partner_values()
-        if columns:
-            columns.update( {
-                'delivery_date': None,
-                'delivery_time': None,
-                'invoice_date_due': None,
-                'remaining_days': None
-            })
         return columns
     
-    def _aged_partner_report_custom_engine_common(self, options, internal_type, current_groupby, 
-		next_groupby, offset=0, limit=None):
-        rslt =  super()._aged_partner_report_custom_engine_common(options, 
-			internal_type, 
-			current_groupby, 
-			next_groupby,
-			offset,
-			limit)
+    def _aged_partner_report_custom_engine_common(self, options, internal_type, current_groupby,
+        next_groupby, offset=0, limit=None):
+        rslt = super()._aged_partner_report_custom_engine_common(
+            options,
+            internal_type,
+            current_groupby,
+            next_groupby,
+            offset,
+            limit,
+        )
 
         cxc = self.env.ref('account_reports.aged_receivable_report').id
 		
@@ -106,7 +93,7 @@ class AgedPartnerBalanceCustomHandler(models.AbstractModel):
             })
         
         if isinstance(rslt, list):
-            for id, value in  rslt:
+            for _line_id, value in rslt:
                 value.update(
                         {
                             'delivery_date':  None,
@@ -138,5 +125,3 @@ class AgedPartnerBalanceCustomHandler(models.AbstractModel):
                     return 'En más de 120 días'           
 
         return None
-	
-    
