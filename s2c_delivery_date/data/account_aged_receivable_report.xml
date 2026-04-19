@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="aged_receivable_report_delivery_date" model="account.report.column">
+		<field name="name">Fecha de Entrega</field>
+		<field name="expression_label">delivery_date</field>
+		<field name="figure_type">date</field>
+		<field name="report_id" ref="account_reports.aged_receivable_report"/>
+	</record>
+
+	<record id="aged_receivable_line_delivery_date" model="account.report.expression">
+		<field name="label">delivery_date</field>
+		<field name="engine">custom</field>
+		<field name="report_line_id" ref="account_reports.aged_receivable_line"/>
+		<field name="formula">_report_custom_engine_aged_receivable</field>
+		<field name="subformula">delivery_date</field>
+	</record>
+
+	<record id="aged_receivable_report_delivery_time" model="account.report.column">
+		<field name="name">Tiempo de Entrega</field>
+		<field name="expression_label">delivery_time</field>
+		<field name="figure_type">string</field>
+		<field name="report_id" ref="account_reports.aged_receivable_report"/>
+	</record>
+
+	<record id="aged_receivable_line_delivery_time" model="account.report.expression">
+		<field name="label">delivery_time</field>
+		<field name="engine">custom</field>
+		<field name="report_line_id" ref="account_reports.aged_receivable_line"/>
+		<field name="formula">_report_custom_engine_aged_receivable</field>
+		<field name="subformula">delivery_time</field>
+	</record>
+
+	<!-- fecha vencimiento -->
+
+	<record id="aged_receivable_report_invoice_date_due" model="account.report.column">
+		<field name="name">Fecha de vencimiento</field>
+		<field name="expression_label">invoice_date_due</field>
+		<field name="figure_type">date</field>
+		<field name="report_id" ref="account_reports.aged_receivable_report"/>
+	</record>
+
+	<record id="aged_receivable_line_invoice_date_due" model="account.report.expression">
+		<field name="label">invoice_date_due</field>
+		<field name="engine">custom</field>
+		<field name="report_line_id" ref="account_reports.aged_receivable_line"/>
+		<field name="formula">_report_custom_engine_aged_receivable</field>
+		<field name="subformula">invoice_date_due</field>
+	</record>
+	
+
+	<record id="aged_receivable_report_invoice_remaining_days" model="account.report.column">
+		<field name="name">Días de vencido</field>
+		<field name="expression_label">remaining_days</field>
+		<field name="figure_type">string</field>
+		<field name="report_id" ref="account_reports.aged_receivable_report"/>
+	</record>
+
+	<record id="aged_receivable_line_invoice_remaining_days" model="account.report.expression">
+		<field name="label">remaining_days</field>
+		<field name="engine">custom</field>
+		<field name="report_line_id" ref="account_reports.aged_receivable_line"/>
+		<field name="formula">_report_custom_engine_aged_receivable</field>
+		<field name="subformula">remaining_days</field>
+	</record>
+
+	
+
+</odoo>
