@@ -36,7 +36,7 @@
                     <attribute name="string">Total</attribute>
                 </xpath>
 
-                <xpath expr="/form/sheet/notebook/page[@id='aml_tab']/field[@name='journal_line_ids']/list//field[@name='credit']" position="after">
+                <xpath expr="//page[@id='aml_tab']//field[@name='line_ids']/*[self::tree or self::list]/field[@name='credit']" position="after">
                     <!-- vista de factura -->
                     <field name="fcurrency_id" invisible="1" column_invisible="True"/>
                     <field name="debit_fcurrency" optional="show" widget="monetary" options="{'currency_field':'fcurrency_id'}" sum="debit_fcurrency"/>
