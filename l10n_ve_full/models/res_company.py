@@ -3,6 +3,8 @@ from odoo import models, fields, api
 from odoo.exceptions import UserError
 import re
 
+from .res_partner import RIF_FORMAT_ERROR, get_rif_search_values, is_valid_rif_format
+
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
@@ -86,17 +88,14 @@ class ResCompany(models.Model):
     @staticmethod
     def validate_vat_er(field_value):
         if field_value:
-            patron = r'^[VEJGC]-\d{7,8}-\d$'
-            # Validar la cadena
-            if re.match(patron, field_value):
+            if is_valid_rif_format(field_value):
                 return True
-            else:
-                raise UserError('El rif tiene el formato incorrecto. Ej: V-01234567-8, E-01234567-8, J-01234567-8 o G-01234567-8. Por favor verifique el formato y si posee los 12 caracteres como se indica en el Ej. e intente de nuevo')
+            raise UserError(RIF_FORMAT_ERROR)
 
 
     def validate_vat_duplicate(self, valor):
         if valor:
-            partner_dup = self.search([('vat', '=', valor), ('id', '!=', self.id)],limit=1)
+            partner_dup = self.search([('vat', 'in', get_rif_search_values(valor)), ('id', '!=', self.id)],limit=1)
             if partner_dup.vat:
                 raise UserError('El cliente o proveedor ya se encuentra registrado con el Documento: %s'
                     % (self.vat))

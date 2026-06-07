@@ -1,12 +1,12 @@
-from odoo import models, fields, api
+from odoo import models
 from odoo.exceptions import AccessDenied
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    def _check_credentials(self, password, env):
+    def _check_credentials(self, credential, env):
         try:
-            super(ResUsers, self)._check_credentials(password, env)
+            auth_info = super()._check_credentials(credential, env)
             self.env['ir.logging'].create({
                 'name': 'Login Attempt',
                 'type': 'server',
@@ -17,6 +17,7 @@ class ResUsers(models.Model):
                 'func': '_check_credentials',
                 'line': 0,
             })
+            return auth_info
         except AccessDenied:
             self.env['ir.logging'].create({
                 'name': 'Login Attempt',
@@ -28,5 +29,4 @@ class ResUsers(models.Model):
                 'func': '_check_credentials',
                 'line': 0,
             })
-            self.env.cr.commit()
             raise

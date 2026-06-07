@@ -1,7 +1,39 @@
 # -*- coding: UTF-8 -*-
-from odoo import fields, models, api
+from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 import re
+
+
+RIF_FORMAT_ERROR = (
+    'El rif tiene el formato incorrecto. Ej: V-01234567-8, E-01234567-8, '
+    'J-01234567-8 o G-01234567-8. Por favor verifique el formato y si posee '
+    'los 12 caracteres como se indica en el Ej. e intente de nuevo'
+)
+RIF_FORMAT_PATTERN = re.compile(
+    r'[VEJGC](?:-\d{7,8}-\d|-\d{2}\.\d{3}\.\d{3}-\d|\d{8,9})'
+)
+
+
+def normalize_rif(value):
+    return re.sub(r'[-.\s]', '', value or '').upper()
+
+
+def is_valid_rif_format(value):
+    return bool(RIF_FORMAT_PATTERN.fullmatch((value or '').strip().upper()))
+
+
+def get_rif_search_values(value):
+    normalized_rif = normalize_rif(value)
+    if not normalized_rif:
+        return []
+
+    search_values = {value, normalized_rif}
+    match = re.fullmatch(r'([VEJGC])(\d{7,8})(\d)', normalized_rif)
+    if match:
+        letter, number, digit = match.groups()
+        search_values.add(f'{letter}-{number}-{digit}')
+    return list(search_values)
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -112,6 +144,22 @@ class ResPartner(models.Model):
                 else:
                     return super().check_vat()
 
+    @api.model
+    def format_vat_ve(self, vat):
+        return (vat or '').strip().upper()
+
+    @api.model
+    def _build_vat_error_message(self, country_code, wrong_vat, record_label):
+        if country_code == 'VE' and is_valid_rif_format(wrong_vat):
+            return '\n' + _(
+                'El RIF [%(wrong_vat)s] para %(record_label)s no es válido. '
+                'El formato es correcto, pero el dígito verificador no coincide. '
+                'Revise que la letra, el número y el último dígito del RIF sean correctos.',
+                wrong_vat=wrong_vat,
+                record_label=record_label,
+            )
+        return super()._build_vat_error_message(country_code, wrong_vat, record_label)
+
             
     @api.depends('company_type')
     def compute_value_parent_id(self):
@@ -163,16 +211,13 @@ class ResPartner(models.Model):
     @staticmethod
     def validate_rif_er(str_rif):
         if str_rif:
-            patron = r'^[VEJGC]-\d{7,8}-\d$'
-            # Validar la cadena
-            if re.match(patron, str_rif):
+            if is_valid_rif_format(str_rif):
                 return True
-            else:
-                raise UserError('El rif tiene el formato incorrecto. Ej: V-01234567-8, E-01234567-8, J-01234567-8 o G-01234567-8. Por favor verifique el formato y si posee los 12 caracteres como se indica en el Ej. e intente de nuevo')
+            raise UserError(RIF_FORMAT_ERROR)
 
     def validate_rif_duplicate(self, valor):
         if valor:
-            partner_dup = self.search([('vat', '=', valor), ('id', '!=', self.id), ('parent_id', '=', False)],limit=1)
+            partner_dup = self.search([('vat', 'in', get_rif_search_values(valor)), ('id', '!=', self.id), ('parent_id', '=', False)],limit=1)
             if partner_dup.vat:
                 raise UserError('El cliente o proveedor ya se encuentra registrado con el Documento: %s'
                     % (self.vat))
