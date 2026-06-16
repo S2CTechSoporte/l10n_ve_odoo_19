@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWar
 from datetime import date, timedelta, datetime
 from bs4 import BeautifulSoup
 import requests
+import re
 import urllib3
 urllib3.disable_warnings()
 class ResCurrency(models.Model):
@@ -103,16 +104,8 @@ class ResCurrency(models.Model):
         if status_code == 200:
 
             html = BeautifulSoup(req.text, "html.parser")
-            # Dolar
-            dolar = html.find('div', {'id': 'dolar'})
-            dolar = str(dolar.find('strong')).split()
-            dolar = str.replace(dolar[1], '.', '')
-            dolar = float(str.replace(dolar, ',', '.'))
-            # Euro
-            euro = html.find('div', {'id': 'euro'})
-            euro = str(euro.find('strong')).split()
-            euro = str.replace(euro[1], '.', '')
-            euro = float(str.replace(euro, ',', '.'))
+            dolar = self._extract_bcv_rate(html, 'dolar')
+            euro = self._extract_bcv_rate(html, 'euro')
 
             if self.name == 'USD':
                 bcv = dolar
@@ -124,6 +117,29 @@ class ResCurrency(models.Model):
             return bcv
         else:
             return False
+
+    def _extract_bcv_rate(self, html, currency_id):
+        container = html.find('div', {'id': currency_id})
+        if not container:
+            return False
+        strong_tag = container.find('strong')
+        if not strong_tag:
+            return False
+        return self._parse_localized_float(strong_tag.get_text(' ', strip=True))
+
+    @api.model
+    def _parse_localized_float(self, value):
+        if not value:
+            return False
+        match = re.search(r'(\d[\d\.,]*)', value)
+        if not match:
+            return False
+        normalized_value = match.group(1)
+        if ',' in normalized_value and '.' in normalized_value:
+            normalized_value = normalized_value.replace('.', '').replace(',', '.')
+        elif ',' in normalized_value:
+            normalized_value = normalized_value.replace(',', '.')
+        return float(normalized_value)
 
     def get_dolar_today_promedio(self):
         url = "https://s3.amazonaws.com/dolartoday/data.json"
