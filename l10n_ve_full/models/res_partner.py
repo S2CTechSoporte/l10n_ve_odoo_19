@@ -108,7 +108,9 @@ class ResPartner(models.Model):
     @api.constrains('rif')
     def _check_rif(self):
         for partner in self:
-            if (partner.company_type == 'company' and partner.people_type_company == 'pjdo') or (partner.company_type == 'individual' and partner.people_type_individual == 'pnre'):    
+            if not partner.rif or partner.country_id.code != 'VE':
+                continue
+            if (partner.company_type == 'company' and partner.people_type_company == 'pjdo') or (partner.company_type == 'individual' and partner.people_type_individual == 'pnre'):
                 partner.validate_rif_er(partner.rif)
                 partner.validate_rif_duplicate(partner.rif)
                    

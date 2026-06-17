@@ -5,6 +5,13 @@ from odoo.exceptions import UserError
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    @api.model
+    def _default_islr_concept_id(self):
+        return self.env.ref(
+            'l10n_ve_full.islr_wh_concept_no_apply_withholding',
+            raise_if_not_found=False,
+        )
+
     apply_wh = fields.Boolean(
         string='Withheld', default=False,
         help="Indicates whether a line has been retained or not, to"
@@ -12,7 +19,7 @@ class AccountMoveLine(models.Model):
              " to the lines that have not been retained.")
     concept_id = fields.Many2one('account.wh.islr.concept', 'Concepto de Islr', ondelete='cascade',
                                  help="concepto de retención de ingresos asociada a esta tasa",
-                                 default=lambda self: self.env.ref('l10n_ve_full.islr_wh_concept_no_apply_withholding'))
+                                 default=_default_islr_concept_id)
     state = fields.Selection([('draft', 'Borrador'),
                               ('open', 'Abierto'),
                               ('paid', 'Pagado'),

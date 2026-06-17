@@ -1,5 +1,6 @@
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase, tagged
+from unittest.mock import patch
 
 
 @tagged('post_install', '-at_install')
@@ -48,3 +49,16 @@ class TestRifVatValidation(TransactionCase):
         self.assertEqual(company.vat, 'J-87654321-3')
         self.assertEqual(company.rif, 'J-87654321-3')
         self.assertTrue(company.validate_vat_er('V151005809'))
+
+    def test_non_ve_company_vat_skips_ve_rif_constraint(self):
+        partner = self.env['res.partner'].new({
+            'name': 'Foreign Company',
+            'company_type': 'company',
+            'people_type_company': 'pjdo',
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+
+        with patch.object(type(partner), 'validate_rif_er', side_effect=AssertionError('validate_rif_er should not be called')):
+            with patch.object(type(partner), 'validate_rif_duplicate', side_effect=AssertionError('validate_rif_duplicate should not be called')):
+                partner._check_rif()
