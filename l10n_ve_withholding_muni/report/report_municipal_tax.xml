@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="paperformat_l10n_ve_withholding_muni" model="report.paperformat">
+        <field name="name">Voucher of Municipal Withholding</field>
+        <field name="orientation">Landscape</field>
+        <field name="header_line" eval="False"/>
+    </record>
+
+    <record id="action_report_l10n_ve_withholding_muni" model="ir.actions.report">
+        <field name="name">Voucher of Municipal Withholding</field>
+        <field name="model">municipality.tax</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni</field>
+        <field name="report_file">l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni</field>
+        <field name="paperformat_id" ref="l10n_ve_withholding_muni.paperformat_l10n_ve_withholding_muni"/>
+        <field name="binding_model_id" ref="model_municipality_tax"/>
+        <field name="binding_type">report</field>
+    </record>
+
     <template id="template_wh_l10n_ve_withholding_muni">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
@@ -317,26 +334,6 @@
 
 
 
-
-
-<!-- Paper format -->
-    <record id="paperformat_l10n_ve_withholding_muni" model="report.paperformat">
-        <field name="name">Voucher of Municipal Withholding</field>
-        <field name="orientation">Landscape</field>
-        <field name="header_line" eval="False"/>
-    </record>
-
-
-<!-- Report action -->
-    <report
-        id="action_report_l10n_ve_withholding_muni"
-        string="Voucher of Municipal Withholding"
-        model="municipality.tax"
-        report_type="qweb-pdf"
-        name="l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni"
-        file="l10n_ve_withholding_muni.template_wh_l10n_ve_withholding_muni"
-        paperformat="l10n_ve_withholding_muni.paperformat_l10n_ve_withholding_muni"
-    />
 
 
 </odoo>

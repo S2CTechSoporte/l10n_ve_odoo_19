@@ -35,6 +35,9 @@
             # 'views/res_company_views.xml',
             'views/res_config_settings.xml'
             ],
+        'demo': [
+            'demo/municipality_tax_demo.xml',
+        ],
         'installable': True,
         'application': True,
         'auto_install': False,

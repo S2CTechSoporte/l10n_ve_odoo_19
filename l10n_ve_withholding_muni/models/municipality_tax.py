@@ -82,35 +82,19 @@ class MunicipalityTaxLine(models.Model):
 
     @api.depends('base_tax', 'aliquot')
     def _compute_wh_amount(self):
-        # for line in self.act_code_ids:
-        # if self.base_tax and self.aliquot:
-        withheld_amount=0
-        cont = 0
-        amount=0
-        for item in self:
-            cont = cont + 1
-            if self[0].boleano_tal == True:
-                return
-            else:
-
-                retention = ((item.base_tax * item.aliquot) / 100)
-                item.wh_amount = retention
-                muni_tax = self.env['municipality.tax'].browse(item.l10n_ve_withholding_muni_id.id)
-                # withheld_amount = item.base_tax
-                # amount = amount+retention
-
-                withheld_amount = withheld_amount + item.base_tax  # correccion darrell se transformo en acumulador
-                amount = amount + item.wh_amount
-                # correccion darrell se transformo en acumulador
-                # if self[0].l10n_ve_withholding_muni_id:
-        self[0].l10n_ve_withholding_muni_id.write({'withheld_amount': withheld_amount, 'amount': amount})
-        self[0].boleano_tal = True
-            # muni_tax.write({'withheld_amount': withheld_amount, 'amount': retention})
+        for line in self:
+            line.wh_amount = ((line.base_tax or 0.0) * (line.aliquot or 0.0)) / 100
 
 
 class MUnicipalityTax(models.Model):
     _name = 'municipality.tax'
     _description = 'municipality.tax'
+
+    @api.depends('act_code_ids.base_tax', 'act_code_ids.wh_amount')
+    def _compute_totals(self):
+        for record in self:
+            record.withheld_amount = sum(record.act_code_ids.mapped('base_tax'))
+            record.amount = sum(record.act_code_ids.mapped('wh_amount'))
 
     def doc_cedula(self,aux):
         #nro_doc=self.partner_id.vat
@@ -148,9 +132,7 @@ class MUnicipalityTax(models.Model):
     @api.model
     def _type(self):
         """Return invoice type."""
-        origin = self._context.get('type') 
-        if self._context.get('type'):
-            return self._context.get('type')
+        return self.env.context.get('type') or self.env.context.get('default_type')
 
     wh_muni_id = fields.Many2one('account.move', string='Asiento Contable', readonly=True, copy=False)
     name = fields.Char(string='Voucher number', default='New')
@@ -176,8 +158,8 @@ class MUnicipalityTax(models.Model):
     state_id = fields.Many2one('res.country.state', string='State')
     municipality_id = fields.Many2one('res.country.state.municipality', string='Municipality')
     invoice_id = fields.Many2one('account.move', string='Invoice')
-    amount = fields.Float(string='Amount')
-    withheld_amount = fields.Float(string='Withheld Amount')
+    amount = fields.Float(compute='_compute_totals', store=True, string='Amount')
+    withheld_amount = fields.Float(compute='_compute_totals', store=True, string='Withheld Amount')
     type = fields.Selection(selection=[
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice','Supplier Invoince'),
@@ -294,20 +276,23 @@ class MUnicipalityTax(models.Model):
 
 
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') != 'New':
+                continue
 
-            if vals['type']=="in_invoice" or vals['type']=="in_refund" or vals['type']=="in_receipt":
-                    vals['name'] = self.get_name() #self.env['ir.sequence'].next_by_code('l10n_ve_cuenta_retencion_municipal') or '/'
-                    invoice = self.env['account.move'].search([('id','=',vals['invoice_id'])])
-                    if invoice.date.month not in [10,11,12]:
-                        month = '0'+str(invoice.date.month)
-                    else:
-                        month = invoice.date.month
-                    vals['name'] = str(invoice.date.year) + str(month) + str(vals['name'])
+            company = self.env['res.company'].browse(vals.get('company_id')).exists() or self.env.company
+            move_type = vals.get('type')
+            invoice = self.env['account.move'].browse(vals.get('invoice_id')).exists()
+            sequence = self.with_company(company).get_name()
 
-        return super().create(vals)
+            if move_type in {'in_invoice', 'in_refund', 'in_receipt'} and invoice and invoice.date:
+                vals['name'] = f"{invoice.date.year}{invoice.date.month:02d}{sequence}"
+            else:
+                vals['name'] = sequence
+
+        return super().create(vals_list)
 
 
     def conv_div_extranjera(self,valor):

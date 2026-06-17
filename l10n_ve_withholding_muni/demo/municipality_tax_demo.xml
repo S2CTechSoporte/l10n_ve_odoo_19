@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="partner_demo_municipal_supplier" model="res.partner">
+        <field name="name">Demo Municipal Supplier</field>
+        <field name="company_type">company</field>
+        <field name="vat">J-87654321-3</field>
+        <field name="email">municipal.demo@example.com</field>
+        <field name="street">Av. Principal Zona Industrial</field>
+        <field name="city">Machiques</field>
+    </record>
+
+    <record id="municipality_tax_demo_voucher" model="municipality.tax">
+        <field name="name">DEMO-MUNI-0001</field>
+        <field name="partner_id" ref="l10n_ve_withholding_muni.partner_demo_municipal_supplier"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="transaction_date">2026-06-17</field>
+        <field name="date_start" ref="l10n_ve_withholding_muni.month6"/>
+        <field name="date_end" ref="l10n_ve_withholding_muni.year27"/>
+        <field name="rif">J-87654321-3</field>
+        <field name="act_code_ids" eval="[
+            (0, 0, {
+                'wh_concept_id': ref('l10n_ve_withholding_muni.concept2'),
+                'code': '1.02.001',
+                'aliquot': 1.0,
+                'base_tax': 1500.0,
+                'invoice_number': 'DEMO-INV-001',
+                'invoice_ctrl_number': 'DEMO-CTRL-001',
+            }),
+            (0, 0, {
+                'wh_concept_id': ref('l10n_ve_withholding_muni.concept3'),
+                'code': '2.02.001',
+                'aliquot': 1.0,
+                'base_tax': 500.0,
+                'invoice_number': 'DEMO-INV-002',
+                'invoice_ctrl_number': 'DEMO-CTRL-002',
+            }),
+        ]"/>
+    </record>
+</odoo>
