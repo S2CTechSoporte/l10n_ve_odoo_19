@@ -45,7 +45,7 @@ class TestPartnerSaleRisk(TransactionCase):
                             "name": cls.product.name,
                             "product_id": cls.product.id,
                             "product_uom_qty": 1,
-                            "product_uom": cls.product.uom_id.id,
+                            "product_uom_id": cls.product.uom_id.id,
                             "price_unit": 100.0,
                             "company_id": company.id,
                         },
