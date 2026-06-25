@@ -2,6 +2,7 @@
 
 import {Component, useState} from "@odoo/owl";
 import {Dropdown} from "@web/core/dropdown/dropdown";
+import {useDropdownState} from "@web/core/dropdown/dropdown_hooks";
 import {DropdownItem} from "@web/core/dropdown/dropdown_item";
 import {registry} from "@web/core/registry";
 import {useDiscussSystray} from "@mail/utils/common/hooks";
@@ -15,6 +16,7 @@ export class TierReviewMenu extends Component {
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
         this.action = useService("action");
+        this.dropdown = useDropdownState();
         this.fetchSystrayReviewer();
     }
     async fetchSystrayReviewer() {
@@ -38,8 +40,7 @@ export class TierReviewMenu extends Component {
         ];
     }
     openReviewGroup(group) {
-        document.body.click();
-        // Hack to close dropdown
+        this.dropdown.close();
         const context = {};
         var domain = [["can_review", "=", true]];
         if (group.active_field) {

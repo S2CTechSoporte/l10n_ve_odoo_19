@@ -32,5 +32,10 @@
             "/base_tier_validation/static/src/components/tier_review_widget/tier_review_widget.xml",
             "/base_tier_validation/static/src/js/services/tier_review_service.esm.js",
         ],
+        "web.assets_unit_tests": [
+            "/base_tier_validation/static/src/components/tier_review_menu/tier_review_menu.esm.js",
+            "/base_tier_validation/static/src/components/tier_review_menu/tier_review_menu.xml",
+            "/base_tier_validation/static/tests/tier_review_menu.test.js",
+        ],
     },
 }
