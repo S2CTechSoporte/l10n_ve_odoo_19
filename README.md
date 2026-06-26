@@ -18,6 +18,7 @@ Lista de módulos a Instalar de forma Standard para la localización
 - account_financial_risk
 - sale_financial_risk
 - sale_financial_risk_info
+- s2c_financial_risk_overdue
 
 ## Aprobaciones
 - sale_tier_validation
