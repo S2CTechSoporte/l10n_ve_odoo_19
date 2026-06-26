@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_partner_view_risk_overdue" model="ir.ui.view">
+        <field name="name">res.partner.view.risk.overdue</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account_financial_risk.res_partner_view_risk" />
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='risk_remaining_percentage']" position="before">
+                <field
+                    name="risk_account_overdue_invoices"
+                    readonly="not risk_allow_edit"
+                />
+                <button
+                    name="open_risk_pivot_info"
+                    type="object"
+                    class="btn-link"
+                    context="{'open_risk_field': 'risk_amount_overdue_invoices'}"
+                >
+                    <field
+                        name="risk_amount_overdue_invoices"
+                        nolabel="1"
+                        widget="monetary"
+                        options="{'currency_field': 'risk_currency_id'}"
+                    />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

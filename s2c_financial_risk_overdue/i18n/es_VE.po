@@ -1,0 +1,39 @@
+# Translation of Odoo Server.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"POT-Creation-Date: 2026-06-26 00:00+0000\n"
+"PO-Revision-Date: 2026-06-26 00:00+0000\n"
+"Language: es_VE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: s2c_financial_risk_overdue
+#: model:ir.model.fields,field_description:s2c_financial_risk_overdue.field_res_partner__risk_account_overdue_invoices
+#: model:ir.model.fields,field_description:s2c_financial_risk_overdue.field_res_users__risk_account_overdue_invoices
+msgid "Block Sales With Overdue Invoices"
+msgstr "Bloquear ventas con facturas vencidas"
+
+#. module: s2c_financial_risk_overdue
+#: model:ir.model.fields,help:s2c_financial_risk_overdue.field_res_partner__risk_account_overdue_invoices
+#: model:ir.model.fields,help:s2c_financial_risk_overdue.field_res_users__risk_account_overdue_invoices
+msgid "If enabled, sale orders are blocked when the customer has overdue customer invoices with pending balance."
+msgstr "Si está habilitado, los pedidos de venta se bloquean cuando el cliente tiene facturas vencidas con saldo pendiente."
+
+#. module: s2c_financial_risk_overdue
+#: model:ir.model.fields,field_description:s2c_financial_risk_overdue.field_res_partner__risk_amount_overdue_invoices
+#: model:ir.model.fields,field_description:s2c_financial_risk_overdue.field_res_users__risk_amount_overdue_invoices
+msgid "Overdue Customer Invoices"
+msgstr "Facturas de cliente vencidas"
+
+#. module: s2c_financial_risk_overdue
+#: model:ir.model.fields,help:s2c_financial_risk_overdue.field_res_partner__risk_amount_overdue_invoices
+#: model:ir.model.fields,help:s2c_financial_risk_overdue.field_res_users__risk_amount_overdue_invoices
+msgid "Pending balance of overdue customer invoices."
+msgstr "Saldo pendiente de las facturas de cliente vencidas."
+
+#. module: s2c_financial_risk_overdue
+msgid "This customer has overdue invoices.\n"
+msgstr "Este cliente tiene facturas vencidas.\n"
