@@ -131,32 +131,6 @@ class AccountPaymentInnerit(models.Model):
                 return idem
         return idem
 
-
-    # def get_name_itf(self):
-    #     '''metodo que crea el name del asiento contable si la secuencia no esta creada crea una con el
-    #     nombre: 'l10n_account_withholding_itf'''
-    #
-    #     self.ensure_one()
-    #     SEQUENCE_CODE = 'account.itf'
-    #     company_id = self._get_company()
-    #     IrSequence = self.env['ir.sequence'].with_company(company_id)
-    #     name = IrSequence.next_by_code(SEQUENCE_CODE)
-    #     return name
-
-
-    # def cancel(self):
-    #     """Calcela el movimiento contable si se cancela el pago de las facturas"""
-    #     res = super(AccountPaymentInnerit, self).cancel()
-    #     date = fields.Datetime.now()
-    #     for pago in self:
-    #         if pago.state == 'cancelled':
-    #             for move in pago.move_itf_id:
-    #                 move_reverse = move._reverse_moves([{'date': date, 'ref': _('Reversal of %s') % move.name}],
-    #                                cancel=True)
-    #                 if len(move_reverse) == 0:
-    #                     raise UserError(_('No se reversaron los asientos asociados'))
-    #     return res
-
     def action_draft(self):
         ''' posted -> draft '''
         res = super().action_draft()
@@ -169,41 +143,19 @@ class AccountPaymentInnerit(models.Model):
         if self.move_itf_id:
             self.move_itf_id.button_cancel()
     
-    @api.constrains('payment_reference')
-    def validation_constrains_ref(self):
+    @api.constrains('memo')
+    def validation_constrains_memo(self):
         for record in self:
-            if record.payment_reference:
-                self.validation_ref(company_id=record.company_id.id, ref=record.payment_reference, id=record.id )
+            if record.memo:
+                self.validation_memo(company_id=record.company_id.id, memo=record.memo, id=record.id )
            
-    def validation_ref(self, company_id=None, ref=None, id=None):
-        domain = [('company_id','=',company_id),('payment_reference','=',ref)]
-        if ref:
+    def validation_memo(self, company_id=None, memo=None, id=None):
+        domain = [('company_id','=',company_id),('memo','=',memo)]
+        if memo:
             if id:
                 domain.append(('id','!=',id))
             
             payments = self.env['account.payment'].search(domain=domain,limit=1)
             if payments:
                 for payment in payments:
-                    raise UserError(f'La referencia bancaria {ref} ya está registrada en el pago {payment.name} para el cliente {payment.partner_id.name}')
-
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            # company_id=self.env.company.id
-            # ref=None
-            # if 'ref' in vals:
-            #     ref = vals['ref']
-
-            # if 'company_id' in vals:
-            #     company_id = vals['company_id'] 
-            if 'ref' in vals and 'payment_reference' not in vals:
-                vals['payment_reference'] = vals.pop('ref')
-            elif 'ref' in vals and 'payment_reference' in vals:
-                vals.pop('ref')
-            if 'payment_reference' in vals and 'company_id' in vals:
-                company_id = vals['company_id']
-                ref = vals['payment_reference']
-                self.validation_ref(company_id, ref)
-                
-        return super().create(vals_list)       
+                    raise UserError(f'La referencia bancaria {memo} ya está registrada en el pago {payment.name} para el cliente {payment.partner_id.name}')
