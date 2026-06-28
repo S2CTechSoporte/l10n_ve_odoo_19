@@ -28,7 +28,7 @@
         <record id="wizard_invoice_nro_control_action" model="ir.actions.act_window">
             <field name="name">Create null paper</field>
             <field name="res_model">wizard.invoice.nro.ctrl</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="view_id" ref="view_wizard_invoice_nro_ctrl"/>
             <field name="target">new</field>
             <field name="context">{'menu': True}</field>
