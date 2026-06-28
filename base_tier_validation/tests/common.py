@@ -64,7 +64,7 @@ class CommonTierValidation(common.TransactionCase):
                 "name": "John",
                 "login": "test1",
                 "email": "john@yourcompany.example.com",
-                "groups_id": [(6, 0, group_ids)],
+                "group_ids": [(6, 0, group_ids)],
             }
         )
         cls.test_user_2 = cls.env["res.users"].create(

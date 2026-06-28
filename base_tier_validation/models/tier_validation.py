@@ -230,7 +230,7 @@ class TierValidation(models.AbstractModel):
 
     def _compute_need_validation(self):
         for rec in self:
-            if isinstance(rec.id, models.NewId):
+            if isinstance(rec.id, api.NewId):
                 rec.need_validation = False
                 continue
             tiers = self.env["tier.definition"].search(

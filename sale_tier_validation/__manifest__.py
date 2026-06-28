@@ -12,5 +12,6 @@
     "application": False,
     "installable": True,
     "depends": ["sale", "base_tier_validation"],
+    "demo": ["demo/sale_tier_validation_demo.xml"],
     "data": ["data/mail_data.xml", "views/sale_order_view.xml"],
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="user_sale_tier_validation_demo_reviewer" model="res.users">
+        <field name="name">Sale Tier Demo Reviewer</field>
+        <field name="login">sale_tier_validation_demo_reviewer</field>
+        <field name="email">sale-tier-demo@example.com</field>
+        <field
+            name="group_ids"
+            eval="[(6, 0, [ref('base.group_user'), ref('sales_team.group_sale_manager')])]"
+        />
+    </record>
+
+    <record id="partner_sale_tier_validation_demo_customer" model="res.partner">
+        <field name="name">Sale Tier Demo Customer</field>
+        <field name="email">sale-tier-customer@example.com</field>
+        <field name="company_type">company</field>
+        <field name="people_type_company">pjnd</field>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <record id="product_sale_tier_validation_demo" model="product.product">
+        <field name="name">Sale Tier Demo Product</field>
+        <field name="list_price">125.0</field>
+    </record>
+
+    <record id="tier_definition_sale_tier_validation_demo" model="tier.definition">
+        <field name="name">Sale Tier Demo Approval</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="review_type">individual</field>
+        <field name="reviewer_id" ref="user_sale_tier_validation_demo_reviewer" />
+        <field name="definition_domain">[('amount_untaxed', '&gt;', 50.0)]</field>
+    </record>
+
+    <record id="sale_order_tier_validation_demo_order" model="sale.order">
+        <field name="partner_id" ref="partner_sale_tier_validation_demo_customer" />
+        <field
+            name="order_line"
+            eval="[(0, 0, {
+                'name': 'Sale Tier Demo Line',
+                'product_id': ref('product_sale_tier_validation_demo'),
+                'product_uom_qty': 1.0,
+                'product_uom_id': ref('uom.product_uom_unit'),
+                'price_unit': 125.0,
+            })]"
+        />
+    </record>
+</odoo>

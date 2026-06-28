@@ -25,6 +25,11 @@ class TierTierValidation(CommonTierValidation):
         with self.assertRaises(ValidationError):
             self.test_record.with_user(self.test_user_2.id).action_confirm()
 
+    def test_02_need_validation_is_false_for_new_records(self):
+        """Unsaved records should not try to inspect legacy NewId accessors."""
+        record = self.test_model.new({"test_field": 1.0})
+        self.assertFalse(record.need_validation)
+
     def test_03_request_validation_approved(self):
         """User 2 request a validation and user 1 approves it."""
         self.assertFalse(self.test_record.review_ids)
@@ -593,7 +598,7 @@ class TierTierValidation(CommonTierValidation):
     def test_22_notify_on_accepted(self):
         self.test_user_2.write(
             {
-                "groups_id": [(6, 0, self.env.ref("base.group_system").ids)],
+                "group_ids": [(6, 0, self.env.ref("base.group_system").ids)],
             }
         )
 
@@ -648,7 +653,7 @@ class TierTierValidation(CommonTierValidation):
     def test_23_notify_on_rejected(self):
         self.test_user_2.write(
             {
-                "groups_id": [(6, 0, self.env.ref("base.group_system").ids)],
+                "group_ids": [(6, 0, self.env.ref("base.group_system").ids)],
             }
         )
 
@@ -704,7 +709,7 @@ class TierTierValidation(CommonTierValidation):
     def test_24_notify_on_restarted(self):
         self.test_user_2.write(
             {
-                "groups_id": [(6, 0, self.env.ref("base.group_system").ids)],
+                "group_ids": [(6, 0, self.env.ref("base.group_system").ids)],
             }
         )
 
@@ -758,7 +763,7 @@ class TierTierValidation(CommonTierValidation):
     def test_25_all_notification(self):
         self.test_user_2.write(
             {
-                "groups_id": [(6, 0, self.env.ref("base.group_system").ids)],
+                "group_ids": [(6, 0, self.env.ref("base.group_system").ids)],
             }
         )
 
@@ -839,7 +844,7 @@ class TierTierValidation(CommonTierValidation):
     def test_26_no_notification(self):
         self.test_user_2.write(
             {
-                "groups_id": [(6, 0, self.env.ref("base.group_system").ids)],
+                "group_ids": [(6, 0, self.env.ref("base.group_system").ids)],
             }
         )
 

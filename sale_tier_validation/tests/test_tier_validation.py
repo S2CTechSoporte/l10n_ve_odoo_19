@@ -24,7 +24,7 @@ class TestSaleTierValidation(common.TransactionCase):
             {
                 "name": "John",
                 "login": "test1",
-                "groups_id": [(6, 0, group_ids)],
+                "group_ids": [(6, 0, group_ids)],
                 "email": "test@examlple.com",
             }
         )
@@ -39,7 +39,13 @@ class TestSaleTierValidation(common.TransactionCase):
                 "definition_domain": "[('amount_untaxed', '>', 50.0)]",
             }
         )
-        cls.customer = cls.env["res.partner"].create({"name": "Partner for test"})
+        cls.customer = cls.env["res.partner"].create(
+            {
+                "name": "Partner for test",
+                "company_type": "company",
+                "people_type_company": "pjnd",
+            }
+        )
         cls.product = cls.env["product.product"].create(
             {"name": "Product for test", "list_price": 120.00}
         )
@@ -61,7 +67,7 @@ class TestSaleTierValidation(common.TransactionCase):
                             "name": "Test line",
                             "product_id": self.product.id,
                             "product_uom_qty": 1,
-                            "product_uom": self.product.uom_id.id,
+                            "product_uom_id": self.product.uom_id.id,
                             "price_unit": self.product.list_price,
                         },
                     )
