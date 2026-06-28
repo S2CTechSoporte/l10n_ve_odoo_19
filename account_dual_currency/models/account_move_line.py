@@ -13,15 +13,14 @@ class AccountMoveLine(models.Model):
         store=True, 
         currency_field='fcurrency_id',
         compute="_compute_debit_credit", 
-        readonly=False, digits=(12,4))
+        readonly=False)
 
     credit_fcurrency = fields.Monetary(
         string='Crédito ¤', 
         store=True,
         currency_field='fcurrency_id',
         compute="_compute_debit_credit", 
-        readonly=False, 
-        digits=(12,4))
+        readonly=False)
     
     price_unit_fcurrency = fields.Monetary(
         currency_field='fcurrency_id', 
