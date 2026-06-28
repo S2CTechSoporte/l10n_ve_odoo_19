@@ -5,44 +5,62 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 from odoo.tests import TransactionCase
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
 
+@tagged("post_install", "-at_install")
 class TestPartnerFinancialRisk(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         (cls.env.ref("base.USD") | cls.env.ref("base.EUR")).active = True
-        cls.env.user.groups_id |= cls.env.ref("account.group_account_manager")
-        cls.env.user.groups_id |= cls.env.ref(
-            "account_financial_risk.group_account_financial_risk_manager"
+        cls.env.user.write(
+            {
+                "group_ids": [
+                    (4, cls.env.ref("account.group_account_manager").id),
+                    (
+                        4,
+                        cls.env.ref(
+                            "account_financial_risk.group_account_financial_risk_manager"
+                        ).id,
+                    ),
+                ]
+            }
         )
         main_company = cls.env.ref("base.main_company")
         cls.cr.execute(
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
             [cls.env.ref("base.USD").id, main_company.id],
         )
-        cls.account_sale = cls.env["account.account"].create(
+        account_model = cls.env["account.account"]
+        account_common_vals = {}
+        if "create_asset" in account_model._fields:
+            account_common_vals["create_asset"] = "no"
+        cls.account_sale = account_model.create(
             {
+                **account_common_vals,
                 "name": "Sale",
                 "code": "XX700",
                 "account_type": "income_other",
                 "reconcile": True,
             }
         )
-        cls.account_customer = cls.env["account.account"].create(
+        cls.account_customer = account_model.create(
             {
+                **account_common_vals,
                 "name": "Customer",
                 "code": "XX430",
                 "account_type": "asset_receivable",
                 "reconcile": True,
             }
         )
-        cls.other_account_customer = cls.env["account.account"].create(
+        cls.other_account_customer = account_model.create(
             {
+                **account_common_vals,
                 "name": "Other Account Customer",
                 "code": "XX431",
                 "account_type": "asset_receivable",
@@ -54,7 +72,7 @@ class TestPartnerFinancialRisk(TransactionCase):
                 "name": "Partner test",
                 "customer_rank": 1,
                 "property_account_receivable_id": cls.account_customer.id,
-                "company_id": cls.account_customer.company_id.id,
+                "company_id": cls.env.company.id,
             }
         )
         cls.invoice_address = cls.env["res.partner"].create(
