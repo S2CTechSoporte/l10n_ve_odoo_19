@@ -2,8 +2,11 @@
 # Copyright (c) 2022 brain-tec AG (https://braintec.com)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
+import warnings
+
 from lxml import etree
 
+from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.tests import Form
 from odoo.tests.common import tagged
@@ -426,10 +429,45 @@ class TierTierValidation(CommonTierValidation):
         # False Review
         self.assertFalse(self.test_record._calc_reviews_validated(False))
         # test notification message bodies
-        self.assertIn("created", self.test_record._notify_created_review_body())
-        self.assertIn("requested", self.test_record._notify_requested_review_body())
-        self.assertIn("rejected", self.test_record._notify_rejected_review_body())
-        self.assertIn("accepted", self.test_record._notify_accepted_reviews_body())
+        self.assertEqual(
+            self.test_record._notify_created_review_body(),
+            _("A record to be reviewed has been created by %s.")
+            % self.env.user.name,
+        )
+        self.assertEqual(
+            self.test_record._notify_requested_review_body(),
+            _("A review has been requested by %s.") % self.env.user.name,
+        )
+        self.assertEqual(
+            self.test_record._notify_rejected_review_body(),
+            _("A review was rejected by %s.") % self.env.user.name,
+        )
+        self.assertEqual(
+            self.test_record._notify_accepted_reviews_body(),
+            _("A review was accepted"),
+        )
+
+    def test_15_review_user_count_without_read_group_warning(self):
+        test_record = self.test_model.create({"test_field": 2.5})
+        self.tier_def_obj.create(
+            {
+                "model_id": self.tester_model.id,
+                "review_type": "individual",
+                "reviewer_id": self.test_user_1.id,
+                "definition_domain": "[('test_field', '>', 1.0)]",
+            }
+        )
+        review = test_record.with_user(self.test_user_2).request_validation()
+        self.assertTrue(review)
+        self.assertTrue(self.test_user_1.get_reviews({"res_ids": review.ids}))
+        self.assertTrue(self.test_user_1.review_ids)
+        test_record.invalidate_model()
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DeprecationWarning)
+            count = self.test_user_1.with_user(self.test_user_1).review_user_count()
+
+        self.assertEqual(len(count), 1)
 
     def test_16_review_user_count_on_rejected(self):
         """If document is rejected, it should always removed from tray"""

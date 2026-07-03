@@ -17,10 +17,15 @@ class Users(models.Model):
             ("can_review", "=", True),
             ("id", "in", self.env.user.review_ids.ids),
         ]
-        review_groups = self.env["tier.review"].read_group(domain, ["model"], ["model"])
-        for review_group in review_groups:
-            model = review_group["model"]
-            reviews = self.env["tier.review"].search(review_group.get("__domain"))
+        review_groups = {}
+        ordered_models = []
+        for review in self.env["tier.review"].search(domain):
+            if review.model not in review_groups:
+                review_groups[review.model] = self.env["tier.review"]
+                ordered_models.append(review.model)
+            review_groups[review.model] |= review
+        for model in ordered_models:
+            reviews = review_groups[model]
             if reviews:
                 records = (
                     self.env[model]

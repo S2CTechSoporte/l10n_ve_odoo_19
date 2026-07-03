@@ -27,7 +27,6 @@ class TierValidation(models.AbstractModel):
         inverse_name="res_id",
         string="Validations",
         domain=lambda self: [("model", "=", self._name)],
-        auto_join=True,
     )
     to_validate_message = fields.Html(compute="_compute_validated_rejected")
     # TODO: Delete in v17 in favor of validation_status field
@@ -592,10 +591,10 @@ class TierValidation(models.AbstractModel):
     @api.model
     def _update_counter(self, review_counter):
         self.review_ids._compute_can_review()
-        notifications = []
         channel = "base.tier.validation/updated"
-        notifications.append([self.env.user.partner_id, channel, review_counter])
-        self.env["bus.bus"]._sendmany(notifications)
+        self.env["bus.bus"]._sendone(
+            self.env.user.partner_id, channel, review_counter
+        )
 
     def unlink(self):
         self.mapped("review_ids").unlink()

@@ -1,7 +1,49 @@
 # Copyright 2018-19 ForgeFlow S.L. (https://www.forgeflow.com)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
+from odoo import models
+
+if not hasattr(models.MetaModel, "module_to_models") and hasattr(
+    models.MetaModel, "_module_to_models__"
+):
+    models.MetaModel.module_to_models = models.MetaModel._module_to_models__
+
 from odoo_test_helper import FakeModelLoader
+from unittest import mock
+
+
+if hasattr(models.MetaModel, "_module_to_models__"):
+
+    class FakePackage:
+        def __init__(self, name):
+            self.name = name
+
+
+    def _update_registry_odoo_19(self, odoo_models):
+        if hasattr(self.env, "flush_all"):
+            self.env.flush_all()
+        elif hasattr(self.env.all, "tocompute"):
+            to_recompute_models = set()
+            for field, _vals in self.env.all.tocompute.items():
+                to_recompute_models.add(field.model_name)
+            for model in to_recompute_models:
+                self.env[model].recompute()
+
+        self._clean_module_to_model()
+        module_to_models = models.MetaModel._module_to_models__
+        for model in odoo_models:
+            if model not in module_to_models[self._module_name]:
+                module_to_models[self._module_name].append(model)
+
+        with mock.patch.object(self.env.cr, "commit"):
+            model_names = self.env.registry.load(FakePackage(self._module_name))
+            self.env.registry._setup_models__(self.env.cr, model_names)
+            self.env.registry.init_models(
+                self.env.cr, model_names, {"module": self._module_name}
+            )
+
+
+    FakeModelLoader.update_registry = _update_registry_odoo_19
 
 from odoo.tests import common
 
