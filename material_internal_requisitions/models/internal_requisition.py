@@ -496,7 +496,7 @@ class InternalRequisition(models.Model):
                     'product_uom' : line.uom.id,
                     'location_id' : rec.location.id,
                     'location_dest_id' : rec.request_emp.desti_loca_id.id,
-                    'name' : line.description,
+                    'description_picking' : line.description,
                     'picking_id' : stock_id.id,
                     'company_id' : line.requisition_id.company_id.id,
                 }

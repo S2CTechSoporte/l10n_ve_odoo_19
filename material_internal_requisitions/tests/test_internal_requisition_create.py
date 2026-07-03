@@ -9,6 +9,20 @@ class TestInternalRequisitionCreate(TransactionCase):
         super().setUp()
         Employee = self.env['hr.employee'].sudo()
         self.employee = Employee.search([('user_id', '=', self.env.user.id)], limit=1)
+        self.source_location = self.env.ref('stock.stock_location_stock')
+        self.destination_location = self.env['stock.location'].sudo().create({
+            'name': 'Test Requisition Destination',
+            'location_id': self.source_location.id,
+            'usage': 'internal',
+        })
+        self.picking_type = self.env['stock.picking.type'].sudo().search([
+            ('code', '=', 'internal'),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        self.product = self.env['product.product'].sudo().create({
+            'name': 'Test Requisition Product',
+            'type': 'consu',
+        })
 
         if not self.employee:
             self.department = self.env['hr.department'].sudo().create({'name': 'Test Department'})
@@ -27,6 +41,8 @@ class TestInternalRequisitionCreate(TransactionCase):
         if not self.employee.work_email:
             self.employee.work_email = 'employee@example.com'
 
+        self.employee.desti_loca_id = self.destination_location.id
+
         self.manager = Employee.create({
             'name': 'Test Manager',
             'work_email': 'manager@example.com',
@@ -34,6 +50,36 @@ class TestInternalRequisitionCreate(TransactionCase):
         })
         if hasattr(self.department, 'manager_id'):
             self.department.manager_id = self.manager.id
+
+    def test_request_stock_uses_description_picking_on_moves(self):
+        Requisition = self.env['internal.requisition'].sudo()
+
+        requisition = Requisition.create({
+            'request_emp': self.employee.id,
+            'department_id': self.department.id,
+            'company_id': self.env.company.id,
+            'location': self.source_location.id,
+            'desti_loca_id': self.destination_location.id,
+            'custom_picking_type_id': self.picking_type.id,
+            'requisition_line_ids': [
+                (0, 0, {
+                    'product_id': self.product.id,
+                    'description': 'Custom move description',
+                    'qty': 2.0,
+                    'uom': self.product.uom_id.id,
+                }),
+            ],
+        })
+
+        requisition.request_stock()
+
+        self.assertEqual(requisition.state, 'stock')
+        self.assertTrue(requisition.delivery_picking_id)
+
+        move = requisition.delivery_picking_id.move_ids
+        self.assertEqual(len(move), 1)
+        self.assertEqual(move.description_picking, 'Custom move description')
+        self.assertEqual(move.reference, requisition.delivery_picking_id.name)
 
     def test_create_multi_assigns_sequence_name(self):
         Requisition = self.env['internal.requisition'].sudo()
