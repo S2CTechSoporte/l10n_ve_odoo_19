@@ -621,6 +621,13 @@ class TierValidation(models.AbstractModel):
         new_node = etree.fromstring(str_element)
         return new_node
 
+    def _merge_view_models(self, all_models, new_models):
+        for model, field_names in new_models.items():
+            if model not in all_models:
+                all_models[model] = tuple(field_names)
+                continue
+            all_models[model] = tuple(set(all_models[model]) | set(field_names))
+
     @api.model
     def get_view(self, view_id=None, view_type="form", **options):
         res = super().get_view(view_id=view_id, view_type=view_type, **options)
@@ -639,6 +646,7 @@ class TierValidation(models.AbstractModel):
                 # _add_tier_validation_buttons process
                 new_node = self._add_tier_validation_buttons(node, params)
                 new_arch, new_models = View.postprocess_and_fields(new_node, self._name)
+                self._merge_view_models(all_models, new_models)
                 new_node = etree.fromstring(new_arch)
                 for new_element in new_node:
                     node.addnext(new_element)
@@ -646,19 +654,14 @@ class TierValidation(models.AbstractModel):
                 # _add_tier_validation_label process
                 new_node = self._add_tier_validation_label(node, params)
                 new_arch, new_models = View.postprocess_and_fields(new_node, self._name)
+                self._merge_view_models(all_models, new_models)
                 new_node = etree.fromstring(new_arch)
                 for new_element in new_node:
                     node.addprevious(new_element)
                 # _add_tier_validation_reviews process
                 new_node = self._add_tier_validation_reviews(node, params)
                 new_arch, new_models = View.postprocess_and_fields(new_node, self._name)
-                for model in new_models:
-                    if model in all_models:
-                        continue
-                    if model not in res["models"]:
-                        all_models[model] = new_models[model]
-                    else:
-                        all_models[model] = res["models"][model]
+                self._merge_view_models(all_models, new_models)
                 new_node = etree.fromstring(new_arch)
                 node.append(new_node)
             res["arch"] = etree.tostring(doc)

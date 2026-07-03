@@ -1011,6 +1011,8 @@ class TierTierValidationView(CommonTierValidation):
         with Form(self.test_record_2) as f:
             self.assertIn("review_ids", f._values)
             form = etree.fromstring(view["arch"])
+            self.assertIn("review_ids", view["models"][self.test_record_2._name])
+            self.assertIn("can_review", view["models"][self.test_record_2._name])
             self.assertTrue(form.xpath("//field[@name='review_ids']"))
             self.assertTrue(form.xpath("//field[@name='can_review']"))
             self.assertTrue(form.xpath("//button[@name='request_validation']"))
