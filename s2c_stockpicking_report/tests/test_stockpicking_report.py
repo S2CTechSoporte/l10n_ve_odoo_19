@@ -35,12 +35,38 @@ class TestS2CStockPickingReport(TransactionCase):
                 'country_id': country.id,
             })
 
+        identification_id = '12345678'
+        while cls.env['res.partner'].search_count([('identification_id', '=', identification_id)]):
+            identification_id = str(int(identification_id) + 1)
+
         cls.partner = cls.env['res.partner'].create({
             'name': 'Compañía Ñandú',
             'customer_rank': 1,
+            'company_type': 'person',
+            'country_id': country.id,
             'city': 'Caracas',
             'state_id': cls.state_merida.id,
+            'nationality': 'V',
+            'identification_id': identification_id,
         })
+
+        municipality_model = cls.env['res.country.state.municipality']
+        cls.municipality = municipality_model.search([
+            ('state_id', '=', cls.state_merida.id),
+            ('name', '=', 'Libertador'),
+        ], limit=1)
+        if not cls.municipality:
+            cls.municipality = municipality_model.create({
+                'state_id': cls.state_merida.id,
+                'name': 'Libertador',
+                'code': 'LIB',
+            })
+        cls.partner.municipality_id = cls.municipality
+
+        cls.pricelist = cls.env['product.pricelist'].search([
+            ('currency_id', '=', cls.env.company.currency_id.id),
+        ], limit=1)
+        cls.assertTrue(cls.pricelist, 'A sales pricelist is required for stock picking report tests')
 
         cls.product = cls.env['product.product'].create({
             'name': 'S2C Stock Picking Report Product',
@@ -49,6 +75,7 @@ class TestS2CStockPickingReport(TransactionCase):
             'uom_id': cls.uom_unit.id,
             'weight': 1.0,
             'volume': 1.0,
+            'list_price': 25.0,
         })
 
         cls.packaging = cls.env['product.packaging'].create({
@@ -75,7 +102,23 @@ class TestS2CStockPickingReport(TransactionCase):
         )
         return html.decode() if isinstance(html, bytes) else html
 
-    def _create_picking(self, with_lines=False, packages=None, origin='SO-001'):
+    def _create_sale_order(self, client_order_ref='INS-001', price_unit=25.0):
+        return self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'pricelist_id': self.pricelist.id,
+            'client_order_ref': client_order_ref,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'product_uom_qty': 2.0,
+                'price_unit': price_unit,
+                'name': self.product.name,
+            })],
+        })
+
+    def _create_picking(self, with_lines=False, packages=None, origin='SO-001', sale_order=False):
+        if sale_order and origin == 'SO-001':
+            origin = sale_order.name
+
         picking = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
             'origin': origin,
@@ -90,12 +133,16 @@ class TestS2CStockPickingReport(TransactionCase):
             'vehicle_type': 'Cargo',
         })
 
+        if sale_order and 'sale_id' in picking._fields:
+            picking.sale_id = sale_order
+
         if with_lines:
             package_records = packages or [self.package_1]
             total_quantity = self.packaging.qty * len(package_records)
             move = self.env['stock.move'].create({
                 'picking_id': picking.id,
                 'product_id': self.product.id,
+                'sale_line_id': sale_order.order_line[:1].id if sale_order and sale_order.order_line else False,
                 'product_uom': self.uom_unit.id,
                 'product_uom_qty': total_quantity,
                 'location_id': self.stock_location.id,
@@ -140,8 +187,78 @@ class TestS2CStockPickingReport(TransactionCase):
         self.assertEqual(str(picking.origin_raw()), 'SO/Ñ-001')
         self.assertEqual(str(picking.state_name_raw()), 'MERIDA')
         self.assertEqual(str(picking.partner_name_raw()), 'COMPANIA NANDU')
+        self.assertEqual(picking.packages_count, 2)
+        self.assertAlmostEqual(picking.shipping_weight, 20.0, places=4)
 
-    def test_03_batch_grouped_data_report_and_validation(self):
+    def test_03_transport_relation_dataset_views_and_report(self):
+        sale_order = self._create_sale_order(client_order_ref='INS-001', price_unit=25.0)
+        picking = self._create_picking(
+            with_lines=True,
+            packages=[self.package_1, self.package_2],
+            sale_order=sale_order,
+        )
+        batch = self.env['stock.picking.batch'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'picking_ids': [(6, 0, [picking.id])],
+        })
+
+        first_move_line = picking.move_line_ids[:1]
+        self.assertEqual(first_move_line.city, 'Caracas')
+        self.assertEqual(first_move_line.state_id, self.state_merida)
+        self.assertEqual(first_move_line.municipality_id, self.municipality)
+
+        lines = batch._get_transport_relation_lines()
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0]['pedido'], sale_order.name)
+        self.assertEqual(lines[0]['solicitud'], 'INS-001')
+        self.assertEqual(lines[0]['cliente'], self.partner.name)
+        self.assertEqual(lines[0]['destino'], 'Merida / Caracas / Libertador')
+        self.assertEqual(lines[0]['bultos'], 2)
+        self.assertAlmostEqual(lines[0]['peso'], picking.shipping_weight, places=4)
+        self.assertAlmostEqual(lines[0]['monto'], sale_order.amount_total, places=4)
+
+        totals = batch._get_transport_relation_totals()
+        self.assertEqual(totals['total_orders'], 1)
+        self.assertEqual(totals['total_packages'], 2)
+        self.assertAlmostEqual(totals['total_weight'], 20.0, places=4)
+        self.assertAlmostEqual(totals['total_amount'], sale_order.amount_total, places=4)
+
+        action = batch.action_print_transport_relation()
+        self.assertEqual(self._extract_report_name(action), 's2c_stockpicking_report.report_transport_relation_document')
+
+        report_html = self._render_report_html('s2c_stockpicking_report.action_report_transport_relation', batch)
+        self.assertIn('RELACION DE TRANSPORTE', report_html)
+        self.assertIn(sale_order.name, report_html)
+        self.assertIn('INS-001', report_html)
+
+        empty_batch = self.env['stock.picking.batch'].create({
+            'picking_type_id': self.picking_type_out.id,
+        })
+        with self.assertRaises(UserError):
+            empty_batch.action_print_transport_relation()
+
+        picking_search_arch = self.env.ref(
+            's2c_stockpicking_report.s2c_stockpicking_report_stock_picking_search_inherit'
+        ).arch_db
+        self.assertIn("group_by': 'state_id'", picking_search_arch)
+        self.assertIn("group_by': 'city'", picking_search_arch)
+        self.assertIn("group_by': 'municipality_id'", picking_search_arch)
+
+        move_line_search_arch = self.env.ref(
+            's2c_stockpicking_report.view_stock_move_line_transport_relation_search'
+        ).arch_db
+        self.assertIn("group_by': 'state_id'", move_line_search_arch)
+        self.assertIn("group_by': 'city'", move_line_search_arch)
+        self.assertIn("group_by': 'municipality_id'", move_line_search_arch)
+
+        move_line_tree_arch = self.env.ref(
+            's2c_stockpicking_report.view_stock_move_line_transport_relation_tree'
+        ).arch_db
+        self.assertIn('field name="state_id"', move_line_tree_arch)
+        self.assertIn('field name="city"', move_line_tree_arch)
+        self.assertIn('field name="municipality_id"', move_line_tree_arch)
+
+    def test_04_batch_grouped_data_report_and_validation(self):
         picking = self._create_picking(with_lines=True, packages=[self.package_1])
         batch = self.env['stock.picking.batch'].create({
             'picking_type_id': self.picking_type_out.id,
@@ -169,7 +286,7 @@ class TestS2CStockPickingReport(TransactionCase):
         with self.assertRaises(UserError):
             empty_batch.action_print_batch_label_bags()
 
-    def test_04_stock_picking_reports_render_in_odoo_19(self):
+    def test_05_stock_picking_reports_render_in_odoo_19(self):
         picking = self._create_picking(with_lines=True, packages=[self.package_1], origin='SO-REPORT-001')
 
         picking_operations_html = self._render_report_html('stock.action_report_picking', picking)

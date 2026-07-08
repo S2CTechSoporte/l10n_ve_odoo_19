@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+    <record id="s2c_stockpicking_report_demo_state_merida" model="res.country.state">
+        <field name="name">Merida</field>
+        <field name="code">ME</field>
+        <field name="country_id" ref="base.ve"/>
+    </record>
+
+    <record id="s2c_stockpicking_report_demo_municipality_libertador" model="res.country.state.municipality">
+        <field name="state_id" ref="s2c_stockpicking_report_demo_state_merida"/>
+        <field name="name">Libertador</field>
+        <field name="code">LIB</field>
+    </record>
+
     <record id="s2c_stockpicking_report_demo_partner" model="res.partner">
         <field name="name">S2C Demo Delivery Partner</field>
         <field name="city">Caracas</field>
+        <field name="state_id" ref="s2c_stockpicking_report_demo_state_merida"/>
+        <field name="municipality_id" ref="s2c_stockpicking_report_demo_municipality_libertador"/>
         <field name="customer_rank">1</field>
     </record>
 

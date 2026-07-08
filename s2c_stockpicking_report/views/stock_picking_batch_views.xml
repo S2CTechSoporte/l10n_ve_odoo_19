@@ -7,6 +7,11 @@
             <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_cancel']" position="before">
+                    <button string="Relación de Transporte" type="object"
+                        name="action_print_transport_relation"
+                        invisible="state not in ('in_progress', 'done') or not picking_ids"/>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="before">
                     <button string="Imprimir Etiquetas Bultos" type="object" 
                         name="action_print_batch_label_bags"/>
                 </xpath>

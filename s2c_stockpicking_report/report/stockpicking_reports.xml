@@ -39,6 +39,33 @@
             <field name="binding_type">report</field>
         </record>
 
+        <record id="paperformat_transport_relation" model="report.paperformat">
+            <field name="name">Relación de Transporte</field>
+            <field name="default" eval="False"/>
+            <field name="format">custom</field>
+            <field name="page_height">279</field>
+            <field name="page_width">216</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+
+        <record id="action_report_transport_relation" model="ir.actions.report">
+            <field name="name">Relación de Transporte</field>
+            <field name="model">stock.picking.batch</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">s2c_stockpicking_report.report_transport_relation_document</field>
+            <field name="report_file">s2c_stockpicking_report.report_transport_relation_document</field>
+            <field name="paperformat_id" ref="s2c_stockpicking_report.paperformat_transport_relation"/>
+            <field name="print_report_name">'Relacion de Transporte - %s' % (object.name or '').replace('/','')</field>
+            <field name="binding_model_id" ref="stock_picking_batch.model_stock_picking_batch"/>
+            <field name="binding_type">report</field>
+        </record>
+
 
         <!-- recibo de entrega (Forma Libre) -->
 

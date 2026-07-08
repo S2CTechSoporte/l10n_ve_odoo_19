@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_transport_relation_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="pages" t-value="o._get_transport_relation_pages()"/>
+                <t t-set="totals" t-value="o._get_transport_relation_totals()"/>
+                <t t-foreach="pages" t-as="page_lines">
+                    <t t-call="web.basic_layout">
+                        <div class="page" style="font-size: 10pt;">
+                            <div class="row align-items-start mb-3">
+                                <div class="col-4">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 70px;" alt="Logo"/>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <div style="font-size: 14pt;"><strong>RELACION DE TRANSPORTE</strong></div>
+                                    <div><strong><span t-field="o.name"/></strong></div>
+                                </div>
+                                <div class="col-4 text-end">
+                                    <div>Pág. <span class="page"/> de <span class="topage"/></div>
+                                    <div><strong>Fecha:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/></div>
+                                    <div><strong>Hora:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%I:%M %p')"/></div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3" style="font-size: 9pt;">
+                                <div class="col-3"><strong>Total Pedidos:</strong> <span t-esc="totals['total_orders']"/></div>
+                                <div class="col-3"><strong>Total Pesos:</strong> <span t-esc="totals['total_weight']" t-options="{'widget': 'float', 'precision': 2}"/></div>
+                                <div class="col-3"><strong>Total Bultos:</strong> <span t-esc="totals['total_packages']"/></div>
+                                <div class="col-3 text-end"><strong>Total Monto:</strong> <span t-esc="totals['total_amount']" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></div>
+                            </div>
+
+                            <table class="table table-sm table-bordered border-dark" style="font-size: 9pt;">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"># ITEM</th>
+                                        <th class="text-center">PEDIDO</th>
+                                        <th class="text-center">SOLICITUD</th>
+                                        <th class="text-center">CLIENTE</th>
+                                        <th class="text-center">DESTINO</th>
+                                        <th class="text-center">PESO</th>
+                                        <th class="text-center">BULTOS</th>
+                                        <th class="text-center">MONTO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="page_lines" t-as="line">
+                                        <td class="text-center"><span t-esc="line['item']"/></td>
+                                        <td><span t-esc="line['pedido']"/></td>
+                                        <td><span t-esc="line['solicitud']"/></td>
+                                        <td><span t-esc="line['cliente']"/></td>
+                                        <td><span t-esc="line['destino']"/></td>
+                                        <td class="text-end"><span t-esc="line['peso']" t-options="{'widget': 'float', 'precision': 2}"/></td>
+                                        <td class="text-end"><span t-esc="line['bultos']"/></td>
+                                        <td class="text-end"><span t-esc="line['monto']" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
