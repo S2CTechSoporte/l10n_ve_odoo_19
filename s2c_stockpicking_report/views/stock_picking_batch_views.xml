@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="s2c_stockpicking_report_stock_picking_batch_form_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.batch.form.s2c_stockpicking_report</field>
+            <field name="model">stock.picking.batch</field>
+            <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_cancel']" position="before">
+                    <button string="Imprimir Etiquetas Bultos" type="object" 
+                        name="action_print_batch_label_bags"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

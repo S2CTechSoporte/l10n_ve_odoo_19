@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_product_packaging_tree" model="ir.ui.view">
+            <field name="name">product.packaging.tree</field>
+            <field name="model">product.packaging</field>
+            <field name="arch" type="xml">
+                <list editable="bottom" default_order="product_tmpl_id,product_id,name">
+                    <field name="product_tmpl_id" readonly="1" optional="show"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="name" optional="show"/>
+                    <field name="product_uom_id" optional="show"/>
+                    <field name="qty" optional="show"/>
+                    <field name="packaging_liters" optional="show"/>
+                    <field name="packaging_weight" optional="show"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_product_packaging_form" model="ir.ui.view">
+            <field name="name">product.packaging.form</field>
+            <field name="model">product.packaging</field>
+            <field name="arch" type="xml">
+                <form string="Packaging">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="product_tmpl_id" readonly="1"/>
+                                <field name="product_id"/>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="product_uom_id"/>
+                                <field name="qty"/>
+                                <field name="packaging_liters" readonly="1"/>
+                                <field name="packaging_weight" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_product_packaging" model="ir.actions.act_window">
+            <field name="name">Packagings</field>
+            <field name="res_model">product.packaging</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_product_packaging_tree"/>
+        </record>
+
+        <menuitem
+            id="menu_product_packaging"
+            parent="stock.menu_warehouse_config"
+            name="Packagings"
+            action="action_product_packaging"
+            sequence="80"
+            groups="stock.group_stock_manager"
+        />
+    </data>
+</odoo>

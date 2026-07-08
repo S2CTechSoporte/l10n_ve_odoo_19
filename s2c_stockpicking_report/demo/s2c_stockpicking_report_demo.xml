@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="s2c_stockpicking_report_demo_partner" model="res.partner">
+        <field name="name">S2C Demo Delivery Partner</field>
+        <field name="city">Caracas</field>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <record id="s2c_stockpicking_report_demo_picking" model="stock.picking">
+        <field name="partner_id" ref="s2c_stockpicking_report_demo_partner"/>
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_customers"/>
+        <field name="name_driver">DEMO DRIVER</field>
+        <field name="identification_driver">V-10000000</field>
+        <field name="vehicle">DEMO TRUCK</field>
+        <field name="license_plate">AB123CD</field>
+        <field name="vehicle_brand">S2C</field>
+        <field name="vehicle_type">Cargo</field>
+    </record>
+
+    <record id="s2c_stockpicking_report_demo_batch" model="stock.picking.batch">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="picking_ids" eval="[(6, 0, [ref('s2c_stockpicking_report_demo_picking')])]"/>
+    </record>
+</odoo>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_label_sheet" model="report.paperformat">
+            <field name="name">A4 Label Sheet</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">5</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+        <record id="action_print_label_bags_label_4x7" model="ir.actions.report">
+            <field name="name">Imprimir Etiquetas de Envío 4x7</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">s2c_stockpicking_report.report_pickinglabel</field>
+            <field name="report_file">s2c_stockpicking_report.report_pickinglabel</field>
+            <field name="paperformat_id" ref="s2c_stockpicking_report.paperformat_label_sheet"/>
+            <field name="print_report_name">'Etiquetas de Envío - %s' % (object.name)</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_print_batch_label_bags_label" model="ir.actions.report">
+            <field name="name">Imprimir Etiquetas de Envío</field>
+            <field name="model">stock.picking.batch</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">s2c_stockpicking_report.report_pickingbatch_label</field>
+            <field name="report_file">s2c_stockpicking_report.report_pickingbatch_label</field>
+            <field name="paperformat_id" ref="s2c_stockpicking_report.paperformat_label_sheet"/>
+            <field name="print_report_name">'Etiquetas de Envío en Lote - %s' % (object.name)</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+        <!-- recibo de entrega (Forma Libre) -->
+
+        <record id="paperformat_custom_deliveryslip" model="report.paperformat">
+            <field name="name">Recibo de entrega (Forma Libre)</field>
+            <field name="default" eval="True" />
+            <field name="format">custom</field>
+            <field name="page_height">279</field>
+            <field name="page_width">216</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">5</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+        <record id="action_report_custom_deliveryslip" model="ir.actions.report">
+            <field name="name">Recibo de Entrega (Forma Libre)</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">s2c_stockpicking_report.report_custom_deliveryslip_template</field>
+            <field name="report_file">s2c_stockpicking_report.report_custom_deliveryslip_template</field>
+            <field name="paperformat_id" ref="s2c_stockpicking_report.paperformat_custom_deliveryslip"/>
+            <field name="print_report_name">'Recibo de Entrega - %s' % (object.name or '').replace('/','')</field>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

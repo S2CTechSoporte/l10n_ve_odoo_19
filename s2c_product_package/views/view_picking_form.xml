@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Stock Picking Inherit Form View to Modify it -->
+        <record id="view_picking_form_inherit_s2c_1" model="ir.ui.view">
+            <field name="name">view.picking.form.inherit.s2c.1</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='operations']//field[@name='move_ids']//list//field[@name='quantity']" position="before">
+                    <field name="product_packaging_id" optional="show"/>
+                    <field name="packaging_quantity" readonly="not is_initial_demand_editable" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

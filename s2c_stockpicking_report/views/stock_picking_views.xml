@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="s2c_stockpicking_report_stock_picking_form_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.form.s2c_stockpicking_report</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_put_in_pack']" position="before">
+                    <div class="btn btn-secundary">
+                        <group>
+                            <!-- <label for="total_destination_packages" string="Total Bultos = " class="col-sm-2"/> -->
+                            <field name="total_destination_packages" readonly="1" invisible="state in ('draft', 'done', 'cancel')"/>
+                        </group>
+                    </div>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="before">
+                    <button string="Imprimir Etiquetas Bultos" type="object" 
+                        name="action_print_label_bags" invisible="not packages_count"/>
+                </xpath>
+
+                <notebook position="inside">
+                    <page string="Información de Entrega" name="extra">
+                        <group>
+                            <group string="Datos del Conductor" name="other_infos">
+                                <field name="name_driver" readonly="state in ('done', 'cancel')"/>
+                                <field name="identification_driver"  readonly="state in ('done', 'cancel')"/>
+                            </group>
+
+                            <group string="Datos del Vehículo" name="other_infos">
+                                <field name="vehicle"  readonly="state in ('done', 'cancel')"/>
+                                <field name="license_plate" readonly="state in ('done', 'cancel')"/>
+                                <field name="vehicle_brand" readonly="state in ('done', 'cancel')"/>
+                                <field name="vehicle_type" readonly="state in ('done', 'cancel')"/>
+                            </group>
+                            
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

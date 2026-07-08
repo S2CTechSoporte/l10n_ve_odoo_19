@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="stock_picking_batch_report" inherit_id="stock_picking_batch.report_picking_batch">
+        <xpath expr="//t[@t-call='web.external_layout']" position="replace">
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-size: 9pt;">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-6">
+                                <!-- style="max-height: 50px;" -->
+                                 <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" class="company-logo" style="max-height: 70px;"/>
+                            </div>
+                            <div class="col-6 text-end" style="font-size: 9pt;">
+                                <div>Página: <span class="page"/> de <span class="topage"/></div>
+                                <div>
+                                    <b>Fecha/Hora: </b>
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%y %I:%M %p')" />
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <div style="font-size: 12pt;"><b>LISTA DE PICKING - <span t-field="o.name"/></b></div>
+                            </div>
+                        </div>
+                        <div class="row" style="font-size: 9pt;">
+                            <div class="col-6">
+                                <b>Pedido de Ventas: </b>
+                            </div>
+                            <div class="col-6 text-end">
+                                <b>Responsable: </b> <span t-field="o.user_id" />
+                            </div>
+                        </div>
+                        <div class="row" style="font-size: 9pt;">
+                            <div class="col-12">
+                                <span t-field="o.sale_orders" />
+                            </div>
+                        </div>
+                    </div> 
+                    <!-- <t t-set="datas" t-value="o._get_grouped_data()"/> -->
+                    
+                    <t t-set="i" t-value="0" />
+                    <t t-foreach="datas" t-as="data">
+                        <div id="header_spacing" style="height: 10mm" t-if="i == 0" />
+                        <div class="row border-top border-bottom p-2 border-dark" style="font-size: 9pt;" t-if="i == 0">
+                            <div class="col-3 py-0 px-2"><b>UBICACIÓN</b></div>
+                            <div class="col-4 py-0 px-2"><b>PRODUCTO</b></div>
+                            <div class="col-2 py-0 px-2"><b>LOTE</b></div>
+                            <div class="col-2 py-0 px-2"><b>EMPAQUE</b></div>
+                            <div class="col-1 py-0 text-end"><b>CANTIDAD</b></div>
+                        </div>
+                        <div class="row p-2  border-bottom border-dark">
+                            <div class="col-3 py-0 px-2" t-esc="data['location']" />
+                            <div class="col-4 py-0 px-2"><b><span t-if="data['default_code']" t-esc="'[' + data['default_code']+']'" /></b> <span t-esc="data['product_name']" /></div>
+                            <div class="col-2 py-0 px-2" t-esc="data['lot']"> </div> 
+                            <div class="col-2 py-0 px-2" t-esc="data['packaging']" />
+                            <div class="col-1 py-0 text-end"  t-esc="data['qty']" />
+                        </div>
+                        
+                        
+                        
+                        <t t-set="i" t-value="i + 1" />
+                        <t t-if="i == 17">
+                            <t t-set="i" t-value="0" />
+                            <div class="row" style="page-break-after:always" />
+                        </t>
+                    </t>   
+                    <div class="row">
+                        <div class="col-9">
+                        <br />
+                        Observaciones:
+                        </div>
+                        <div class="col-3">
+                            <br />
+                            <table width="100%" class="table table-bordered border-dark">
+                                <tr>
+                                    <td><b>Total peso: </b></td>
+                                    <td style="text-align: right;">  
+                                        <span t-esc="total_weight" t-options="{'widget': 'float', 'precision': 2}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Total Pedidos: </b></td>
+                                    <td  style="text-align: right;"><span t-esc="total_orders" t-options="{'widget': 'float', 'precision': 2}" /> </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </t>
+            
+        </xpath>
+    </template>
+</odoo>

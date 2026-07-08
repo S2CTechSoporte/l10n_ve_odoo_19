@@ -25,5 +25,10 @@ Lista de módulos a Instalar de forma Standard para la localización
 - purchase_tier_validation
 - base_tier_validation
 
+
+## Inventario
+- s2c_product_package
+- s2c_stockpicking_report
+
 ## Homologación
 - s2c_seniat_regulations

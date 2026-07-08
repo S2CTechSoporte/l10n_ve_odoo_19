@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>    
+        <record id="view_picking_move_tree_s2c_1" model="ir.ui.view">
+            <field name="name">stock_picking_batch.picking.move.tree.s2c.1</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_picking_move_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='quantity']" position="before">
+                    <field name="product_packaging_id" optional="show"/>
+                    <field name="packaging_quantity" readonly="not is_initial_demand_editable" optional="show" />
+
+                </xpath>
+            </field>
+        </record>
+
+        
+
+        <record id="view_picking_move_line_tree_s2c_1" model="ir.ui.view">
+            <field name="name">stock_picking_batch.picking.move.line.tree.s2c.1</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock_picking_batch.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='quantity']" position="before">
+                    <field name="product_packaging_id" optional="show"/>
+                    <field name="packaging_quantity" readonly="state in ('done', 'cancel')" optional="show" />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

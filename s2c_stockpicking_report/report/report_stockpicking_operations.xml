@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="custom_header">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <div class="header"  style="font-size: 11px">
+                <div class="row">
+                    <div class="col-3">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 90px;" alt="Logo"/>
+                    </div>
+                    <div class="col-7 text-center">
+                        <!-- <span t-esc="company.name"/> -->
+                    </div>
+                    <div class="col-2 text-right">
+                        <br />
+                        <br />
+                        <br />
+                        <ul class="list-inline" style="margin-bottom: 0rem">
+                            <li class="list-inline-item">Página: <span class="page"/></li>
+                            <li class="list-inline-item">/</li>
+                            <li class="list-inline-item"><span class="topage"/></li>
+                        </ul>
+                        <div>
+                            <span><b>Fecha: </b></span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                        </div>
+                        <div>
+                            <span><b>Hora: </b></span><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%I:%M:%S %p')"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <div class="mt-2 mb-2">
+                                <!-- City and State slightly larger than the title -->
+                                <div style="font-size: 18px"><strong>CIUDAD: <span t-field="o.partner_id.city"/></strong></div>
+                                <div style="font-size: 18px"><strong>ESTADO: <span t-field="o.partner_id.state_id"/></strong></div>
+                                <!-- Keep the "LISTA DE PICKING" title at 14px as requested -->
+                                <div style="font-size: 14px"><strong>LISTA DE PICKING - <span t-field="o.name"/></strong></div>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+                <div class="space"/>
+                <br/>
+                <div class="row">
+                    <div class="col-5">
+                        <div class="float-left" >
+                            <strong>Pedido de Venta:</strong>
+                            <span t-esc="o.origin"/>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                    </div>
+                    <div class="col-4" >
+                        <div class="float-right">
+                            <strong>Responsable:</strong>
+                            <span t-field="o.user_id"/>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <strong>Nombre del Cliente:</strong>
+                    <span t-esc="o.partner_id.name"/>
+                </div>
+            </div>
+        </template>
+
+        <template id="custom_page">
+            <div class="page" style="font-size: 11px">
+                <div style="height: 15mm;"></div>
+                <!-- In case you come across duplicated lines, ask NIM or LAP -->
+                <t t-set="i" t-value="0"/>
+                <t t-set="weight" t-value="0.0"/>
+                <t t-set="move_lines" t-value="o.move_ids.move_line_ids.filtered(lambda ml: not ml.is_entire_pack)"/>
+                <t t-foreach="move_lines.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
+                    <t t-set="i" t-value="i+1"/>
+                    <div class="row border-dark border-bottom border-top mt-2 pt-2 pb-2 px-0 mx-0" t-if="i==1">
+                        <div class="col-3 px-0 mx-0 text-center"><b>UBICACIÓN</b></div>
+                        <div class="col-5 px-0 mx-0 text-center"><b>PRODUCTO</b></div>
+                        <div class="col-1 px-0 mx-0 text-center"><b>LOTE</b></div>
+                        <div class="col-2 px-0 mx-0 text-center"><b>EMPAQUETADO</b></div>
+                        <div class="col-1 px-0 mx-0 text-center"><b>CANTIDAD</b></div>
+                    </div>
+
+                    <div class="row border-dark border-bottom mt-1 px-0 mx-0" style="height:40px;">
+                        <div class="col-3 mt-2"> <!-- 1. location -->
+                            <span t-esc="ml.location_id.display_name"/>
+                        </div>
+                        <div class="col-5 mt-2"> <!-- 2. products -->
+                            <span t-field="ml.display_name"/>
+                        </div>
+                        <div class="col-1 text-center"><!-- <td t-if="has_serial_number" class="text-center h6" width="15%"> -->
+                            <!-- 6. Lot/Serial Number -->
+                            <div t-if="ml.lot_id or ml.lot_name" t-field="ml.lot_id.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
+                        </div>
+                        <div class="col-2 mt-2 text-center"> <!-- 4. empaquetado -->
+                            <t t-if="ml.product_packaging_id">
+                                <span t-field="ml.product_packaging_id.name"/>
+                            </t>
+                            <t t-else="">
+                                <span t-field="ml.product_uom_id.name"/>
+                            </t>
+                        </div>
+                        <div class="col-1 mt-2 text-center"> <!-- 7. Package -->
+                            <t t-set="packaging" t-value="1"/>
+                            <t t-set="weight" t-value="weight + (ml.quantity * ml.product_id.weight)"/>
+                            <t t-if="ml.product_packaging_id">
+                                <t t-set="packaging" t-value="ml.product_packaging_id.qty"/>
+                            </t>
+                            <span t-esc="ml.quantity / packaging" t-options='{"widget": "float", "precision": 2}'/>
+                        </div>
+                    </div>
+
+                    <t t-if="i==22">
+                        <t t-set="i" t-value="0"/>
+                        <div style="page-break-after: always;"/>
+                    </t>
+                </t>
+                <br />
+                <!-- Totales -->
+                <div class="row">
+                    <div class="col-7">
+                        <table class="table-sm table-borderless" style="width: 100%"> 
+                            <tr>
+                                <td><strong>Observaciones:</strong></td>
+                            </tr>
+                            <tr>
+                                <td><span t-field="o.note"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-1">
+                    </div>
+                    <div class="col-4">
+                        <div class="pull-right">
+                            <table class="table-sm table-bordered" style="width: 100%"> 
+                                <tr> <!-- 1.-->
+                                    <td class="text-right" style="width: 70%;">
+                                        <b>TOTAL PESO</b>
+                                    </td>
+                                    <td class="text-center" style="width: 30%;">
+                                        <span t-esc="weight" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                </tr>
+                                <tr>  
+                                    <td class="text-right">
+                                        <b>TOTAL PEDIDOS</b>
+                                    </td>
+                                    <td class="text-center">
+                                        1
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="s2c_report_picking_inheritance" inherit_id="stock.report_picking">
+            <xpath expr="//t[@t-call='web.report_layout']" position="replace">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.basic_layout">
+                        <t t-call="s2c_stockpicking_report.custom_header"/>
+                        <t t-call="s2c_stockpicking_report.custom_page"/>
+                    </t>
+                    <t t-if="not o_last">
+                        <p style="page-break-after: always;"/>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

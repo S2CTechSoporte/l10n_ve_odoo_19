@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="s2c_report_delivery_document_inheritance" inherit_id="stock.report_delivery_document">
+        <xpath expr="//t[@t-call='web.external_layout']" position="replace">
+            <t t-call="s2c_stockpicking_report.custom_header"/>   
+            <t t-call="web.basic_layout">
+                <t t-call="s2c_stockpicking_report.custom_page"/>   
+            </t>
+            <!-- 
+                Placeholder oculto para compatibilidad con product_expiry.
+                product_expiry busca //th[@name='lot_serial'] para agregar columna de fecha expiración.
+                Como s2c_stockpicking_report reemplaza la estructura original, agregamos este elemento
+                oculto para que el xpath de product_expiry encuentre algo y no falle.
+                
+                También agregamos t[@name='move_line_lot'] para stock_report_delivery_has_serial_move_line.
+            -->
+            <table style="display:none;" name="s2c_product_expiry_placeholder">
+                <thead>
+                    <tr>
+                        <th name="lot_serial"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t name="move_line_lot"/>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+</odoo>

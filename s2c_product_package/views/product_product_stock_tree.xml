@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- existencias -->
+        <record id="product_product_stock_tree_inherit" model="ir.ui.view">
+            <field name="name">product.product.stock.tree.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.product_product_stock_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='free_qty']" position="after">
+                    
+                    <field name="packaging_name" optional="show" />
+                    <field name="packaging_qty_available" optional="show" />
+                    <field name="packaging_free_qty" optional="show" />
+                    <field name="volume_available" optional="show" />
+                    <field name="weight_available" optional="show" />
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="s2c_product_package_demo_product" model="product.product">
+        <field name="name">S2C Demo Packed Product</field>
+        <field name="type">consu</field>
+        <field name="is_storable">True</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="weight">2.5</field>
+        <field name="volume">1.25</field>
+    </record>
+
+    <record id="s2c_product_package_demo_packaging" model="product.packaging">
+        <field name="name">S2C Demo Box x10</field>
+        <field name="product_id" ref="s2c_product_package_demo_product"/>
+        <field name="product_uom_id" ref="uom.product_uom_unit"/>
+        <field name="qty">10</field>
+    </record>
+</odoo>

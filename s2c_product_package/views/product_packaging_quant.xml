@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="product_packaging_quant_search_view" model="ir.ui.view">
+            <field name="name">product.packaging.quant.search.view</field>
+            <field name="model">product.packaging.quant</field>
+            <field name="arch" type="xml">
+                <search string="Existencias">
+                    <field name="product_id" />
+                    <field name="location_id" />
+                    <field name="product_packaging_id" />
+                    <field name="quantity"/>
+                    <field name="packaging_quantity" />
+
+                    <filter name="internal_loc" string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
+                    <filter name="transit_loc" string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
+                    <separator/>
+
+                    <group>
+                        <filter name="productgroup" string="Producto" context="{'group_by': 'product_id'}" />
+                        <filter name="locationgroup" string="Ubicación" context="{'group_by': 'location_id'}" />
+                        <filter name="product_packaging_group" string="Empaque" context="{'group_by': 'product_packaging_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+ 
+
+       <record model="ir.ui.view" id="product_packaging_quant_tree">
+            <field name="name">product.packaging.quant.tree</field>
+            <field name="model">product.packaging.quant</field>
+            <field name="priority" eval="100"/>
+            <field name="arch" type="xml">
+                <list create="false" delete="false">
+                    <field name="id" column_invisible="True"/>
+                    <field name="company_id" optional="hide"/>
+                    <field name="product_id" optional="show"/> 						
+                    <field name="location_id" optional="show"/>	
+                    <field name="product_packaging_id" optional="show"/>	
+                    <field name="quantity" optional="show"/>	
+                    <field name="packaging_quantity" optional="show"/> 		
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_product_packaging_quant_tree">
+            <field name="name">Existencias por Empaque</field>
+            <field name="res_model">product.packaging.quant</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="product_packaging_quant_tree"/>
+            <field name="search_view_id" ref="product_packaging_quant_search_view"/>
+            <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1,'search_default_locationgroup':1}</field>
+            <field name="domain">[('quantity', '&gt;', 0)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No stock to show
+                </p><p>
+                    Create some storable products to see their stock info in this view.
+                </p>
+            </field>
+        </record>
+
+        <menuitem 
+            id="product_packaging_quant_menu"
+            parent="stock.menu_warehouse_report" 
+            name="Existencia por Empaque" 
+            action="action_product_packaging_quant_tree"/>
+</odoo>

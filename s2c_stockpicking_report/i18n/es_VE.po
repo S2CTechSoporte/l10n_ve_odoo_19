@@ -1,0 +1,650 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* customer_extend_chronus
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-03 13:50+0000\n"
+"PO-Revision-Date: 2023-01-03 13:50+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_account_report
+msgid "Account Report"
+msgstr "Informe de las cuentas"
+
+#. module: customer_extend_chronus
+#. openerp-web
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#, python-format
+msgid "Accounts"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__active
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__active
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__active
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__active
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__active
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__active
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__active
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__active
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_contigo_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_manager_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_potential_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_region_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_route_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_sector_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_subtype_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_support_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_type_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_visit_frequency_view_search
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,help:customer_extend_chronus.field_res_partner__is_supplier
+#: model:ir.model.fields,help:customer_extend_chronus.field_res_users__is_supplier
+msgid "Chequeca si el usuario es Proveedor"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_chronus_contigo_action
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__chronus_contigo
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__chronus_contigo
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__chronus_contigo
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__chronus_contigo
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_chronus_contigo_menu
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+msgid "Chronus Contigo"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_chronus_main_menu
+msgid "Chronus Customers type"
+msgstr "Tipo de Clientes Chronus"
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_chronus_contigo_action
+msgid "Create a Chronus Contigo"
+msgstr "Crea un Chronus Contigo"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_potential_action
+msgid "Create a Customer Potential"
+msgstr "Crea un Potential"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_region_action
+msgid "Create a Customer Region"
+msgstr "Crea una Región"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_route_action
+msgid "Create a Customer Route"
+msgstr "Crea una Ruta"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_sector_action
+msgid "Create a Customer Sector"
+msgstr "Crea un sector"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_support_action
+msgid "Create a Customer Support"
+msgstr "Crea una atencioón al cliente"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_visit_frequency_action
+msgid "Create a Customer Visit Frequency"
+msgstr "Crea una frecuencia de visita"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_manager_action
+msgid "Create a customer manager"
+msgstr "Crea un Gerente"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_subtype_action
+msgid "Create a customer subtype"
+msgstr "Crea un Suptipo"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_type_action
+msgid "Create a customer type"
+msgstr "Crea un Tipo de Cliente"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__create_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__create_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__create_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__create_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__create_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__create_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__create_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__create_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__create_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__create_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__create_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__create_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__create_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__create_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__create_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__create_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.res_partner_customer_type
+msgid "Customer Category"
+msgstr "Categoria de Cliente"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_manager_action
+msgid "Customer Manager"
+msgstr "Gerente"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_potential_action
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_potential_menu
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_potential_view_tree
+msgid "Customer Potential"
+msgstr "Potencial"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_region_action
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_region_menu
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_region_view_tree
+msgid "Customer Region"
+msgstr "Región"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_route_action
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_route_menu
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_route_view_tree
+msgid "Customer Route"
+msgstr "Ruta"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_sector_action
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_sector_menu
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_sector_view_tree
+msgid "Customer Sector"
+msgstr "Sector"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_subtype_action
+msgid "Customer SubType"
+msgstr "Subtipo de Cliente"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_support_action
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__customer_support_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__customer_support_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__customer_support_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__customer_support_id
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_support_menu
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_support_view_tree
+msgid "Customer Support"
+msgstr "Atención al Cliente"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_type_action
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__customer_type_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__customer_type_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__customer_type_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__customer_type_id
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_contigo_view_tree
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_manager_view_tree
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_subtype_view_tree
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_type_view_tree
+msgid "Customer Type"
+msgstr "Tipo Cliente"
+
+#. module: customer_extend_chronus
+#: model:ir.actions.act_window,name:customer_extend_chronus.customer_visit_frequency_action
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_visit_frequency_menu
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_visit_frequency_view_tree
+msgid "Customer Visit Frequency"
+msgstr "Frecuencia de Visita a Cliente"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__customer_subtype_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__customer_subtype_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__customer_subtype_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__customer_subtype_id
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+msgid "Customer subtype"
+msgstr "Subtipo de Cliente"
+
+#. module: customer_extend_chronus
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_subtype_menu
+msgid "Customers SubType"
+msgstr "Subtipo de Cliente"
+
+#. module: customer_extend_chronus
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_type_menu
+msgid "Customers Type"
+msgstr "Tipo de Cliente"
+
+#. module: customer_extend_chronus
+#. openerp-web
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#, python-format
+msgid "Date cannot be empty"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__description
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__description
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__description
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__description
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__description
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__description
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__description
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__description
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__display_name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__display_name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__display_name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__display_name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__display_name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__display_name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__display_name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__display_name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__is_supplier
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__is_supplier
+msgid "Es un proveedor"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__id
+msgid "ID"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager____last_update
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential____last_update
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region____last_update
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route____last_update
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector____last_update
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype____last_update
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support____last_update
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type____last_update
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__write_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__write_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__write_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__write_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__write_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__write_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__write_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__write_uid
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__write_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__write_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__write_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__write_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__write_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__write_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__write_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__write_date
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__manager_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__manager_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__manager_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__manager_id
+#: model:ir.ui.menu,name:customer_extend_chronus.customer_manager_menu
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+msgid "Manager"
+msgstr "Gerente"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_manager__name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_potential__name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_region__name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_route__name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_sector__name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_subtype__name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_support__name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_type__name
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_customer_visit_frequency__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: customer_extend_chronus
+#. openerp-web
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#, python-format
+msgid "Odoo Warning"
+msgstr ""
+
+#. module: customer_extend_chronus
+#. openerp-web
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#, python-format
+msgid "Partners"
+msgstr "Socios"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__potential_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__potential_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__potential_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__potential_id
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+msgid "Potential"
+msgstr "Potencial"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__prorrata_IVA
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__prorrata_IVA
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__prorrata_IVA
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__prorrata_IVA
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+msgid "Prorrata IVA"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__region_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__region_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__region_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__region_id
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+msgid "Region"
+msgstr "Región"
+
+#. module: customer_extend_chronus
+#. openerp-web
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__route_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__route_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__route_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__route_id
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+#, python-format
+msgid "Route"
+msgstr "Ruta"
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "Informe de análisis de ventas"
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_sale_order
+msgid "Sales Order"
+msgstr "Pedidos de venta"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_contigo_view_search
+msgid "Search Chronus Contigo"
+msgstr "Buscar Chronus Contigo"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_potential_view_search
+msgid "Search Customer Potential"
+msgstr "Buscar Potencial"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_region_view_search
+msgid "Search Customer Region"
+msgstr "Buscar Región"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_route_view_search
+msgid "Search Customer Route"
+msgstr "Buscar Ruta"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_sector_view_search
+msgid "Search Customer Sector"
+msgstr "Buscar Sector"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_subtype_view_search
+msgid "Search Customer SubType"
+msgstr "Buscar Subtipo"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_support_view_search
+msgid "Search Customer Support"
+msgstr "Buscar Atención al Cliente"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_manager_view_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_type_view_search
+msgid "Search Customer Type"
+msgstr "Buscar tipo de Cliente"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_visit_frequency_view_search
+msgid "Search Customer Visit Frequency"
+msgstr "Buscar Frecuencia de Visita"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__sector_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__sector_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__sector_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__sector_id
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+msgid "Sector"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_potential_action
+msgid "Specify Customer Potential."
+msgstr "Especifica Potencial."
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_region_action
+msgid "Specify Customer Region."
+msgstr "Especifica Región."
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_route_action
+msgid "Specify Customer Route."
+msgstr "Especifica Ruta."
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_sector_action
+msgid "Specify Customer Sector."
+msgstr "Especifica Sector."
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_support_action
+msgid "Specify Customer Support."
+msgstr "Especifica Atención al Cliente"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_visit_frequency_action
+msgid "Specify Customer Visit Frequency."
+msgstr "Especifica Frecuecia de Visita"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_chronus_contigo_action
+msgid "Specify customers Chronus COntigo."
+msgstr "Especifica Chronus Contigo"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_manager_action
+msgid "Specify customers manager."
+msgstr "Especifica Manager"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_subtype_action
+msgid "Specify customers subtype."
+msgstr "Especifica Subtipo Cliente"
+
+#. module: customer_extend_chronus
+#: model_terms:ir.actions.act_window,help:customer_extend_chronus.customer_type_action
+msgid "Specify customers type."
+msgstr "Especifica Tipo de Cliente"
+
+#. module: customer_extend_chronus
+#. openerp-web
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#: code:addons/customer_extend_chronus/static/src/js/account_report.js:0
+#, python-format
+msgid "Tags"
+msgstr "Etiquetas"
+
+#. module: customer_extend_chronus
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_partner__visit_frequency_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_res_users__visit_frequency_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_order__visit_frequency_id
+#: model:ir.model.fields,field_description:customer_extend_chronus.field_sale_report__visit_frequency_id
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_sale_order_view_search_inherit
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_order_product_search
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_quotation
+#: model_terms:ir.ui.view,arch_db:customer_extend_chronus.customer_chronus_view_sales_order_filter_inherit
+msgid "Visit frequency"
+msgstr "Frecuencia de Visita"
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_manager
+msgid "customer.manager"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_potential
+msgid "customer.potential"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_region
+msgid "customer.region"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_route
+msgid "customer.route"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_sector
+msgid "customer.sector"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_subtype
+msgid "customer.subtype"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_support
+msgid "customer.support"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_type
+msgid "customer.type"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model,name:customer_extend_chronus.model_customer_visit_frequency
+msgid "customer.visit.frequency"
+msgstr ""
+
+#. module: customer_extend_chronus
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_manager_name_unique
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_potential_name_unique
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_region_name_unique
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_route_name_unique
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_sector_name_unique
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_subtype_name_unique
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_support_name_unique
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_type_name_unique
+#: model:ir.model.constraint,message:customer_extend_chronus.constraint_customer_visit_frequency_name_unique
+msgid "name already exists!"
+msgstr "Nombre ya existe!"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report__volume
+msgid "Volume"
+msgstr "Litros"
