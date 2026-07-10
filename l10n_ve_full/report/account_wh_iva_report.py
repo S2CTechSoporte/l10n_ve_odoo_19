@@ -188,12 +188,11 @@ class IvaReport(models.AbstractModel):
             if data['form'].wh_lines.invoice_id.currency_id.id == data['form'].company_id.currency_id.id :
                 total_doc = data['form'].wh_lines.invoice_id.amount_total
             elif data['form'].wh_lines.invoice_id.currency_id != data['form'].company_id.currency_id.id:
-                tasa = data['form'].wh_lines.invoice_id.currency_bs_rate
+                tasa = data['form'].wh_lines.invoice_id.invoice_currency_rate
                 if tasa:
-                    total_doc = data['form'].wh_lines.invoice_id.amount_total * tasa
+                    total_doc = data['form'].wh_lines.invoice_id.amount_total / tasa
                 else:
-                    tasa = self.obtener_tasa(data['form'].wh_lines.invoice_id)
-                    total_doc = data['form'].wh_lines.invoice_id.amount_total * tasa
+                    total_doc = data['form'].wh_lines.invoice_id.amount_total
         return {
             'data': data['form'],
             'model': self.env['report.l10n_ve_full.template_wh_vat'],
