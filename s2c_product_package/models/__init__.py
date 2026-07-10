@@ -4,7 +4,6 @@
 from . import product_packaging
 from . import product_product
 from . import stock_quant
-from . import stock_picking
 from . import stock_move
 from . import stock_move_line
 from . import product_packaging_quant

@@ -140,16 +140,11 @@
                                     <span t-field="ml.product_id.name"/>
                                 </div>
                                 
-                                <div class="col-2"> <!-- 4. empaquetado -->
-                                    <t t-if="ml.product_packaging_id">
-                                        <span t-field="ml.product_packaging_id.name"/>
-                                    </t>
-                                    <t t-else="">
-                                        <span t-field="ml.product_id.uom_id"/>
-                                    </t>
+                                <div class="col-2">
+                                    <span t-field="ml.product_uom"/>
                                 </div>
-                                <div class="col-2 text-end"> <!-- 7. Package -->
-                                    <span t-field="ml.packaging_quantity" t-options='{"widget": "float", "precision": 2}'/>
+                                <div class="col-2 text-end">
+                                    <span t-field="ml.quantity" t-options='{"widget": "float", "precision": 2}'/>
                                 </div>
                             </div>
 

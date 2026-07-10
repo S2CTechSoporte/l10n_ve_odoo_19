@@ -15,7 +15,6 @@
         'views/product_template_view.xml',
         'views/product_product_stock_tree.xml',
         'views/view_stock_quant_tree_editable.xml',
-        'views/stock_picking_views.xml',
         'views/view_picking_form.xml',
         'views/stock_picking_batch_views.xml',
         'views/product_packaging_quant.xml',

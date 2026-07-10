@@ -92,7 +92,7 @@
                         <div class="col-3 px-0 mx-0 text-center"><b>UBICACIÓN</b></div>
                         <div class="col-5 px-0 mx-0 text-center"><b>PRODUCTO</b></div>
                         <div class="col-1 px-0 mx-0 text-center"><b>LOTE</b></div>
-                        <div class="col-2 px-0 mx-0 text-center"><b>EMPAQUETADO</b></div>
+                        <div class="col-2 px-0 mx-0 text-center"><b>UNIDAD</b></div>
                         <div class="col-1 px-0 mx-0 text-center"><b>CANTIDAD</b></div>
                     </div>
 
@@ -107,21 +107,12 @@
                             <!-- 6. Lot/Serial Number -->
                             <div t-if="ml.lot_id or ml.lot_name" t-field="ml.lot_id.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
                         </div>
-                        <div class="col-2 mt-2 text-center"> <!-- 4. empaquetado -->
-                            <t t-if="ml.product_packaging_id">
-                                <span t-field="ml.product_packaging_id.name"/>
-                            </t>
-                            <t t-else="">
-                                <span t-field="ml.product_uom_id.name"/>
-                            </t>
+                        <div class="col-2 mt-2 text-center">
+                            <span t-field="ml.product_uom_id.name"/>
                         </div>
-                        <div class="col-1 mt-2 text-center"> <!-- 7. Package -->
-                            <t t-set="packaging" t-value="1"/>
+                        <div class="col-1 mt-2 text-center">
                             <t t-set="weight" t-value="weight + (ml.quantity * ml.product_id.weight)"/>
-                            <t t-if="ml.product_packaging_id">
-                                <t t-set="packaging" t-value="ml.product_packaging_id.qty"/>
-                            </t>
-                            <span t-esc="ml.quantity / packaging" t-options='{"widget": "float", "precision": 2}'/>
+                            <span t-field="ml.quantity" t-options='{"widget": "float", "precision": 2}'/>
                         </div>
                     </div>
 

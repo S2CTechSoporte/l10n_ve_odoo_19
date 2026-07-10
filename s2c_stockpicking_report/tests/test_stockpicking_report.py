@@ -35,10 +35,6 @@ class TestS2CStockPickingReport(TransactionCase):
                 'country_id': country.id,
             })
 
-        identification_id = '12345678'
-        while cls.env['res.partner'].search_count([('identification_id', '=', identification_id)]):
-            identification_id = str(int(identification_id) + 1)
-
         cls.partner = cls.env['res.partner'].create({
             'name': 'Compañía Ñandú',
             'customer_rank': 1,
@@ -46,8 +42,6 @@ class TestS2CStockPickingReport(TransactionCase):
             'country_id': country.id,
             'city': 'Caracas',
             'state_id': cls.state_merida.id,
-            'nationality': 'V',
-            'identification_id': identification_id,
         })
 
         municipality_model = cls.env['res.country.state.municipality']
@@ -76,13 +70,6 @@ class TestS2CStockPickingReport(TransactionCase):
             'weight': 1.0,
             'volume': 1.0,
             'list_price': 25.0,
-        })
-
-        cls.packaging = cls.env['product.packaging'].create({
-            'name': 'Pack x10',
-            'product_id': cls.product.id,
-            'product_uom_id': cls.uom_unit.id,
-            'qty': 10.0,
         })
 
         cls.package_1 = cls.env['stock.package'].create({'name': '1'})
@@ -138,7 +125,7 @@ class TestS2CStockPickingReport(TransactionCase):
 
         if with_lines:
             package_records = packages or [self.package_1]
-            total_quantity = self.packaging.qty * len(package_records)
+            total_quantity = 10.0 * len(package_records)
             move = self.env['stock.move'].create({
                 'picking_id': picking.id,
                 'product_id': self.product.id,
@@ -147,7 +134,6 @@ class TestS2CStockPickingReport(TransactionCase):
                 'product_uom_qty': total_quantity,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
-                'product_packaging_id': self.packaging.id,
                 'description_picking': 'Stock picking report move',
             })
 
@@ -157,7 +143,7 @@ class TestS2CStockPickingReport(TransactionCase):
                     'move_id': move.id,
                     'product_id': self.product.id,
                     'product_uom_id': self.uom_unit.id,
-                    'quantity': self.packaging.qty,
+                    'quantity': 10.0,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
                     'result_package_id': package.id,
@@ -237,27 +223,6 @@ class TestS2CStockPickingReport(TransactionCase):
         with self.assertRaises(UserError):
             empty_batch.action_print_transport_relation()
 
-        picking_search_arch = self.env.ref(
-            's2c_stockpicking_report.s2c_stockpicking_report_stock_picking_search_inherit'
-        ).arch_db
-        self.assertIn("group_by': 'state_id'", picking_search_arch)
-        self.assertIn("group_by': 'city'", picking_search_arch)
-        self.assertIn("group_by': 'municipality_id'", picking_search_arch)
-
-        move_line_search_arch = self.env.ref(
-            's2c_stockpicking_report.view_stock_move_line_transport_relation_search'
-        ).arch_db
-        self.assertIn("group_by': 'state_id'", move_line_search_arch)
-        self.assertIn("group_by': 'city'", move_line_search_arch)
-        self.assertIn("group_by': 'municipality_id'", move_line_search_arch)
-
-        move_line_tree_arch = self.env.ref(
-            's2c_stockpicking_report.view_stock_move_line_transport_relation_tree'
-        ).arch_db
-        self.assertIn('field name="state_id"', move_line_tree_arch)
-        self.assertIn('field name="city"', move_line_tree_arch)
-        self.assertIn('field name="municipality_id"', move_line_tree_arch)
-
     def test_04_batch_grouped_data_report_and_validation(self):
         picking = self._create_picking(with_lines=True, packages=[self.package_1])
         batch = self.env['stock.picking.batch'].create({
@@ -267,7 +232,7 @@ class TestS2CStockPickingReport(TransactionCase):
 
         grouped_data = batch._get_grouped_data()
         self.assertTrue(grouped_data, 'Grouped data should not be empty for a batch with move lines')
-        self.assertAlmostEqual(grouped_data[0]['qty'], 1.0, places=4)
+        self.assertAlmostEqual(grouped_data[0]['qty'], 10.0, places=4)
         self.assertEqual(batch.total_orders, 1)
         self.assertEqual(str(batch.company_vat_raw()), self.env.company.vat or '')
 

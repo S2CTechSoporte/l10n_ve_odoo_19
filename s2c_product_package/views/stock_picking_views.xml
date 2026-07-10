@@ -1,32 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_picking_edi_tree_s2c_inherit" model="ir.ui.view">
-            <field name="model">stock.picking</field>
-            <field name="name">stock.picking.edi.tree.s2c.inherit</field>
-            <field name="inherit_id" ref="stock.vpicktree" />
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="after">
-                    <field name="city" optional="show"/>
-                    <field name="municipality_id" optional="show"/>
-                    <field name="state_id"  optional="show"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_picking_internal_search_s2c_inherit" model="ir.ui.view">
-            <field name="name">stock.picking.internal.search.s2c.inherit</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_internal_search" />
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='picking_type_id']" position="after">
-                    <field name="city"/>
-                    <field name="municipality_id"/>
-                    <field name="state_id"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_stock_move_line_detailed_operation_s2c_1" model="ir.ui.view">
             <field name="name">stock.move.line.operations.s2c_1</field>
             <field name="model">stock.move.line</field>

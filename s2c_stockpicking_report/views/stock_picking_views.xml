@@ -45,25 +45,5 @@
             </field>
         </record>
 
-        <record id="s2c_stockpicking_report_stock_picking_search_inherit" model="ir.ui.view">
-            <field name="name">stock.picking.search.s2c_stockpicking_report</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='picking_type_id']" position="after">
-                    <field name="state_id"/>
-                    <field name="city"/>
-                    <field name="municipality_id"/>
-                </xpath>
-                <xpath expr="//filter[@name='internal']" position="after">
-                    <separator/>
-                </xpath>
-                <xpath expr="//group[not(@name)]" position="inside">
-                    <filter string="Estado" name="state_id" domain="[]" context="{'group_by': 'state_id'}"/>
-                    <filter string="Ciudad" name="city" domain="[]" context="{'group_by': 'city'}"/>
-                    <filter string="Municipio" name="municipality_id" domain="[]" context="{'group_by': 'municipality_id'}"/>
-                </xpath>
-            </field>
-        </record>
     </data>
 </odoo>

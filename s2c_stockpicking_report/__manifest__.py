@@ -6,7 +6,7 @@
     'category': 'Sale',
     'version': '19.0.1.0.0',
     'author': 'JGR AUTODIST, C.A.',
-    'depends': ['stock', 'sale_stock', 's2c_product_package', 'mrp', 'stock_picking_batch'],
+    'depends': ['stock', 'sale_stock', 's2c_stock_location_zone', 'mrp', 'stock_picking_batch'],
     'data': [
         'report/report_stockpicking_operations.xml',
         'report/report_deliveryslip.xml',
@@ -14,7 +14,6 @@
         'report/stockpicking_reports.xml',
         'report/report_stockpicking_templates.xml',
         'views/stock_picking_views.xml',
-        'views/stock_move_line_views.xml',
         'views/stock_picking_batch_views.xml',
         'report/stock_picking_batch_report.xml',
         'report/transport_relation_report.xml',

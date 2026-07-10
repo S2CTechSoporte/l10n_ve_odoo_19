@@ -96,9 +96,8 @@ class StockPickingBatch(models.Model):
         for move_line in self.picking_ids.mapped('move_line_ids').sorted(key=lambda line: (line.location_id.complete_name, line.product_id.id)):
             key = (move_line.location_id.id,
             move_line.product_id.id,
-            move_line.lot_id.id,
-            move_line.product_packaging_id.id)
-            qty = move_line.packaging_quantity or move_line.quantity
+            move_line.lot_id.id)
+            qty = move_line.quantity
             
             if  key in row:
                 row[key].update({
@@ -112,7 +111,7 @@ class StockPickingBatch(models.Model):
                         'default_code': move_line.product_id.default_code,
                         'product_name': move_line.product_id.product_tmpl_id.name,
                         'lot': move_line.lot_id.name or ' ',
-                        'packaging': move_line.product_packaging_id.name or move_line.product_id.uom_name ,
+                        'packaging': move_line.product_uom_id.name,
                         'qty': qty
                     }
                 })
