@@ -30,7 +30,7 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         sale_order = self._get_transport_relation_sale_order(picking)
         if sale_order:
-            return sale_order.client_order_ref or ''
+            return sale_order.origin or ''
         return ''
 
     def _get_transport_relation_amount(self, picking):
@@ -61,6 +61,7 @@ class StockPickingBatch(models.Model):
         for item, picking in enumerate(sorted_pickings, start=1):
             lines.append({
                 'item': item,
+                'guia': picking.name,
                 'pedido': self._get_transport_relation_order_name(picking),
                 'solicitud': self._get_transport_relation_request(picking),
                 'cliente': picking.partner_id.name or '',

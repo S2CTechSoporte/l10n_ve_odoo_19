@@ -89,11 +89,12 @@ class TestS2CStockPickingReport(TransactionCase):
         )
         return html.decode() if isinstance(html, bytes) else html
 
-    def _create_sale_order(self, client_order_ref='INS-001', price_unit=25.0):
+    def _create_sale_order(self, client_order_ref='INS-001', origin=False, price_unit=25.0):
         return self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'pricelist_id': self.pricelist.id,
             'client_order_ref': client_order_ref,
+            'origin': origin,
             'order_line': [(0, 0, {
                 'product_id': self.product.id,
                 'product_uom_qty': 2.0,
@@ -177,7 +178,7 @@ class TestS2CStockPickingReport(TransactionCase):
         self.assertAlmostEqual(picking.shipping_weight, 20.0, places=4)
 
     def test_03_transport_relation_dataset_views_and_report(self):
-        sale_order = self._create_sale_order(client_order_ref='INS-001', price_unit=25.0)
+        sale_order = self._create_sale_order(origin='998877', price_unit=25.0)
         picking = self._create_picking(
             with_lines=True,
             packages=[self.package_1, self.package_2],
@@ -195,8 +196,9 @@ class TestS2CStockPickingReport(TransactionCase):
 
         lines = batch._get_transport_relation_lines()
         self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0]['guia'], picking.name)
         self.assertEqual(lines[0]['pedido'], sale_order.name)
-        self.assertEqual(lines[0]['solicitud'], 'INS-001')
+        self.assertEqual(lines[0]['solicitud'], '998877')
         self.assertEqual(lines[0]['cliente'], self.partner.name)
         self.assertEqual(lines[0]['destino'], 'Merida / Caracas / Libertador')
         self.assertEqual(lines[0]['bultos'], 2)
@@ -214,8 +216,9 @@ class TestS2CStockPickingReport(TransactionCase):
 
         report_html = self._render_report_html('s2c_stockpicking_report.action_report_transport_relation', batch)
         self.assertIn('RELACION DE TRANSPORTE', report_html)
+        self.assertIn(picking.name, report_html)
         self.assertIn(sale_order.name, report_html)
-        self.assertIn('INS-001', report_html)
+        self.assertIn('998877', report_html)
 
         empty_batch = self.env['stock.picking.batch'].create({
             'picking_type_id': self.picking_type_out.id,

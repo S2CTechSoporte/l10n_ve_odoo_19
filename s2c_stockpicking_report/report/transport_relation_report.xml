@@ -34,6 +34,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center"># ITEM</th>
+                                        <th class="text-center">GUIA</th>
                                         <th class="text-center">PEDIDO</th>
                                         <th class="text-center">SOLICITUD</th>
                                         <th class="text-center">CLIENTE</th>
@@ -46,6 +47,7 @@
                                 <tbody>
                                     <tr t-foreach="page_lines" t-as="line">
                                         <td class="text-center"><span t-esc="line['item']"/></td>
+                                        <td><span t-esc="line['guia']"/></td>
                                         <td><span t-esc="line['pedido']"/></td>
                                         <td><span t-esc="line['solicitud']"/></td>
                                         <td><span t-esc="line['cliente']"/></td>
