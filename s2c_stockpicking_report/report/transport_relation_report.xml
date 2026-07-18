@@ -5,19 +5,33 @@
             <t t-foreach="docs" t-as="o">
                 <t t-set="pages" t-value="o._get_transport_relation_pages()"/>
                 <t t-set="totals" t-value="o._get_transport_relation_totals()"/>
+                <t t-set="company_partner" t-value="o.company_id.partner_id"/>
+                <t t-set="company_location" t-value="' / '.join(part for part in [company_partner.state_id.name or '', company_partner.city or '', company_partner.municipality_id.name or ''] if part)"/>
+                <t t-set="company_address" t-value="', '.join(part for part in [company_partner.street or '', company_partner.street2 or '', company_location] if part)"/>
                 <t t-foreach="pages" t-as="page_lines">
                     <t t-call="web.basic_layout">
                         <div class="page" style="font-size: 10pt;">
-                            <div class="row align-items-start mb-3">
-                                <div class="col-4">
-                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 70px;" alt="Logo"/>
+                            <div class="row align-items-start mb-2">
+                                <div class="col-12">
+                                    <span style="display: inline-block; width: 120px; vertical-align: top;">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 85px; max-width: 115px;" alt="Logo"/>
+                                    </span>
+                                    <span style="display: inline-block; vertical-align: top; font-size: 8pt; line-height: 1.25; max-width: 520px;">
+                                        <span style="display: block; font-size: 10pt;"><strong><span t-field="o.company_id.name"/></strong></span>
+                                        <span t-if="company_address" style="display: block;"><span t-esc="company_address"/></span>
+                                        <span t-if="o.company_id.vat" style="display: block;"><strong>RIF:</strong> <span t-field="o.company_id.vat"/></span>
+                                    </span>
                                 </div>
-                                <div class="col-4 text-center">
+                            </div>
+
+                            <div class="row align-items-start mb-3">
+                                <div class="col-3"></div>
+                                <div class="col-6 text-center">
                                     <div style="font-size: 14pt;"><strong>RELACION DE TRANSPORTE</strong></div>
                                     <div><strong><span t-field="o.name"/></strong></div>
                                 </div>
-                                <div class="col-4 text-end">
-                                    <div>Pág. <span class="page"/> de <span class="topage"/></div>
+                                <div class="col-3 text-end">
+                                    <div>Pág. <span t-esc="page_lines_index + 1"/> de <span t-esc="len(pages)"/></div>
                                     <div><strong>Fecha:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/></div>
                                     <div><strong>Hora:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%I:%M %p')"/></div>
                                 </div>

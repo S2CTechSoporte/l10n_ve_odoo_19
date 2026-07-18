@@ -40,10 +40,11 @@ class StockPickingBatch(models.Model):
 
     def _get_transport_relation_destination(self, picking):
         self.ensure_one()
+        partner = picking.partner_id
         destination_parts = [
-            picking.state_id.name or '',
-            picking.city or '',
-            picking.municipality_id.name or '',
+            (partner.state_id.name if partner else picking.state_id.name) or '',
+            (partner.city if partner else picking.city) or '',
+            (partner.municipality_id.name if partner else picking.municipality_id.name) or '',
         ]
         return ' / '.join(part for part in destination_parts if part)
 

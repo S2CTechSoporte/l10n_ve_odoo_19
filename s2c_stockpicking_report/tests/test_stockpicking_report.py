@@ -38,7 +38,8 @@ class TestS2CStockPickingReport(TransactionCase):
         cls.partner = cls.env['res.partner'].create({
             'name': 'Compañía Ñandú',
             'customer_rank': 1,
-            'company_type': 'person',
+            'company_type': 'company',
+            'people_type_company': 'pjnd',
             'country_id': country.id,
             'city': 'Caracas',
             'state_id': cls.state_merida.id,
@@ -188,6 +189,15 @@ class TestS2CStockPickingReport(TransactionCase):
             'picking_type_id': self.picking_type_out.id,
             'picking_ids': [(6, 0, [picking.id])],
         })
+        company_vat = batch.company_id.vat
+        company_partner = batch.company_id.partner_id
+        company_partner.write({
+            'street': 'Av. Principal',
+            'street2': 'Edif. S2C',
+            'city': 'Caracas',
+            'state_id': self.state_merida.id,
+            'municipality_id': self.municipality.id,
+        })
 
         first_move_line = picking.move_line_ids[:1]
         self.assertEqual(first_move_line.city, 'Caracas')
@@ -218,6 +228,13 @@ class TestS2CStockPickingReport(TransactionCase):
         self.assertIn('RELACION DE TRANSPORTE', report_html)
         self.assertIn(picking.name, report_html)
         self.assertIn(sale_order.name, report_html)
+        self.assertIn('Merida / Caracas / Libertador', report_html)
+        self.assertIn('Pág. <span>1</span> de <span>1</span>', report_html)
+        self.assertIn(batch.company_id.name, report_html)
+        self.assertIn('Av. Principal, Edif. S2C, Merida / Caracas / Libertador', report_html)
+        if company_vat:
+            self.assertIn('RIF:', report_html)
+            self.assertIn(company_vat, report_html)
         self.assertIn('998877', report_html)
 
         empty_batch = self.env['stock.picking.batch'].create({
