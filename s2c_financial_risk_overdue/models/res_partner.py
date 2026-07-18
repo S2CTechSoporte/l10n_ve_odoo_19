@@ -53,7 +53,7 @@ class ResPartner(models.Model):
                 ("move_id.move_type", "=", "out_invoice"),
             ],
             "fields": ["amount_residual:sum", "amount_residual_currency:sum"],
-            "group_by": ["partner_id", "account_id", "currency_id"],
+            "group_by": ["partner_id", "account_id", "company_id", "currency_id"],
         }
         return groups
 
@@ -63,6 +63,7 @@ class ResPartner(models.Model):
         for (
             partner,
             account,
+            company,
             currency,
             amount_residual,
             amount_residual_currency,
@@ -73,7 +74,7 @@ class ResPartner(models.Model):
                 currency,
                 amount_residual_currency,
                 amount_residual,
-                account,
+                company,
             )
         return vals
 
@@ -86,9 +87,8 @@ class ResPartner(models.Model):
         return super()._get_field_risk_model_domain(field_name)
 
     def _get_amount_in_risk_currency(
-        self, currency, amount_residual_currency, amount_residual, account
+        self, currency, amount_residual_currency, amount_residual, company
     ):
-        company = getattr(account, "company_id", False) or account.company_ids[:1]
         company = company or self.company_id
         acc_currency_id = company.currency_id.id
         risk_currency_id = self.risk_currency_id.id
