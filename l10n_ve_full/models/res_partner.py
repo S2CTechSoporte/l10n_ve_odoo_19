@@ -12,6 +12,26 @@ RIF_FORMAT_ERROR = (
 RIF_FORMAT_PATTERN = re.compile(
     r'[VEJGC](?:-\d{7,8}-\d|-\d{2}\.\d{3}\.\d{3}-\d|\d{8,9})'
 )
+BUSINESS_DOCUMENT_LOCK_FIELDS = {
+    'vat',
+    'rif',
+    'identification_id',
+    'name',
+    'parent_id',
+    'company_type',
+    'country_id',
+    'nationality',
+}
+BUSINESS_DOCUMENT_LOCK_FIELD_LABELS = {
+    'vat': 'RIF',
+    'rif': 'RIF',
+    'identification_id': 'Documento de Identidad',
+    'name': 'Nombre',
+    'parent_id': 'Empresa relacionada',
+    'company_type': 'Tipo de compañía',
+    'country_id': 'País',
+    'nationality': 'Tipo Documento',
+}
 
 
 def normalize_rif(value):
@@ -98,6 +118,55 @@ class ResPartner(models.Model):
         ('gobernamental', 'Gubernamental')], string="Contribuyente", default='ordinario')
     
     country_id = fields.Many2one('res.country', default=lambda self: self.env.ref('base.ve') )
+
+    def _get_business_document_lock_reasons(self):
+        self.ensure_one()
+        reasons = []
+        if self.sale_order_count > 0:
+            reasons.append(_('Ventas: %(count)s', count=self.sale_order_count))
+        if self.total_invoiced > 0:
+            reasons.append(_('Facturado: %(amount)s', amount=self.total_invoiced))
+        if self.purchase_order_count > 0:
+            reasons.append(_('Compras: %(count)s', count=self.purchase_order_count))
+        return reasons
+
+    def _get_business_document_locked_field_labels(self, vals):
+        locked_field_names = BUSINESS_DOCUMENT_LOCK_FIELDS.intersection(vals)
+        changed_field_names = []
+        for field_name in locked_field_names:
+            field = self._fields[field_name]
+            current_value = self[field_name]
+            new_value = vals[field_name]
+            if field.type == 'many2one':
+                current_value = current_value.id or False
+                new_value = new_value or False
+            if current_value != new_value:
+                changed_field_names.append(field_name)
+        return [
+            BUSINESS_DOCUMENT_LOCK_FIELD_LABELS.get(field_name, self._fields[field_name].string)
+            for field_name in changed_field_names
+        ]
+
+    def _check_business_document_lock_before_write(self, vals):
+        for partner in self.sudo():
+            locked_field_labels = partner._get_business_document_locked_field_labels(vals)
+            if not locked_field_labels:
+                continue
+            reasons = partner._get_business_document_lock_reasons()
+            if reasons:
+                raise UserError(_(
+                    'No puede modificar los datos fiscales del contacto "%(partner)s" porque ya tiene ventas, facturas o compras registradas.\n'
+                    'Campos bloqueados: %(fields)s.\n'
+                    'Motivo: %(reasons)s.',
+                    partner=partner.display_name,
+                    fields=', '.join(locked_field_labels),
+                    reasons=', '.join(reasons),
+                ))
+
+    def write(self, vals):
+        if vals:
+            self._check_business_document_lock_before_write(vals)
+        return super().write(vals)
 
     @api.constrains('identification_id')
     def _check_identification_id(self):
