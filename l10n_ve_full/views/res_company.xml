@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='vat']" position="replace">
-                    <field name="rif" placeholder="Ej.: J-01234567-8" string="RIF" required="1"/>
+                    <field name="rif" placeholder="Ej.: J012345678" string="RIF" required="1"/>
                 </xpath>
                 <xpath expr="//field[@name='phone']" position="after">
                     <field name="fax"/>

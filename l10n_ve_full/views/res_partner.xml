@@ -38,7 +38,7 @@
                     <field name="vat"
                         class="w-100"
                         string="RIF"
-                        placeholder="Ej.: V-01234567-8 / J-01234567-8"
+                        placeholder="Ej.: V012345678 / J012345678"
                         readonly="parent_id != False"
                         invisible="people_type_company == 'pjnd'"
                         required="company_type == 'company' and people_type_company == 'pjdo'"/>

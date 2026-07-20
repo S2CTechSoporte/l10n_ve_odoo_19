@@ -1,16 +1,20 @@
 # -*- coding: UTF-8 -*-
 from odoo import _, fields, models, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 import re
 
 
 RIF_FORMAT_ERROR = (
-    'El rif tiene el formato incorrecto. Ej: V-01234567-8, E-01234567-8, '
-    'J-01234567-8 o G-01234567-8. Por favor verifique el formato y si posee '
-    'los 12 caracteres como se indica en el Ej. e intente de nuevo'
+    'El RIF tiene el formato incorrecto. Ej: V012345678, E012345678, '
+    'J012345678 o G012345678. Ingrese una letra inicial seguida de 9 dígitos, '
+    'sin guiones ni puntos.'
+)
+RIF_CHECKSUM_ERROR = (
+    'El RIF no es válido. Revise que la letra, los 8 dígitos y el último dígito '
+    'verificador sean correctos. El formato permitido es V012345678, sin guiones ni puntos.'
 )
 RIF_FORMAT_PATTERN = re.compile(
-    r'[VEJGC](?:-\d{7,8}-\d|-\d{2}\.\d{3}\.\d{3}-\d|\d{8,9})'
+    r'[VEJGC]\d{9}'
 )
 BUSINESS_DOCUMENT_LOCK_FIELDS = {
     'vat',
@@ -167,6 +171,21 @@ class ResPartner(models.Model):
         if vals:
             self._check_business_document_lock_before_write(vals)
         return super().write(vals)
+
+    @api.model
+    def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
+        """Validate Venezuelan RIFs using the compact localization format."""
+        if country and country.code == 'VE' and vat and validation:
+            vat = vat.strip().upper()
+            if not is_valid_rif_format(vat):
+                if validation == 'setnull':
+                    return '', country.code
+                raise ValidationError(RIF_FORMAT_ERROR)
+            try:
+                return super()._run_vat_checks(country, vat, partner_name, validation)
+            except ValidationError as error:
+                raise ValidationError(RIF_CHECKSUM_ERROR) from error
+        return super()._run_vat_checks(country, vat, partner_name, validation)
 
     @api.constrains('identification_id')
     def _check_identification_id(self):
