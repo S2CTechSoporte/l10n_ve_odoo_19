@@ -23,6 +23,11 @@ class TestInternalRequisitionCreate(TransactionCase):
             'name': 'Test Requisition Product',
             'type': 'consu',
         })
+        self.analytic_account = self.env['account.analytic.account'].sudo().create({
+            'name': 'Test Requisition Analytic Account',
+            'plan_id': self.env.ref('analytic.analytic_plan_projects').id,
+            'company_id': self.env.company.id,
+        })
 
         if not self.employee:
             self.department = self.env['hr.department'].sudo().create({'name': 'Test Department'})
@@ -42,6 +47,7 @@ class TestInternalRequisitionCreate(TransactionCase):
             self.employee.work_email = 'employee@example.com'
 
         self.employee.desti_loca_id = self.destination_location.id
+        self.employee.account_id = self.analytic_account.id
 
         self.manager = Employee.create({
             'name': 'Test Manager',
@@ -137,3 +143,30 @@ class TestInternalRequisitionCreate(TransactionCase):
         self.assertNotIn('{%', body)
         self.assertNotIn('<t ', body)
         self.assertIn(f'/web#id={requisition.id}', body)
+
+    def test_request_employee_onchange_sets_default_analytic_account(self):
+        requisition = self.env['internal.requisition'].new({
+            'request_emp': self.employee.id,
+        })
+
+        requisition.set_department()
+
+        self.assertEqual(requisition.department_id, self.employee.department_id)
+        self.assertEqual(requisition.account_id, self.employee.account_id)
+        self.assertEqual(requisition.desti_loca_id, self.employee.desti_loca_id)
+
+    def test_location_onchange_sets_first_warehouse_picking_type(self):
+        warehouse = self.source_location.warehouse_id
+        expected_picking_type = self.env['stock.picking.type'].search([
+            ('warehouse_id', '=', warehouse.id),
+        ], limit=1)
+        self.assertTrue(expected_picking_type)
+
+        requisition = self.env['internal.requisition'].new({
+            'location': self.source_location.id,
+        })
+
+        requisition._onchange_location()
+
+        self.assertEqual(requisition.location_warehouse_id, warehouse)
+        self.assertEqual(requisition.custom_picking_type_id, expected_picking_type)

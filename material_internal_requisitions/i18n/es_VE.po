@@ -298,6 +298,7 @@ msgid "Add Reason for Internal Requistion ...."
 msgstr "Agregue el motivo de la requisición interna...."
 
 #. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_hr_employee__account_id
 #: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__account_id
 msgid "Analytic Account"
 msgstr "Cuenta analítica"
@@ -866,6 +867,13 @@ msgid ""
 msgstr "Este campo se usa para definir la ubicación de destino predeterminada del empleado al crear requisiciones internas de materiales."
 
 #. module: material_internal_requisitions
+#: model:ir.model.fields,help:material_internal_requisitions.field_hr_employee__account_id
+msgid ""
+"This field is used to set the default analytic account for the employee when "
+"creating material internal requisitions."
+msgstr "Este campo se usa para definir la cuenta analítica predeterminada del empleado al crear requisiciones internas de materiales."
+
+#. module: material_internal_requisitions
 #: model:ir.model,name:material_internal_requisitions.model_stock_picking
 msgid "Transfer"
 msgstr "Transferencia"
@@ -879,6 +887,11 @@ msgstr "Tipo de actividad en excepción en el registro."
 #: model:ir.model.fields,field_description:material_internal_requisitions.field_custom_internal_requisition_line__uom
 msgid "Unit of Measure"
 msgstr "Unidad de medida"
+
+#. module: material_internal_requisitions
+#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__location_warehouse_id
+msgid "Warehouse"
+msgstr "Almacén"
 
 #. module: material_internal_requisitions
 #: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view

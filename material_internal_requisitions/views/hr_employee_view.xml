@@ -12,6 +12,7 @@
                         <group>
                             <group>
                                 <field name="desti_loca_id" groups="material_internal_requisitions.group_requisition_user,material_internal_requisitions.group_requisition_manager,material_internal_requisitions.group_requisition_department"/>
+                                <field name="account_id" groups="analytic.group_analytic_accounting,material_internal_requisitions.group_requisition_user,material_internal_requisitions.group_requisition_manager,material_internal_requisitions.group_requisition_department"/>
                             </group>
                         </group>
                      </page>

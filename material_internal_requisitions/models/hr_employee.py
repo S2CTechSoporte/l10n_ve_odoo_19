@@ -10,5 +10,9 @@ class HrEmployee(models.Model):
         'stock.location',
         string='Destination Location',
         help='This field is used to set the default destination location for the employee when creating material internal requisitions.')
+    account_id = fields.Many2one(
+        'account.analytic.account',
+        string='Analytic Account',
+        help='This field is used to set the default analytic account for the employee when creating material internal requisitions.')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

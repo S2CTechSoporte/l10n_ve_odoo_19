@@ -21,6 +21,7 @@ class InternalRequisition(models.Model):
         string='Number',
         index=True,
         readonly=True,
+        copy=False,
     )
     state = fields.Selection([
         ('draft', 'New'),
@@ -89,6 +90,12 @@ class InternalRequisition(models.Model):
         string='Source Location',
         #required=True,
         copy=True,
+    )
+    location_warehouse_id = fields.Many2one(
+        'stock.warehouse',
+        string='Warehouse',
+        related='location.warehouse_id',
+        readonly=True,
     )
     requisition_line_ids = fields.One2many(
         'custom.internal.requisition.line',
@@ -527,7 +534,20 @@ class InternalRequisition(models.Model):
     def set_department(self):
         for rec in self:
             rec.department_id = rec.request_emp.sudo().department_id.id
+            rec.account_id = rec.request_emp.sudo().account_id.id
             rec.desti_loca_id = rec.request_emp.desti_loca_id.id or rec.request_emp.department_id.desti_loca_id.id 
+
+    @api.onchange('location')
+    def _onchange_location(self):
+        for rec in self:
+            warehouse = rec.location.warehouse_id
+            if not warehouse:
+                rec.custom_picking_type_id = False
+                continue
+
+            rec.custom_picking_type_id = self.env['stock.picking.type'].search([
+                ('warehouse_id', '=', warehouse.id),
+            ], limit=1)
             
     #@api.multi
     def show_picking(self):
