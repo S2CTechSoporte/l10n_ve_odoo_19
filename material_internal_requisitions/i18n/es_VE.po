@@ -889,11 +889,6 @@ msgid "Unit of Measure"
 msgstr "Unidad de medida"
 
 #. module: material_internal_requisitions
-#: model:ir.model.fields,field_description:material_internal_requisitions.field_internal_requisition__location_warehouse_id
-msgid "Warehouse"
-msgstr "Almacén"
-
-#. module: material_internal_requisitions
 #: model_terms:ir.ui.view,arch_db:material_internal_requisitions.material_internal_requisition_search_view
 msgid "User Approve Date"
 msgstr "Fecha de aprobación del usuario"

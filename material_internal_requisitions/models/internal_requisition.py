@@ -91,12 +91,6 @@ class InternalRequisition(models.Model):
         #required=True,
         copy=True,
     )
-    location_warehouse_id = fields.Many2one(
-        'stock.warehouse',
-        string='Warehouse',
-        related='location.warehouse_id',
-        readonly=True,
-    )
     requisition_line_ids = fields.One2many(
         'custom.internal.requisition.line',
         'requisition_id',
@@ -185,7 +179,8 @@ class InternalRequisition(models.Model):
     custom_picking_type_id = fields.Many2one(
         'stock.picking.type',
         string='Picking Type',
-        copy=False,
+        copy=True,
+
     )
 
     def init(self):
@@ -537,17 +532,10 @@ class InternalRequisition(models.Model):
             rec.account_id = rec.request_emp.sudo().account_id.id
             rec.desti_loca_id = rec.request_emp.desti_loca_id.id or rec.request_emp.department_id.desti_loca_id.id 
 
-    @api.onchange('location')
-    def _onchange_location(self):
+    @api.onchange('custom_picking_type_id')
+    def _onchange_custom_picking_type_id(self):
         for rec in self:
-            warehouse = rec.location.warehouse_id
-            if not warehouse:
-                rec.custom_picking_type_id = False
-                continue
-
-            rec.custom_picking_type_id = self.env['stock.picking.type'].search([
-                ('warehouse_id', '=', warehouse.id),
-            ], limit=1)
+            rec.location = rec.custom_picking_type_id.default_location_src_id
             
     #@api.multi
     def show_picking(self):

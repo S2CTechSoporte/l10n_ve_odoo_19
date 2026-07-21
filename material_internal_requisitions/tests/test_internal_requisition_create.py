@@ -155,18 +155,19 @@ class TestInternalRequisitionCreate(TransactionCase):
         self.assertEqual(requisition.account_id, self.employee.account_id)
         self.assertEqual(requisition.desti_loca_id, self.employee.desti_loca_id)
 
-    def test_location_onchange_sets_first_warehouse_picking_type(self):
-        warehouse = self.source_location.warehouse_id
-        expected_picking_type = self.env['stock.picking.type'].search([
-            ('warehouse_id', '=', warehouse.id),
-        ], limit=1)
-        self.assertTrue(expected_picking_type)
-
+    def test_picking_type_onchange_sets_default_source_location(self):
         requisition = self.env['internal.requisition'].new({
-            'location': self.source_location.id,
+            'custom_picking_type_id': self.picking_type.id,
         })
 
-        requisition._onchange_location()
+        requisition._onchange_custom_picking_type_id()
 
-        self.assertEqual(requisition.location_warehouse_id, warehouse)
-        self.assertEqual(requisition.custom_picking_type_id, expected_picking_type)
+        self.assertEqual(
+            requisition.location,
+            self.picking_type.default_location_src_id,
+        )
+
+        requisition.custom_picking_type_id = False
+        requisition._onchange_custom_picking_type_id()
+
+        self.assertFalse(requisition.location)

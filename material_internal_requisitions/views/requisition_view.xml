@@ -76,8 +76,7 @@
                                     <group>
                                         <field name="desti_loca_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" readonly="state in ('reject','cancel','receive')"/>
                                         <field name="delivery_picking_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user"/>
-                                        <field name="location_warehouse_id" invisible="1" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user"/>
-                                        <field name="custom_picking_type_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" domain="[('warehouse_id', '=', location_warehouse_id), ('warehouse_id', '!=', False)]" readonly="state in ('reject','cancel','receive')"/>
+                                        <field name="custom_picking_type_id" groups="material_internal_requisitions.group_requisition_user,stock.group_stock_user" readonly="state in ('reject','cancel','receive')"/>
                                     </group>
                                 </group>
                             </page>
