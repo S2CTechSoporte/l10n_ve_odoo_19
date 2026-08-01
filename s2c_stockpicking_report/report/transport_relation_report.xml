@@ -61,9 +61,9 @@
                                 <tbody>
                                     <tr t-foreach="page_lines" t-as="line">
                                         <td class="text-center"><span t-esc="line['item']"/></td>
-                                        <td><span t-esc="line['guia']"/></td>
-                                        <td><span t-esc="line['pedido']"/></td>
-                                        <td><span t-esc="line['solicitud']"/></td>
+                                        <td class="text-center"><span t-esc="line['guia']"/></td>
+                                        <td class="text-center"><span t-esc="line['pedido']"/></td>
+                                        <td class="text-center"><span t-esc="line['solicitud']"/></td>
                                         <td><span t-esc="line['cliente']"/></td>
                                         <td><span t-esc="line['destino']"/></td>
                                         <td class="text-end"><span t-esc="line['peso']" t-options="{'widget': 'float', 'precision': 2}"/></td>
