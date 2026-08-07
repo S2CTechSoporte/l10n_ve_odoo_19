@@ -72,5 +72,8 @@
         'security/ir.model.access.csv',
         'views/res_config_settings.xml',
     ],
+    'demo': [
+        'demo/l10n_ve_full_demo.xml',
+    ],
     "license": "GPL-2",
 }

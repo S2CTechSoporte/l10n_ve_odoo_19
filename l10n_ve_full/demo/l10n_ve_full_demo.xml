@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="partner_my_company_ves" model="res.partner">
+            <field name="name">My Company VES</field>
+            <field name="is_company" eval="True"/>
+            <field name="company_type">company</field>
+            <field name="people_type_company">pjdo</field>
+            <field name="vat">J123456784</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="street">Avenida Principal 100</field>
+            <field name="city">Caracas</field>
+            <field name="phone">+58 212 5550100</field>
+            <field name="email">ves@example.com</field>
+            <field name="customer_rank">1</field>
+            <field name="supplier_rank">1</field>
+            <field name="wh_iva_agent" eval="False"/>
+            <field name="islr_withholding_agent" eval="False"/>
+        </record>
+
+        <record id="partner_my_company_usd" model="res.partner">
+            <field name="name">My Company USD</field>
+            <field name="is_company" eval="True"/>
+            <field name="company_type">company</field>
+            <field name="people_type_company">pjdo</field>
+            <field name="vat">J987654324</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="street">Avenida Principal 200</field>
+            <field name="city">Valencia</field>
+            <field name="phone">+58 241 5550200</field>
+            <field name="email">usd@example.com</field>
+            <field name="customer_rank">1</field>
+            <field name="supplier_rank">1</field>
+            <field name="wh_iva_agent" eval="False"/>
+            <field name="islr_withholding_agent" eval="False"/>
+        </record>
+
+        <record id="company_my_company_ves" model="res.company">
+            <field name="name">My Company VES</field>
+            <field name="partner_id" ref="partner_my_company_ves"/>
+            <field name="currency_id" ref="base.VES"/>
+            <field name="currency_l10n_id" ref="base.VES"/>
+        </record>
+
+        <record id="company_my_company_usd" model="res.company">
+            <field name="name">My Company USD</field>
+            <field name="partner_id" ref="partner_my_company_usd"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="currency_l10n_id" ref="base.USD"/>
+        </record>
+
+        <function model="res.users" name="write">
+            <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+            <value eval="{'company_ids': [(4, ref('l10n_ve_full.company_my_company_ves')), (4, ref('l10n_ve_full.company_my_company_usd'))]}"/>
+        </function>
+
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>ve</value>
+            <value model="res.company" eval="obj().env.ref('l10n_ve_full.company_my_company_ves')"/>
+            <value name="install_demo" eval="False"/>
+        </function>
+
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>ve</value>
+            <value model="res.company" eval="obj().env.ref('l10n_ve_full.company_my_company_usd')"/>
+            <value name="install_demo" eval="False"/>
+        </function>
+
+        <function model="res.company" name="write">
+            <value eval="[ref('l10n_ve_full.company_my_company_ves')]"/>
+            <value eval="{'currency_id': ref('base.VES'), 'currency_l10n_id': ref('base.VES')}"/>
+        </function>
+
+        <function model="res.company" name="write">
+            <value eval="[ref('l10n_ve_full.company_my_company_usd')]"/>
+            <value eval="{'currency_id': ref('base.USD'), 'currency_l10n_id': ref('base.USD')}"/>
+        </function>
+
+        <record id="warehouse_my_company_ves" model="stock.warehouse" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_ves')]}" >
+            <field name="name">My Company VES Warehouse</field>
+            <field name="code">VES</field>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_ves"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_my_company_ves"/>
+        </record>
+
+        <record id="warehouse_my_company_usd" model="stock.warehouse" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_usd')]}" >
+            <field name="name">My Company USD Warehouse</field>
+            <field name="code">USD</field>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_usd"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_my_company_usd"/>
+        </record>
+
+        <record id="partner_ves_customer" model="res.partner">
+            <field name="name">Caracas Retail Customer</field>
+            <field name="is_company" eval="True"/>
+            <field name="company_type">company</field>
+            <field name="people_type_company">pjdo</field>
+            <field name="vat">J234567895</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_ves"/>
+            <field name="customer_rank">1</field>
+            <field name="wh_iva_agent" eval="False"/>
+            <field name="islr_withholding_agent" eval="False"/>
+        </record>
+
+        <record id="partner_ves_supplier" model="res.partner">
+            <field name="name">Andes Industrial Supplier</field>
+            <field name="is_company" eval="True"/>
+            <field name="company_type">company</field>
+            <field name="people_type_company">pjdo</field>
+            <field name="vat">J345678904</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_ves"/>
+            <field name="supplier_rank">1</field>
+            <field name="wh_iva_agent" eval="False"/>
+            <field name="islr_withholding_agent" eval="False"/>
+        </record>
+
+        <record id="partner_usd_customer" model="res.partner">
+            <field name="name">Carabobo Retail Customer</field>
+            <field name="is_company" eval="True"/>
+            <field name="company_type">company</field>
+            <field name="people_type_company">pjdo</field>
+            <field name="vat">J456789012</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_usd"/>
+            <field name="customer_rank">1</field>
+            <field name="wh_iva_agent" eval="False"/>
+            <field name="islr_withholding_agent" eval="False"/>
+        </record>
+
+        <record id="partner_usd_supplier" model="res.partner">
+            <field name="name">Llanos Industrial Supplier</field>
+            <field name="is_company" eval="True"/>
+            <field name="company_type">company</field>
+            <field name="people_type_company">pjdo</field>
+            <field name="vat">J567890120</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_usd"/>
+            <field name="supplier_rank">1</field>
+            <field name="wh_iva_agent" eval="False"/>
+            <field name="islr_withholding_agent" eval="False"/>
+        </record>
+
+        <record id="product_ves_service" model="product.product">
+            <field name="name">Venezuelan Distribution Service VES</field>
+            <field name="default_code">DEMO-VES-001</field>
+            <field name="list_price">125.00</field>
+            <field name="standard_price">75.00</field>
+            <field name="is_storable" eval="True"/>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_ves"/>
+        </record>
+
+        <record id="product_usd_service" model="product.product">
+            <field name="name">Venezuelan Distribution Service USD</field>
+            <field name="default_code">DEMO-USD-001</field>
+            <field name="list_price">125.00</field>
+            <field name="standard_price">75.00</field>
+            <field name="is_storable" eval="True"/>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_usd"/>
+        </record>
+
+        <record id="sale_order_my_company_ves" model="sale.order" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_ves')]}" >
+            <field name="company_id" ref="l10n_ve_full.company_my_company_ves"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_ves_customer"/>
+            <field name="date_order">2026-08-01 09:00:00</field>
+            <field name="order_line" eval="[(0, 0, {'product_id': ref('l10n_ve_full.product_ves_service'), 'name': 'Venezuelan Distribution Service VES', 'product_uom_qty': 4.0, 'product_uom_id': ref('uom.product_uom_unit'), 'price_unit': 125.0})]"/>
+        </record>
+
+        <record id="sale_order_my_company_usd" model="sale.order" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_usd')]}" >
+            <field name="company_id" ref="l10n_ve_full.company_my_company_usd"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_usd_customer"/>
+            <field name="date_order">2026-08-02 09:00:00</field>
+            <field name="order_line" eval="[(0, 0, {'product_id': ref('l10n_ve_full.product_usd_service'), 'name': 'Venezuelan Distribution Service USD', 'product_uom_qty': 4.0, 'product_uom_id': ref('uom.product_uom_unit'), 'price_unit': 125.0})]"/>
+        </record>
+
+        <record id="purchase_order_my_company_ves" model="purchase.order" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_ves')]}" >
+            <field name="company_id" ref="l10n_ve_full.company_my_company_ves"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_ves_supplier"/>
+            <field name="date_order">2026-08-03 09:00:00</field>
+            <field name="order_line" eval="[(0, 0, {'product_id': ref('l10n_ve_full.product_ves_service'), 'name': 'Venezuelan Distribution Service VES', 'product_qty': 2.0, 'product_uom_id': ref('uom.product_uom_unit'), 'price_unit': 75.0, 'date_planned': '2026-08-06'})]"/>
+        </record>
+
+        <record id="purchase_order_my_company_usd" model="purchase.order" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_usd')]}" >
+            <field name="company_id" ref="l10n_ve_full.company_my_company_usd"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_usd_supplier"/>
+            <field name="date_order">2026-08-04 09:00:00</field>
+            <field name="order_line" eval="[(0, 0, {'product_id': ref('l10n_ve_full.product_usd_service'), 'name': 'Venezuelan Distribution Service USD', 'product_qty': 2.0, 'product_uom_id': ref('uom.product_uom_unit'), 'price_unit': 75.0, 'date_planned': '2026-08-07'})]"/>
+        </record>
+
+        <record id="picking_my_company_ves" model="stock.picking" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_ves')]}" >
+            <field name="picking_type_id" model="stock.warehouse" eval="obj(ref('l10n_ve_full.warehouse_my_company_ves')).out_type_id.id"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_ves_customer"/>
+            <field name="origin">My Company VES demo sale</field>
+            <field name="scheduled_date">2026-08-08 09:00:00</field>
+            <field name="location_id" model="stock.warehouse" eval="obj(ref('l10n_ve_full.warehouse_my_company_ves')).lot_stock_id.id"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="move_ids" model="stock.warehouse" eval="[(0, 0, {'product_id': ref('l10n_ve_full.product_ves_service'), 'product_uom': ref('uom.product_uom_unit'), 'product_uom_qty': 4.0, 'picking_type_id': obj(ref('l10n_ve_full.warehouse_my_company_ves')).out_type_id.id, 'location_id': obj(ref('l10n_ve_full.warehouse_my_company_ves')).lot_stock_id.id, 'location_dest_id': ref('stock.stock_location_customers')})]"/>
+        </record>
+
+        <record id="picking_my_company_usd" model="stock.picking" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_usd')]}" >
+            <field name="picking_type_id" model="stock.warehouse" eval="obj(ref('l10n_ve_full.warehouse_my_company_usd')).out_type_id.id"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_usd_customer"/>
+            <field name="origin">My Company USD demo sale</field>
+            <field name="scheduled_date">2026-08-09 09:00:00</field>
+            <field name="location_id" model="stock.warehouse" eval="obj(ref('l10n_ve_full.warehouse_my_company_usd')).lot_stock_id.id"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="move_ids" model="stock.warehouse" eval="[(0, 0, {'product_id': ref('l10n_ve_full.product_usd_service'), 'product_uom': ref('uom.product_uom_unit'), 'product_uom_qty': 4.0, 'picking_type_id': obj(ref('l10n_ve_full.warehouse_my_company_usd')).out_type_id.id, 'location_id': obj(ref('l10n_ve_full.warehouse_my_company_usd')).lot_stock_id.id, 'location_dest_id': ref('stock.stock_location_customers')})]"/>
+        </record>
+
+        <record id="invoice_my_company_ves" model="account.move" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_ves')]}" >
+            <field name="move_type">out_invoice</field>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_ves"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_ves_customer"/>
+            <field name="invoice_date">2026-08-01</field>
+            <field name="date">2026-08-01</field>
+            <field name="date_document">2026-08-01</field>
+            <field name="nro_ctrl">00-000001</field>
+            <field name="journal_id" search="[('type', '=', 'sale'), ('company_id', '=', ref('l10n_ve_full.company_my_company_ves'))]"/>
+        </record>
+
+        <record id="invoice_my_company_ves_line" model="account.move.line" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_ves')]}" >
+            <field name="move_id" ref="l10n_ve_full.invoice_my_company_ves"/>
+            <field name="product_id" ref="l10n_ve_full.product_ves_service"/>
+            <field name="name">Venezuelan Distribution Service VES</field>
+            <field name="quantity">4.0</field>
+            <field name="price_unit">125.0</field>
+            <field name="account_id" search="[('account_type', 'in', ['income', 'income_other']), ('company_ids', 'in', [ref('l10n_ve_full.company_my_company_ves')])]"/>
+            <field name="tax_ids" model="account.tax" eval="[(6, 0, [obj().search([('type_tax_use', '=', 'sale'), ('amount', '=', 22.0), ('company_id', '=', ref('l10n_ve_full.company_my_company_ves'))], limit=1).id])]"/>
+        </record>
+
+        <record id="invoice_my_company_usd" model="account.move" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_usd')]}" >
+            <field name="move_type">out_invoice</field>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_usd"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_usd_customer"/>
+            <field name="invoice_date">2026-08-02</field>
+            <field name="date">2026-08-02</field>
+            <field name="date_document">2026-08-02</field>
+            <field name="nro_ctrl">00-000002</field>
+            <field name="journal_id" search="[('type', '=', 'sale'), ('company_id', '=', ref('l10n_ve_full.company_my_company_usd'))]"/>
+        </record>
+
+        <record id="invoice_my_company_usd_line" model="account.move.line" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_usd')]}" >
+            <field name="move_id" ref="l10n_ve_full.invoice_my_company_usd"/>
+            <field name="product_id" ref="l10n_ve_full.product_usd_service"/>
+            <field name="name">Venezuelan Distribution Service USD</field>
+            <field name="quantity">4.0</field>
+            <field name="price_unit">125.0</field>
+            <field name="account_id" search="[('account_type', 'in', ['income', 'income_other']), ('company_ids', 'in', [ref('l10n_ve_full.company_my_company_usd')])]"/>
+            <field name="tax_ids" model="account.tax" eval="[(6, 0, [obj().search([('type_tax_use', '=', 'sale'), ('amount', '=', 22.0), ('company_id', '=', ref('l10n_ve_full.company_my_company_usd'))], limit=1).id])]"/>
+        </record>
+
+        <record id="vendor_bill_my_company_ves" model="account.move" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_ves')]}" >
+            <field name="move_type">in_invoice</field>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_ves"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_ves_supplier"/>
+            <field name="invoice_date">2026-08-03</field>
+            <field name="date">2026-08-03</field>
+            <field name="date_document">2026-08-03</field>
+            <field name="supplier_invoice_number">PROV-VES-0001</field>
+            <field name="journal_id" search="[('type', '=', 'purchase'), ('company_id', '=', ref('l10n_ve_full.company_my_company_ves'))]"/>
+        </record>
+
+        <record id="vendor_bill_my_company_ves_line" model="account.move.line" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_ves')]}" >
+            <field name="move_id" ref="l10n_ve_full.vendor_bill_my_company_ves"/>
+            <field name="product_id" ref="l10n_ve_full.product_ves_service"/>
+            <field name="name">Venezuelan Distribution Service VES</field>
+            <field name="quantity">2.0</field>
+            <field name="price_unit">75.0</field>
+            <field name="account_id" search="[('account_type', 'in', ['expense', 'expense_direct_cost']), ('company_ids', 'in', [ref('l10n_ve_full.company_my_company_ves')])]"/>
+            <field name="tax_ids" model="account.tax" eval="[(6, 0, [obj().search([('type_tax_use', '=', 'purchase'), ('amount', '=', 22.0), ('company_id', '=', ref('l10n_ve_full.company_my_company_ves'))], limit=1).id])]"/>
+        </record>
+
+        <record id="vendor_bill_my_company_usd" model="account.move" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_usd')]}" >
+            <field name="move_type">in_invoice</field>
+            <field name="company_id" ref="l10n_ve_full.company_my_company_usd"/>
+            <field name="partner_id" ref="l10n_ve_full.partner_usd_supplier"/>
+            <field name="invoice_date">2026-08-04</field>
+            <field name="date">2026-08-04</field>
+            <field name="date_document">2026-08-04</field>
+            <field name="supplier_invoice_number">PROV-USD-0001</field>
+            <field name="journal_id" search="[('type', '=', 'purchase'), ('company_id', '=', ref('l10n_ve_full.company_my_company_usd'))]"/>
+        </record>
+
+        <record id="vendor_bill_my_company_usd_line" model="account.move.line" context="{'allowed_company_ids': [ref('l10n_ve_full.company_my_company_usd')]}" >
+            <field name="move_id" ref="l10n_ve_full.vendor_bill_my_company_usd"/>
+            <field name="product_id" ref="l10n_ve_full.product_usd_service"/>
+            <field name="name">Venezuelan Distribution Service USD</field>
+            <field name="quantity">2.0</field>
+            <field name="price_unit">75.0</field>
+            <field name="account_id" search="[('account_type', 'in', ['expense', 'expense_direct_cost']), ('company_ids', 'in', [ref('l10n_ve_full.company_my_company_usd')])]"/>
+            <field name="tax_ids" model="account.tax" eval="[(6, 0, [obj().search([('type_tax_use', '=', 'purchase'), ('amount', '=', 22.0), ('company_id', '=', ref('l10n_ve_full.company_my_company_usd'))], limit=1).id])]"/>
+        </record>
+    </data>
+</odoo>
