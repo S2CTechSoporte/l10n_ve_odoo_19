@@ -31,6 +31,11 @@ class TestS2CStockLocationZone(TransactionCase):
             'state_id': cls.state.id,
             'municipality_id': cls.municipality.id,
         })
+        cls.product = cls.env['product.product'].create({
+            'name': 'S2C Zone Test Product',
+            'type': 'consu',
+            'is_storable': True,
+        })
 
     def test_picking_and_move_line_zone_fields(self):
         picking = self.env['stock.picking'].create({
@@ -41,7 +46,7 @@ class TestS2CStockLocationZone(TransactionCase):
         })
         move_line = self.env['stock.move.line'].create({
             'picking_id': picking.id,
-            'product_id': self.env.ref('product.product_product_4').id,
+            'product_id': self.product.id,
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'location_id': picking.location_id.id,
             'location_dest_id': picking.location_dest_id.id,

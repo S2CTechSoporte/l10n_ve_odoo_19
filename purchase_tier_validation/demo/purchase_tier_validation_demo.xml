@@ -14,7 +14,6 @@
         <field name="name">Purchase Tier Demo Vendor</field>
         <field name="email">purchase-tier-vendor@example.com</field>
         <field name="company_type">company</field>
-        <field name="people_type_company">pjnd</field>
         <field name="supplier_rank">1</field>
     </record>
 

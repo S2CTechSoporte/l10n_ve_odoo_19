@@ -59,7 +59,6 @@ class TestPurchaseTierValidationFlow(common.TransactionCase):
                 "name": "Vendor for test",
                 "supplier_rank": 1,
                 "company_type": "company",
-                "people_type_company": "pjnd",
             }
         )
         cls.product = cls.env["product.product"].create(

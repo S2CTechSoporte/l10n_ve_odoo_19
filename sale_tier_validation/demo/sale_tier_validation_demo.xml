@@ -14,7 +14,6 @@
         <field name="name">Sale Tier Demo Customer</field>
         <field name="email">sale-tier-customer@example.com</field>
         <field name="company_type">company</field>
-        <field name="people_type_company">pjnd</field>
         <field name="customer_rank">1</field>
     </record>
 

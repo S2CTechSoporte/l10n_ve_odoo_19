@@ -43,7 +43,6 @@ class TestSaleTierValidation(common.TransactionCase):
             {
                 "name": "Partner for test",
                 "company_type": "company",
-                "people_type_company": "pjnd",
             }
         )
         cls.product = cls.env["product.product"].create(

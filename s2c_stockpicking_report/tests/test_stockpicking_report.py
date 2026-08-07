@@ -39,7 +39,6 @@ class TestS2CStockPickingReport(TransactionCase):
             'name': 'Compañía Ñandú',
             'customer_rank': 1,
             'company_type': 'company',
-            'people_type_company': 'pjnd',
             'country_id': country.id,
             'city': 'Caracas',
             'state_id': cls.state_merida.id,
