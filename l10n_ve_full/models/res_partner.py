@@ -225,15 +225,6 @@ class ResPartner(models.Model):
             partner.same_vat_partner_id = bool(partner.rif) and not partner.parent_id and Partner.search(domain,
                                                                                                          limit=1)
 
-    @api.constrains('vat', 'vat_type', 'country_id')
-    def check_vat(self):
-        for rec in self:
-            if rec.country_id:
-                if rec.country_id.code == 'VE':
-                    return
-                else:
-                    return super().check_vat()
-
     @api.model
     def format_vat_ve(self, vat):
         return (vat or '').strip().upper()
