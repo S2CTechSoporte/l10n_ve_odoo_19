@@ -29,10 +29,15 @@ class SaleOrder(models.Model):
         if vals.get('partner_id'):
                 partner_id = vals.get('partner_id')
                 partner_obj =self.env['res.partner'].search([('id', '=', partner_id)])
-                if (partner_obj.company_type == 'person' and not partner_obj.identification_id):
+                if (partner_obj.company_type == 'person'
+                        and partner_obj.country_id.code == 'VE'
+                        and partner_obj.people_type_individual == 'pnre'
+                        and not partner_obj.identification_id):
                     raise UserError('El Cliente no posee Documento Fiscal, por favor diríjase a la configuación de %s, y realice el registro correctamente para poder continuar' % str(partner_obj.name))
                 if (partner_obj.company_type == 'company'):
-                    if (partner_obj.people_type_company == 'pjdo' and not partner_obj.rif):
+                    if (partner_obj.country_id.code == 'VE'
+                            and partner_obj.people_type_company == 'pjdo'
+                            and not partner_obj.rif):
                         raise UserError('El Cliente no posee Documento Fiscal, por favor diríjase a la configuación de %s, y realice el registro correctamente para poder continuar' % str(partner_obj.name))
 
         res = super(SaleOrder, self).write(vals)
@@ -49,11 +54,16 @@ class SaleOrder(models.Model):
             if not partner_obj:
                 continue
 
-            if (partner_obj.company_type == 'person' and not partner_obj.identification_id):
+            if (partner_obj.company_type == 'person'
+                    and partner_obj.country_id.code == 'VE'
+                    and partner_obj.people_type_individual == 'pnre'
+                    and not partner_obj.identification_id):
                 raise UserError('El Cliente no posee Documento Fiscal, por favor diríjase a la configuación de %s, y realice el registro correctamente para poder continuar' % str(partner_obj.name))
 
             if (partner_obj.company_type == 'company'):
-                if (partner_obj.people_type_company == 'pjdo' and not partner_obj.rif):
+                if (partner_obj.country_id.code == 'VE'
+                        and partner_obj.people_type_company == 'pjdo'
+                        and not partner_obj.rif):
                     raise UserError('El Cliente no posee Documento Fiscal, por favor diríjase a la configuación de %s, y realice el registro correctamente para poder continuar' % str(partner_obj.name))
 
         return super(SaleOrder, self).create(vals_list)

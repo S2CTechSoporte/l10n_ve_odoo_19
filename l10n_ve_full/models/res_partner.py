@@ -65,16 +65,17 @@ class ResPartner(models.Model):
     nationality = fields.Selection([
         ('V', 'Venezolano'),
         ('E', 'Extranjero'),
-        ('P', 'Pasaporte')], string="Tipo Documento", default='V')
+        ('P', 'Pasaporte')], string="Tipo Documento", default=lambda self: self._default_nationality())
     identification_id = fields.Char(string='Documento de Identidad')
     value_parent = fields.Boolean(string='Valor parent_id', compute='compute_value_parent_id')
     people_type_individual = fields.Selection([
         ('pnre', 'PNRE Persona Natural Residente'),
         ('pnnr', 'PNNR Persona Natural No Residente')
-    ], string='Tipo de Persona individual', default='pnre')
+    ], string='Tipo de Persona individual', default=lambda self: self._default_people_type_individual())
     people_type_company = fields.Selection([
         ('pjdo', 'PJDO Persona Jurídica Domiciliada'),
-        ('pjnd', 'PJND Persona Jurídica No Domiciliada')], string='Tipo de Persona compañía', default='pjdo')
+        ('pjnd', 'PJND Persona Jurídica No Domiciliada')],
+        string='Tipo de Persona compañía', default=lambda self: self._default_people_type_company())
     
     #vat = fields.Char(tracking=False)
     rif = fields.Char(string='RIF', 
@@ -123,6 +124,75 @@ class ResPartner(models.Model):
     
     country_id = fields.Many2one('res.country', default=lambda self: self.env.ref('base.ve') )
 
+    @api.model
+    def _get_default_country_id(self):
+        country_id = self.env.context.get('default_country_id')
+        if country_id is None:
+            country_id = self._fields['country_id'].default(self)
+        return country_id
+
+    @api.model
+    def _default_nationality(self):
+        return self._get_nationality_from_country(self._get_default_country_id())
+
+    @api.model
+    def _default_people_type_individual(self):
+        individual_type, company_type = self._get_people_types_from_country(
+            self._get_default_country_id(),
+        )
+        return individual_type
+
+    @api.model
+    def _default_people_type_company(self):
+        individual_type, company_type = self._get_people_types_from_country(
+            self._get_default_country_id(),
+        )
+        return company_type
+
+    @api.model
+    def _get_country_from_value(self, country_id):
+        if getattr(country_id, '_name', None) == 'res.country':
+            return country_id.exists()
+        return self.env['res.country'].browse(country_id).exists()
+
+    @api.model
+    def _get_nationality_from_country(self, country_id):
+        country = self._get_country_from_value(country_id)
+        if not country:
+            return False
+        return 'V' if country.code == 'VE' else 'E'
+
+    @api.model
+    def _get_people_types_from_country(self, country_id):
+        country = self._get_country_from_value(country_id)
+        if not country:
+            return False, False
+        if country.code == 'VE':
+            return 'pnre', 'pjdo'
+        return 'pnnr', 'pjnd'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        default_country_id = self._get_default_country_id()
+        for vals in vals_list:
+            country_id = vals['country_id'] if 'country_id' in vals else default_country_id
+            if 'nationality' not in vals:
+                vals['nationality'] = self._get_nationality_from_country(country_id)
+            individual_type, company_type = self._get_people_types_from_country(country_id)
+            if 'people_type_individual' not in vals:
+                vals['people_type_individual'] = individual_type
+            if 'people_type_company' not in vals:
+                vals['people_type_company'] = company_type
+        return super().create(vals_list)
+
+    @api.onchange('country_id')
+    def _onchange_country_id_set_nationality(self):
+        for partner in self:
+            partner.nationality = self._get_nationality_from_country(partner.country_id.id)
+            individual_type, company_type = self._get_people_types_from_country(partner.country_id.id)
+            partner.people_type_individual = individual_type
+            partner.people_type_company = company_type
+
     def _get_business_document_lock_reasons(self):
         self.ensure_one()
         reasons = []
@@ -168,6 +238,15 @@ class ResPartner(models.Model):
                 ))
 
     def write(self, vals):
+        if 'country_id' in vals:
+            vals = dict(vals)
+            if 'nationality' not in vals:
+                vals['nationality'] = self._get_nationality_from_country(vals['country_id'])
+            individual_type, company_type = self._get_people_types_from_country(vals['country_id'])
+            if 'people_type_individual' not in vals:
+                vals['people_type_individual'] = individual_type
+            if 'people_type_company' not in vals:
+                vals['people_type_company'] = company_type
         if vals:
             self._check_business_document_lock_before_write(vals)
         return super().write(vals)

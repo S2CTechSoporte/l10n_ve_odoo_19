@@ -228,10 +228,15 @@ class AccountMove(models.Model):
         if vals.get('partner_id'):
             partner_id = vals.get('partner_id')
             partner_obj = self.env['res.partner'].search([('id', '=', partner_id)])
-            if partner_obj.company_type == 'person' and not partner_obj.identification_id:
+            if (partner_obj.company_type == 'person'
+                    and partner_obj.country_id.code == 'VE'
+                    and partner_obj.people_type_individual == 'pnre'
+                    and not partner_obj.identification_id):
                 raise UserError("Advertencia! \nEl Proveedor no posee Documento Fiscal. Por favor diríjase a la configuación de %s, y realice el registro correctamente para poder continuar" % (partner_obj.name))
             if partner_obj.company_type == 'company':
-                if partner_obj.people_type_company == 'pjdo' and not partner_obj.rif:
+                if (partner_obj.country_id.code == 'VE'
+                        and partner_obj.people_type_company == 'pjdo'
+                        and not partner_obj.rif):
                     raise UserError("Advertencia! \nEl Proveedor no posee Documento Fiscal. Por favor diríjase a la configuación de %s, y realice el registro correctamente para poder continuar" % (partner_obj.name))
         if vals.get('move_type') in ('out_invoice', 'out_refund') and \
                 vals.get('date') and not vals.get('date_document'):

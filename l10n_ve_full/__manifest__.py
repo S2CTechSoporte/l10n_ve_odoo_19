@@ -75,5 +75,6 @@
     'demo': [
         'demo/l10n_ve_full_demo.xml',
     ],
+    'post_init_hook': 'post_init_hook',
     "license": "GPL-2",
 }
