@@ -1,4 +1,5 @@
-from odoo import api, fields, models, exceptions, _
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 class PurchaseRequestStage(models.Model):
     _name = "purchase.request.stage"
