@@ -54,14 +54,14 @@
             <value eval="{'company_ids': [(4, ref('l10n_ve_full.company_my_company_ves')), (4, ref('l10n_ve_full.company_my_company_usd'))]}"/>
         </function>
 
-        <function model="account.chart.template" name="try_loading">
+        <function model="account.chart.template" name="_load">
             <value eval="[]"/>
             <value>ve</value>
             <value model="res.company" eval="obj().env.ref('l10n_ve_full.company_my_company_ves')"/>
             <value name="install_demo" eval="False"/>
         </function>
 
-        <function model="account.chart.template" name="try_loading">
+        <function model="account.chart.template" name="_load">
             <value eval="[]"/>
             <value>ve</value>
             <value model="res.company" eval="obj().env.ref('l10n_ve_full.company_my_company_usd')"/>
