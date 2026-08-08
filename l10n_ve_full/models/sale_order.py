@@ -17,10 +17,10 @@ class SaleOrder(models.Model):
 
     nationality = fields.Selection(string="Tipo Documento", related='partner_id.nationality', store=True)
 
-    people_type_company = fields.Selection(string='Tipo de Persona', related='partner_id.people_type_company')
+    people_type_company = fields.Selection(string='Tipo de Persona (Jurídica)', related='partner_id.people_type_company')
 
 
-    people_type_individual = fields.Selection(string='Tipo de Persona', related='partner_id.people_type_individual')
+    people_type_individual = fields.Selection(string='Tipo de Persona (Natural)', related='partner_id.people_type_individual')
 
     company_type = fields.Selection(string='Company Type', related='partner_id.company_type')
 
