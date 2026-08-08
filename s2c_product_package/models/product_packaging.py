@@ -20,9 +20,10 @@ class ProductPackaging(models.Model):
     packaging_liters = fields.Float("Litros por empaquetado", compute="_compute_packaging_liters", store=True, digits=(12,4))
     packaging_weight = fields.Float("Peso por empaquetado", compute="_compute_packaging_weight", store=True, digits=(12,4))
 
-    _sql_constraints = [
-        ('s2c_product_packaging_qty_positive', 'CHECK(qty > 0)', 'Packaging quantity must be greater than zero.'),
-    ]
+    _s2c_product_packaging_qty_positive = models.Constraint(
+        'CHECK(qty > 0)',
+        'Packaging quantity must be greater than zero.',
+    )
 
     @api.depends('qty', 'product_id.product_tmpl_id.volume')
     def _compute_packaging_liters(self):

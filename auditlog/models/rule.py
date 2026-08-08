@@ -138,16 +138,13 @@ class AuditlogRule(models.Model):
         string="Fields to Exclude",
     )
 
-    _sql_constraints = [
+    _model_uniq = models.Constraint(
+        "unique(model_id)",
         (
-            "model_uniq",
-            "unique(model_id)",
-            (
-                "There is already a rule defined on this model\n"
-                "You cannot define another: please edit the existing one."
-            ),
-        )
-    ]
+            "There is already a rule defined on this model\n"
+            "You cannot define another: please edit the existing one."
+        ),
+    )
 
     def _register_hook(self):
         """Get all rules and apply them to log method calls."""
