@@ -1325,6 +1325,9 @@ class AccountMove(models.Model):
     def suma_alicuota_iguales_iva(self):
         # raise UserError(_('xxx = %s')%self.wh_iva_id)
         for rec in self:
+            if rec.partner_id.country_id.code != 'VE':
+                continue
+
             if rec.move_type == 'in_invoice' or rec.move_type == 'in_refund' or rec.move_type == 'in_receipt':
                 type_tax_use = 'purchase'
                 porcentaje_ret = self.company_id.partner_id.wh_iva_rate

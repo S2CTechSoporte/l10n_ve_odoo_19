@@ -86,3 +86,52 @@ class TestFiscalDocumentRules(TransactionCase):
             move.write({'partner_id': self.ve_person_without_document.id})
         with self.assertRaises(UserError):
             move.write({'partner_id': self.ve_company_without_rif.id})
+
+    def test_foreign_invoice_without_taxes_skips_venezuelan_iva_validation(self):
+        invoice = self.env['account.move'].new({
+            'move_type': 'out_invoice',
+            'partner_id': self.foreign_person_without_document.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Foreign invoice line',
+                'quantity': 1,
+                'price_unit': 100,
+            })],
+        })
+
+        invoice.suma_alicuota_iguales_iva()
+
+    def test_venezuelan_invoice_without_taxes_keeps_iva_validation(self):
+        invoice = self.env['account.move'].new({
+            'move_type': 'out_invoice',
+            'partner_id': self.ve_person_without_document.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Venezuelan invoice line',
+                'quantity': 1,
+                'price_unit': 100,
+            })],
+        })
+
+        with self.assertRaises(UserError):
+            invoice.suma_alicuota_iguales_iva()
+
+    def test_foreign_demo_invoice_can_be_posted_without_taxes(self):
+        candidates = self.env['account.move'].search([
+            ('move_type', 'in', ('in_invoice', 'out_invoice')),
+            ('state', '=', 'posted'),
+            ('partner_id.country_id.code', '!=', 'VE'),
+        ], limit=100)
+        invoice = next(
+            (
+                move for move in candidates
+                if move.invoice_line_ids
+                and all(not line.tax_ids for line in move.invoice_line_ids)
+            ),
+            self.env['account.move'],
+        )
+        if not invoice:
+            self.skipTest('This check requires a standard demo invoice without taxes')
+
+        invoice.button_draft()
+        invoice.action_post()
+
+        self.assertEqual(invoice.state, 'posted')
