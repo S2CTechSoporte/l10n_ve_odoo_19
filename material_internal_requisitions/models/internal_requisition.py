@@ -424,7 +424,7 @@ class InternalRequisition(models.Model):
             rec.confirm_date = fields.Date.today()
             rec.state = 'confirm'
             if manager_mail_template:
-                manager_mail_template.send_mail(self.id)
+                manager_mail_template.sudo().send_mail(rec.id)
             
     #@api.multi
     def requisition_reject(self):

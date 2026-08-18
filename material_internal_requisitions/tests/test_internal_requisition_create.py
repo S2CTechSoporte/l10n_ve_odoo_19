@@ -144,6 +144,39 @@ class TestInternalRequisitionCreate(TransactionCase):
         self.assertNotIn('<t ', body)
         self.assertIn(f'/web#id={requisition.id}', body)
 
+    def test_requisition_confirm_renders_for_user_without_hr_manager(self):
+        base_user_group = self.env.ref('base.group_user')
+        hr_manager_group = self.env.ref('hr.group_hr_manager')
+        restricted_user = self.env['res.users'].sudo().create({
+            'name': 'Restricted Requisition User',
+            'login': 'restricted.requisition.user@example.com',
+            'email': 'restricted.requisition.user@example.com',
+            'company_id': self.env.company.id,
+            'company_ids': [(6, 0, [self.env.company.id])],
+            'group_ids': [(6, 0, [base_user_group.id])],
+        })
+        employee = self.env['hr.employee'].sudo().create({
+            'name': 'Restricted Requisition Employee',
+            'user_id': restricted_user.id,
+            'department_id': self.department.id,
+            'work_email': 'restricted.requisition.employee@example.com',
+        })
+        requisition = self.env['internal.requisition'].sudo().create({
+            'request_emp': employee.id,
+            'department_id': self.department.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.assertNotIn(hr_manager_group.id, restricted_user.group_ids.ids)
+
+        requisition.with_user(restricted_user).requisition_confirm()
+
+        self.assertEqual(requisition.state, 'confirm')
+        self.assertTrue(self.env['mail.mail'].sudo().search([
+            ('model', '=', requisition._name),
+            ('res_id', '=', requisition.id),
+        ], limit=1))
+
     def test_request_employee_onchange_sets_default_analytic_account(self):
         requisition = self.env['internal.requisition'].new({
             'request_emp': self.employee.id,
