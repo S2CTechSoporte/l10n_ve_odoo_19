@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t
+        t-name="s2c_salesperson_state.AgedPartnerBalanceFilters"
+        t-inherit="account_reports.AgedPartnerBalanceFilters"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//div[@id='filter_aging_interval']" position="after">
+            <t t-if="'salesperson_ids' in controller.cachedFilterOptions">
+                <div id="filter_salesperson">
+                    <Dropdown menuClass="'account_report_filter salesperson'">
+                        <button class="btn btn-secondary">
+                            <i class="fa fa-user me-1"/>Salesperson
+                        </button>
+                        <t t-set-slot="content">
+                            <div class="dropdown-item gap-2 align-items-center">
+                                <label>Salesperson</label>
+                                <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.users', 'salesperson_ids')"/>
+                            </div>
+                        </t>
+                    </Dropdown>
+                </div>
+            </t>
+            <t t-if="'state_ids' in controller.cachedFilterOptions">
+                <div id="filter_state">
+                    <Dropdown menuClass="'account_report_filter state'">
+                        <button class="btn btn-secondary">
+                            <i class="fa fa-map-marker me-1"/>Zone
+                        </button>
+                        <t t-set-slot="content">
+                            <div class="dropdown-item gap-2 align-items-center">
+                                <label>Zone</label>
+                                <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.country.state', 'state_ids')"/>
+                            </div>
+                        </t>
+                    </Dropdown>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_reports.aged_receivable_report" model="account.report">
+        <field name="filter_salesperson" eval="True"/>
+        <field name="filter_state" eval="True"/>
+    </record>
+
+    <record id="account_reports.aged_receivable_report_total" model="account.report.column">
+        <field name="sequence">110</field>
+    </record>
+
+    <record id="aged_receivable_report_salesperson" model="account.report.column">
+        <field name="name">Salesperson</field>
+        <field name="expression_label">salesperson</field>
+        <field name="sequence">120</field>
+        <field name="report_id" ref="account_reports.aged_receivable_report"/>
+        <field name="figure_type">string</field>
+    </record>
+
+    <record id="aged_receivable_line_salesperson" model="account.report.expression">
+        <field name="report_line_id" ref="account_reports.aged_receivable_line"/>
+        <field name="label">salesperson</field>
+        <field name="engine">custom</field>
+        <field name="formula">_report_custom_engine_aged_receivable</field>
+        <field name="subformula">salesperson</field>
+        <field name="auditable" eval="False"/>
+    </record>
+
+    <record id="aged_receivable_report_state" model="account.report.column">
+        <field name="name">Zone</field>
+        <field name="expression_label">state</field>
+        <field name="sequence">130</field>
+        <field name="report_id" ref="account_reports.aged_receivable_report"/>
+        <field name="figure_type">string</field>
+    </record>
+
+    <record id="aged_receivable_line_state" model="account.report.expression">
+        <field name="report_line_id" ref="account_reports.aged_receivable_line"/>
+        <field name="label">state</field>
+        <field name="engine">custom</field>
+        <field name="formula">_report_custom_engine_aged_receivable</field>
+        <field name="subformula">state</field>
+        <field name="auditable" eval="False"/>
+    </record>
+</odoo>
