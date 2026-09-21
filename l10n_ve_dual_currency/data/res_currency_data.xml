@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.VES" model="res.currency">
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="base.ve" model="res.country">
+        <field name="currency_id" ref="base.VES"/>
+    </record>
+</odoo>

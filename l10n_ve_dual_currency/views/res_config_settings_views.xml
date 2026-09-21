@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_dual_currency" model="ir.ui.view">
+        <field name="name">res.config.settings.form.dual.currency</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='main_currency_setting_container']" position="inside">
+                <setting
+                    id="dual_currency"
+                    string="Dual Currency"
+                    company_dependent="1"
+                    help="Display accounting amounts in the company currency and this reference currency."
+                >
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label for="fcurrency_id" class="col-lg-3 o_light_label"/>
+                            <field
+                                name="fcurrency_id"
+                                options="{'no_create_edit': True, 'no_open': True}"
+                                context="{'active_test': False}"
+                            />
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

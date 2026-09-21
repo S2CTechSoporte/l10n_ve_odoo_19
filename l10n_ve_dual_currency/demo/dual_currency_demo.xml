@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="demo_company_ves" model="res.company">
+        <field name="name">Venezuela Dual Currency Demo</field>
+        <field name="country_id" ref="base.ve"/>
+        <field name="currency_id" ref="base.VES"/>
+        <field name="fcurrency_id" ref="base.USD"/>
+    </record>
+
+    <record id="demo_rate_usd_20260110" model="res.currency.rate">
+        <field name="name">2026-01-10</field>
+        <field name="currency_id" ref="base.USD"/>
+        <field name="company_id" ref="demo_company_ves"/>
+        <field name="rate">0.02</field>
+    </record>
+</odoo>

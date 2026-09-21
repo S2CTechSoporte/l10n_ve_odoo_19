@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_payment_form_dual_currency" model="ir.ui.view">
+        <field name="name">account.payment.form.dual.currency</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group1']/field[@name='date']" position="after">
+                <field name="currency_equal" invisible="1"/>
+                <field name="conversion_rate" readonly="1"/>
+                <field name="amount_local" readonly="1"/>
+                <field name="amount_ref" readonly="1"/>
+                <field name="fcurrency_id" readonly="1"/>
+                <field name="company_currency_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

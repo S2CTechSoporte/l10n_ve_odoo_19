@@ -1,0 +1,146 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Contabilidad venezolana en moneda dual</h2>
+            <h3 class="oe_slogan text-body">Trabaja en VES y consulta tus importes en una moneda de referencia</h3>
+            <p>
+                <strong>Venezuela Dual Currency</strong> amplía la localización contable venezolana
+                para mostrar los documentos y saldos de la compañía tanto en bolívares soberanos
+                (VES) como en una moneda de referencia, normalmente USD.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Qué agrega el módulo</h2>
+            <ul>
+                <li>Activa VES como moneda de Venezuela cuando se instala la localización correspondiente.</li>
+                <li>Permite definir una moneda de referencia por compañía; USD es el valor predeterminado.</li>
+                <li>Muestra totales, impuestos, saldos pendientes y pagos convertidos en documentos contables.</li>
+                <li>Añade importes de referencia y tasas de conversión en apuntes contables y pagos.</li>
+                <li>Permite consultar los reportes de vencimiento de cuentas por cobrar y por pagar en VES o en la moneda de referencia.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Requisitos y configuración</h2>
+            <p>
+                Instala la localización venezolana y el módulo de reportes contables antes de
+                instalar este módulo. Odoo instala esas dependencias automáticamente cuando están
+                disponibles en la base de datos.
+            </p>
+            <ol>
+                <li>Abre <strong>Contabilidad &gt; Configuración &gt; Ajustes</strong>.</li>
+                <li>Selecciona la compañía que vas a configurar.</li>
+                <li>Confirma que la moneda principal de la compañía sea <strong>VES</strong>.</li>
+                <li>En <strong>Dual Currency</strong>, selecciona la moneda de referencia. El valor inicial es USD.</li>
+                <li>Registra las tasas de cambio de esa moneda en la configuración estándar de monedas de Odoo.</li>
+            </ol>
+            <p>
+                La moneda de referencia se configura por compañía. Si trabajas con varias compañías,
+                revisa cada una antes de registrar documentos.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span6">
+            <h2 class="oe_slogan text-body">Facturas y documentos</h2>
+            <p>
+                En el formulario de una factura o recibo, el módulo muestra los totales, impuestos
+                y saldos pendientes en la moneda de referencia y en VES cuando las monedas son
+                diferentes. También convierte el detalle de las líneas y los pagos relacionados.
+            </p>
+            <p>
+                En las listas de facturas, asientos y apuntes contables puedes activar las columnas
+                opcionales de importes de referencia, saldo residual y tasa de conversión desde el
+                selector de columnas.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <h2 class="oe_slogan text-body">Notas de crédito</h2>
+            <p>
+                Una nota de crédito en VES creada a partir de una factura conserva la tasa de la
+                factura original. Una nota de crédito emitida en una moneda distinta de la compañía
+                utiliza la tasa correspondiente a su propia fecha.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Pagos</h2>
+            <p>
+                Al registrar un pago, Odoo conserva el importe operativo y muestra los importes
+                equivalentes en VES y en la moneda de referencia junto con la tasa aplicada. Estos
+                valores son informativos y se calculan automáticamente.
+            </p>
+            <p>
+                La conversión de un pago usa la fecha del propio pago. Por eso conviene mantener
+                configurada la tasa de cambio correspondiente a cada fecha de operación.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Reportes de vencimiento</h2>
+            <p>
+                En los reportes estándar de <strong>cuentas por cobrar vencidas</strong> y
+                <strong>cuentas por pagar vencidas</strong> aparece un selector de moneda cuando
+                la compañía tiene VES y una moneda de referencia disponibles.
+            </p>
+            <ol>
+                <li>Abre el reporte de cuentas por cobrar o de cuentas por pagar vencidas.</li>
+                <li>Abre el selector de moneda situado junto a los filtros del reporte.</li>
+                <li>Selecciona VES o la moneda de referencia.</li>
+            </ol>
+            <p>
+                El reporte conserva la fecha de corte y distribuye los saldos en sus períodos de
+                vencimiento. Las conciliaciones se consideran hasta esa fecha, por lo que puedes
+                cambiar la moneda sin perder el alcance temporal del informe.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Cómo se aplican las tasas</h2>
+            <ul>
+                <li>Las facturas y documentos usan su fecha de factura o su fecha contable para convertir los importes.</li>
+                <li>Los pagos usan su fecha de pago.</li>
+                <li>Las tasas se toman de la configuración estándar de monedas de Odoo.</li>
+                <li>Si no existe una moneda de referencia para la compañía, los cálculos utilizan la moneda de la compañía como respaldo.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Consideraciones importantes</h2>
+            <ul>
+                <li>El módulo no cambia automáticamente la moneda principal de una compañía existente. Configura VES antes de registrar operaciones contables.</li>
+                <li>Las columnas adicionales de listas pueden estar ocultas inicialmente; actívalas desde las opciones de la lista cuando las necesites.</li>
+                <li>El selector de moneda añadido por el módulo se aplica a los reportes de vencimiento de cuentas por cobrar y por pagar.</li>
+                <li>Para obtener conversiones coherentes, registra las tasas de cambio antes de trabajar con documentos y pagos de las fechas correspondientes.</li>
+            </ul>
+        </div>
+    </div>
+</section>

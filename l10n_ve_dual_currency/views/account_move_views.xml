@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_form_dual_currency" model="ir.ui.view">
+        <field name="name">account.move.form.dual.currency</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="fcurrency_id" readonly="1"/>
+                <field name="same_currency" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']" position="after">
+                <field name="fcurrency_id" column_invisible="True"/>
+                <field
+                    name="price_unit_fcurrency"
+                    optional="hide"
+                    widget="monetary"
+                    options="{'currency_field': 'fcurrency_id'}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_subtotal']" position="before">
+                <field
+                    name="price_subtotal_fcurrency"
+                    optional="hide"
+                    widget="monetary"
+                    options="{'currency_field': 'fcurrency_id'}"
+                />
+            </xpath>
+
+            <xpath expr="//field[@name='line_ids']/list/field[@name='credit']" position="after">
+                <field name="fcurrency_id" column_invisible="True"/>
+                <field
+                    name="conversion_rate"
+                    string="Reference Rate"
+                    optional="hide"
+                    invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
+                />
+                <field
+                    name="debit_fcurrency"
+                    optional="hide"
+                    sum="Total Reference Debit"
+                    invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
+                />
+                <field
+                    name="credit_fcurrency"
+                    optional="hide"
+                    sum="Total Reference Credit"
+                    invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
+                />
+                <field name="balance_fcurrency" column_invisible="True"/>
+                <field name="amount_residual_fcurrency" optional="hide" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='tax_totals']/.." position="before">
+                <group
+                    class="oe_subtotal_footer"
+                    invisible="not same_currency or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
+                >
+                    <field name="amount_untaxed_fcurrency"/>
+                    <field name="amount_tax_fcurrency"/>
+                    <field name="amount_total_fcurrency" class="oe_subtotal_footer_separator"/>
+                    <field
+                        name="invoice_payments_widget_fcurrency"
+                        colspan="2"
+                        nolabel="1"
+                        widget="payment"
+                        invisible="not invoice_payments_widget_fcurrency"
+                    />
+                    <field
+                        name="amount_residual_fcurrency"
+                        class="oe_subtotal_footer_separator"
+                        invisible="state == 'draft'"
+                    />
+                </group>
+                <group
+                    class="oe_subtotal_footer"
+                    invisible="same_currency or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
+                >
+                    <field name="amount_untaxed_local_currency"/>
+                    <field name="amount_tax_local_currency"/>
+                    <field name="amount_total_local_currency" class="oe_subtotal_footer_separator"/>
+                    <field
+                        name="invoice_payments_widget_local_currency"
+                        colspan="2"
+                        nolabel="1"
+                        widget="payment"
+                        invisible="not invoice_payments_widget_local_currency"
+                    />
+                    <field
+                        name="amount_residual_local_currency"
+                        class="oe_subtotal_footer_separator"
+                        invisible="state == 'draft'"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_invoice_list_dual_currency" model="ir.ui.view">
+        <field name="name">account.invoice.list.dual.currency</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total_in_currency_signed']" position="after">
+                <field name="fcurrency_id" column_invisible="True"/>
+                <field
+                    name="amount_total_fcurrency"
+                    string="Reference Total"
+                    sum="Total Reference Amount"
+                    optional="hide"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_move_list_dual_currency" model="ir.ui.view">
+        <field name="name">account.move.list.dual.currency</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total_signed']" position="after">
+                <field name="fcurrency_id" column_invisible="True"/>
+                <field
+                    name="amount_total_signed_fcurrency"
+                    string="Reference Total"
+                    sum="Total Reference Amount"
+                    optional="hide"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
