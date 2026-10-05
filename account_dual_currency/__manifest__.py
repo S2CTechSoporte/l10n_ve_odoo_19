@@ -67,7 +67,6 @@
     'live_test_url': 'https://localhost:8072/web/login',
     "price": 2990,
     "currency": "USD",
-    'installable' : False,
-    'application' : False,
+    "installable": False,
 }
 

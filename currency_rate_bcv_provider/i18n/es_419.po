@@ -1,0 +1,145 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* currency_rate_bcv_provider
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 16:18+0000\n"
+"PO-Revision-Date: 2026-10-05 16:18+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: currency_rate_bcv_provider
+#: model:ir.model,name:currency_rate_bcv_provider.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid "Could not retrieve the official BCV exchange rate: %(error)s"
+msgstr "No se pudo obtener la tasa de cambio oficial del BCV: %(error)s"
+
+#. module: currency_rate_bcv_provider
+#: model:ir.model.fields,field_description:currency_rate_bcv_provider.field_res_company__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: currency_rate_bcv_provider
+#: model:ir.model.fields,field_description:currency_rate_bcv_provider.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: currency_rate_bcv_provider
+#: model:ir.model.fields,field_description:currency_rate_bcv_provider.field_res_company__currency_provider
+msgid "Service Provider"
+msgstr "Proveedor de servicios"
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid "The BCV %(currency)s quotation is not a valid Spanish-format number."
+msgstr "La cotización de %(currency)s del BCV no tiene un formato numérico español válido."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid "The BCV %(currency)s quotation must be finite and strictly positive."
+msgstr "La cotización de %(currency)s del BCV debe ser finita y estrictamente positiva."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid "The BCV %(currency)s rates block must contain exactly one quotation."
+msgstr "El bloque de tasas %(currency)s del BCV debe contener exactamente una cotización."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+msgid "The BCV official value date is not a valid ISO date."
+msgstr "La Fecha Valor oficial del BCV no es una fecha ISO válida."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid "The BCV page must contain exactly one %(currency)s rates block."
+msgstr "La página del BCV debe contener exactamente un bloque de tasas %(currency)s."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+msgid "The BCV provider requires USD and at least one of VES or VEF to be active."
+msgstr ""
+"El proveedor BCV requiere que USD y al menos una de las monedas VES o VEF "
+"estén activas."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid ""
+"The BCV does not publish quotations for the following company currencies: "
+"%(currencies)s."
+msgstr ""
+"El BCV no publica cotizaciones para las siguientes monedas de compañía: "
+"%(currencies)s."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid "The BCV provider requires these company currencies to be active: %(currencies)s."
+msgstr "El proveedor BCV requiere que estas monedas de compañía estén activas: %(currencies)s."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+msgid "The BCV quotations must share the same official value date."
+msgstr "Las cotizaciones del BCV deben tener la misma Fecha Valor oficial."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid ""
+"The BCV %(currency)s quotation cannot be represented as a positive finite "
+"cross-rate."
+msgstr ""
+"La cotización de %(currency)s del BCV no puede representarse como una tasa "
+"cruzada finita y positiva."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+#, python-format
+msgid "The BCV does not publish a quotation for %(currency)s."
+msgstr "El BCV no publica una cotización para %(currency)s."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+msgid "The BCV rates block must contain exactly one official value date."
+msgstr "El bloque de tasas del BCV debe contener exactamente una Fecha Valor oficial."
+
+#. module: currency_rate_bcv_provider
+#. odoo-python
+#: code:addons/currency_rate_bcv_provider/models/res_company.py:0
+msgid "The BCV response does not contain a valid HTML page."
+msgstr "La respuesta del BCV no contiene una página HTML válida."
+
+#. module: currency_rate_bcv_provider
+#: model:ir.model.fields.selection,name:currency_rate_bcv_provider.selection__res_company__currency_provider__bcv
+msgid "[VE] Central Bank of Venezuela (BCV)"
+msgstr "[VE] Banco Central de Venezuela (BCV)"

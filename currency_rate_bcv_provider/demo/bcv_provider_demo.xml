@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="base.USD" model="res.currency">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="base.VES" model="res.currency">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="base.VEF" model="res.currency">
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="demo_company_bcv" model="res.company">
+        <field name="name">BCV Provider Demo</field>
+        <field name="country_id" ref="base.ve"/>
+        <field name="currency_id" ref="base.USD"/>
+        <field name="currency_provider">bcv</field>
+        <field name="currency_interval_unit">manually</field>
+    </record>
+
+    <record id="demo_rate_usd_20261005" model="res.currency.rate">
+        <field name="name">2026-10-05</field>
+        <field name="currency_id" ref="base.USD"/>
+        <field name="company_id" ref="demo_company_bcv"/>
+        <field name="rate">1.0</field>
+    </record>
+    <record id="demo_rate_ves_20261005" model="res.currency.rate">
+        <field name="name">2026-10-05</field>
+        <field name="currency_id" ref="base.VES"/>
+        <field name="company_id" ref="demo_company_bcv"/>
+        <field name="rate">871.36890000</field>
+    </record>
+    <record id="demo_rate_vef_20261005" model="res.currency.rate">
+        <field name="name">2026-10-05</field>
+        <field name="currency_id" ref="base.VEF"/>
+        <field name="company_id" ref="demo_company_bcv"/>
+        <field name="rate">871.36890000</field>
+    </record>
+</odoo>
