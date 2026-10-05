@@ -1,0 +1,210 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Tasas de cambio del Banco Central de Venezuela</h2>
+            <h3 class="oe_slogan text-body">Actualiza las cotizaciones del bolívar desde Odoo</h3>
+            <p>
+                <strong>BCV Currency Rate Provider</strong> incorpora el
+                <strong>[VE] Banco Central de Venezuela (BCV)</strong> a los proveedores de
+                tasas de cambio de Odoo. Consulta las cotizaciones publicadas en el sitio
+                del BCV y registra las tasas por compañía con su <strong>Fecha Valor</strong>
+                oficial, mediante una actualización manual o la programación estándar de Odoo.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Requisitos e instalación</h2>
+            <ul>
+                <li>Odoo 19 con acceso al módulo Enterprise de tasas de cambio automáticas, <code>currency_rate_live</code>, que se instala como dependencia.</li>
+                <li>Permisos de administración para instalar módulos y acceder a los ajustes contables de la compañía.</li>
+                <li>Acceso desde el servidor de Odoo a <strong>https://www.bcv.org.ve/</strong>.</li>
+                <li>USD y al menos una moneda de bolívar, VES o VEF, activas. La moneda principal de la compañía también debe estar activa.</li>
+                <li>Una moneda principal compatible: USD, EUR, CNY, TRY, RUB, VES o VEF.</li>
+            </ul>
+            <p>
+                Abre <strong>Aplicaciones</strong>, busca <strong>BCV Currency Rate Provider</strong>
+                e instálalo. Quita el filtro <strong>Aplicaciones</strong> si necesitas incluir
+                módulos complementarios en la búsqueda.
+            </p>
+            <p>
+                La instalación sin datos de demostración no activa monedas, no selecciona BCV
+                para tus compañías y no descarga cotizaciones. Debes configurar el servicio
+                antes de utilizarlo. No necesitas una cuenta ni una clave de API del BCV.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Configuración inicial por compañía</h2>
+            <ol>
+                <li>Selecciona en la barra superior la compañía que vas a configurar.</li>
+                <li>Abre <strong>Contabilidad &gt; Configuración &gt; Ajustes</strong>. Si tu aplicación se llama <strong>Facturación</strong>, utiliza sus mismos menús de configuración y ajustes.</li>
+                <li>En la sección <strong>Monedas</strong>, comprueba la moneda principal de la compañía y pulsa el enlace <strong>Monedas</strong> para abrir la lista.</li>
+                <li>Activa <strong>USD</strong> y <strong>VES</strong>. Si trabajas con una configuración heredada, puedes utilizar <strong>VEF</strong> en lugar de VES o mantener ambas activas. Activa también la moneda principal si es diferente.</li>
+                <li>Regresa a los ajustes y localiza <strong>Tasas de cambio automáticas</strong> (<strong>Automatic Currency Rates</strong> en inglés).</li>
+                <li>En <strong>Servicio</strong>, selecciona <strong>[VE] Banco Central de Venezuela (BCV)</strong>. En una interfaz en inglés aparece como <strong>[VE] Central Bank of Venezuela (BCV)</strong>.</li>
+                <li>Elige el <strong>Intervalo</strong>: <strong>Manual</strong>, <strong>Diario</strong>, <strong>Semanal</strong> o <strong>Mensual</strong>. Para una actualización automática, revisa la fecha de <strong>Siguiente ejecución</strong>.</li>
+                <li>Guarda los ajustes antes de realizar la primera actualización.</li>
+            </ol>
+            <p>
+                La opción de tasas automáticas se muestra cuando está habilitado el uso de varias
+                monedas. Odoo lo activa al tener más de una moneda activa; si acabas de activarlas,
+                vuelve a abrir los ajustes. El intervalo estándar inicial es <strong>Manual</strong>.
+            </p>
+            <p>
+                Repite la configuración para cada compañía que necesite el proveedor.
+                Tener Venezuela como país de la compañía no selecciona BCV automáticamente.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Qué monedas se actualizan</h2>
+            <ul>
+                <li><strong>Compañía en USD:</strong> actualiza VES y VEF, si están activas, con la cotización oficial del dólar expresada en bolívares.</li>
+                <li><strong>Compañía en EUR, CNY, TRY o RUB:</strong> actualiza VES y VEF, si están activas, con la cotización oficial de su propia moneda principal. No utiliza la cotización del dólar como si fuera la de esa moneda.</li>
+                <li><strong>Compañía en VES o VEF:</strong> actualiza USD con la cotización oficial del dólar. Las referencias entre VES y VEF se mantienen equivalentes a uno.</li>
+            </ul>
+            <p>
+                Odoo conserva una tasa de referencia de <strong>1</strong> para la moneda principal.
+                Las monedas inactivas y las demás monedas extranjeras no se actualizan con este
+                proveedor, aunque estén disponibles en la base de datos.
+            </p>
+            <p>
+                <strong>VEF es únicamente una compatibilidad para configuraciones heredadas:</strong>
+                recibe la misma cotización actual que VES. El módulo no aplica factores históricos
+                de reconversión monetaria. Utiliza VES para una configuración actual.
+            </p>
+            <p>
+                Por ejemplo, una cotización de <strong>871,36890000 VES por USD</strong> significa
+                que 1 USD equivale a 871,36890000 VES. Para una compañía en EUR se utiliza la
+                cotización publicada del euro, no ese valor del dólar. Este ejemplo es ilustrativo
+                y no debe interpretarse como una tasa vigente.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span6">
+            <h2 class="oe_slogan text-body">Actualización manual</h2>
+            <ol>
+                <li>Abre los ajustes contables de la compañía y comprueba que el servicio guardado sea BCV.</li>
+                <li>Pulsa el icono de actualización junto a <strong>Siguiente ejecución</strong> (<strong>Next Run</strong> en inglés). El icono se identifica en inglés como <strong>Update now</strong>.</li>
+                <li>Espera a que termine la consulta y revisa las tasas de las monedas actualizadas.</li>
+            </ol>
+            <p>
+                Puedes actualizar manualmente aunque hayas elegido un intervalo automático.
+                Si la consulta falla, Odoo muestra un mensaje de error; no se reemplazan
+                las tasas por una cotización inventada.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <h2 class="oe_slogan text-body">Actualización programada</h2>
+            <p>
+                Selecciona un intervalo <strong>Diario</strong>, <strong>Semanal</strong> o
+                <strong>Mensual</strong>, revisa <strong>Siguiente ejecución</strong> y guarda.
+                La tarea estándar de actualización de monedas de Odoo procesa las compañías
+                cuya fecha ya corresponde actualizar.
+            </p>
+            <p>
+                El programador de Odoo debe estar funcionando. La fecha indicada no fija una
+                hora exacta de consulta. Con intervalo <strong>Manual</strong> no se realizan
+                actualizaciones automáticas.
+            </p>
+            <p>
+                La programación estándar procesa compañías principales, no actualizaciones
+                independientes para sucursales.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Cómo revisar las tasas y sus fechas</h2>
+            <ol>
+                <li>Desde los ajustes contables, abre el enlace <strong>Monedas</strong>.</li>
+                <li>Abre VES o VEF si la compañía usa una moneda extranjera, o USD si la compañía usa bolívares.</li>
+                <li>En la pestaña <strong>Tasas</strong> (<strong>Rates</strong> en inglés), revisa la fecha, los valores y la compañía cuando esa columna esté visible.</li>
+            </ol>
+            <p>
+                Las columnas de conversión expresan sentidos inversos. Comprueba las unidades
+                que muestra Odoo antes de comparar una tasa con la publicación del BCV.
+                En una compañía en bolívares, la columna que expresa bolívares por dólar
+                muestra la cotización del BCV; la otra expresa dólares por bolívar.
+            </p>
+            <ul>
+                <li>La fecha guardada es la <strong>Fecha Valor</strong> publicada por el BCV, no la fecha del servidor ni necesariamente el día en que pulsaste actualizar.</li>
+                <li>Repetir la consulta para la misma moneda, compañía y Fecha Valor actualiza el registro existente, sin crear otro para esa misma combinación.</li>
+                <li>Si el BCV sigue publicando la misma Fecha Valor, la actualización no crea una tasa con la fecha de hoy solo por haber ejecutado la consulta.</li>
+                <li>El proveedor consulta la publicación disponible en la página del BCV; no descarga un historial ni permite elegir un rango de fechas.</li>
+            </ul>
+            <p>
+                Comprueba las tasas y la Fecha Valor antes de utilizarlas en operaciones contables.
+                El módulo actualiza las tasas estándar de Odoo; no añade campos de doble moneda,
+                menús de reportes ni un flujo nuevo para facturas o pagos.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Errores y recomendaciones de operación</h2>
+            <ul>
+                <li><strong>Monedas requeridas:</strong> si aparece un error de monedas inactivas, verifica USD, al menos una de VES o VEF y la moneda principal.</li>
+                <li><strong>Moneda principal no compatible:</strong> selecciona otro proveedor que la admita. BCV no calcula cotizaciones para monedas principales distintas de las indicadas en esta guía.</li>
+                <li><strong>Problemas de conexión:</strong> verifica con el administrador el acceso del servidor al sitio del BCV y vuelve a intentar. La consulta tiene un tiempo de espera de 20 segundos.</li>
+                <li><strong>Publicación inválida:</strong> el módulo rechaza cotizaciones ausentes, ambiguas, no positivas o con fechas inválidas. Las cotizaciones necesarias deben compartir la misma Fecha Valor. Si cambió la estructura del sitio del BCV, solicita una revisión del módulo.</li>
+                <li><strong>Varias compañías:</strong> la actualización automática agrupa compañías por proveedor. Un error de configuración o de cotización requerida puede impedir actualizar el grupo BCV; revisa las compañías afectadas.</li>
+            </ul>
+            <p>
+                <strong>Un avance en Siguiente ejecución no confirma que la descarga haya tenido éxito.</strong>
+                Ante un fallo automático, Odoo registra advertencias y avanza igualmente la próxima
+                fecha de ejecución. Revisa las tasas registradas, pide al administrador revisar
+                los registros del servidor y reintenta manualmente después de corregir el problema.
+            </p>
+            <p>
+                <strong>Limitación de seguridad de la conexión:</strong> la versión actual utiliza
+                HTTPS, pero no verifica el certificado del servidor del BCV. Una conexión interceptada
+                podría proporcionar cotizaciones alteradas. Para producción, solicita una solución
+                técnica de confianza de certificados que permita habilitar su verificación.
+                No existe un ajuste de usuario en este módulo para cambiar esa validación.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Datos de demostración</h2>
+            <p>
+                Solo si la base de datos tiene habilitados los datos de demostración, el módulo
+                activa USD, VES y VEF y crea la compañía <strong>BCV Provider Demo</strong>,
+                con moneda principal USD, servicio BCV e intervalo Manual.
+            </p>
+            <p>
+                Sus tasas de ejemplo están fechadas el <strong>5 de octubre de 2026</strong>
+                y utilizan 871,36890000 bolívares por dólar. Son datos ilustrativos, no
+                cotizaciones históricas verificadas. La instalación de estos ejemplos no consulta
+                el sitio del BCV; una actualización posterior sí sustituye o añade tasas según
+                la publicación que recupere.
+            </p>
+        </div>
+    </div>
+</section>
