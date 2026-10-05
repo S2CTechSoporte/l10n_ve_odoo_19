@@ -17,23 +17,45 @@ class ResCompany(models.Model):
         usd = self.env.ref("base.USD")
         return usd if self.env.company.currency_id != usd else False
 
+    def _get_conversion_rate_display(self, conversion_rate):
+        """Orient a stored company/reference rate without looking up rates or dates."""
+        self.ensure_one()
+        usd = self.env.ref("base.USD")
+        company_currency = self.currency_id
+        reference_currency = self.secondary_currency_id
+        is_usd = bool(reference_currency and usd in (company_currency, reference_currency))
+        currency = company_currency
+        if is_usd and company_currency == usd and reference_currency != usd:
+            if conversion_rate <= 0:
+                raise UserError(_("The stored conversion rate must be positive to display a USD quotation."))
+            conversion_rate = 1.0 / conversion_rate
+            currency = reference_currency
+        return {
+            "conversion_rate_display_currency_id": currency.id,
+            "conversion_rate_display_is_usd": is_usd,
+            "conversion_rate_display": conversion_rate,
+        }
+
     @api.model
     def get_secondary_currency_systray(self):
-        """Return one reference-currency unit in the active company's currency."""
+        """Return one USD in the active company's counterpart currency."""
         company = self.env.company
         company.check_access("read")
         currency = company.secondary_currency_id
         if not currency:
             return False
-        amount = currency._convert(
-            1.0, company.currency_id, company, fields.Date.context_today(company),
+        usd = self.env.ref("base.USD")
+        if company.currency_id != usd:
+            currency = company.currency_id
+        amount = usd._convert(
+            1.0, currency, company, fields.Date.context_today(company),
             round=False,
         )
         return {
-            "currency_name": currency.name,
+            "currency_name": usd.name,
             "amount": amount,
             "formatted_amount": formatLang(
-                self.env, amount, currency_obj=company.currency_id,
+                self.env, amount, currency_obj=currency,
             ),
             "can_update": self.env.user.has_group("base.group_system")
             or self.env.user.has_group("account.group_account_manager"),

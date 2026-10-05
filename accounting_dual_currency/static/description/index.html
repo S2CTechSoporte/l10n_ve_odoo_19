@@ -42,7 +42,7 @@
                 <li>Selecciona la compañía que vas a configurar.</li>
                 <li>Comprueba la moneda principal de la compañía antes de registrar documentos.</li>
                 <li>En <strong>Dualidad de moneda</strong> (<strong>Dual Currency</strong> en inglés), selecciona la moneda de referencia. Se propone USD si la compañía usa otra moneda; si ya usa USD, elige una moneda distinta.</li>
-                <li>Registra las tasas de cambio de esa moneda en la configuración estándar de monedas de Odoo.</li>
+                <li>Mantén las tasas de cambio de las monedas utilizadas y de USD en la configuración estándar de monedas de Odoo. La barra superior siempre necesita cotizar USD, aunque no sea la moneda principal ni la de referencia.</li>
             </ol>
             <p>
                 La moneda de referencia se configura por compañía. Si trabajas con varias compañías,
@@ -91,11 +91,43 @@
             <p>
                 Al registrar un pago, Odoo conserva el importe operativo y muestra los importes
                 equivalentes en la moneda de la compañía y en la de referencia junto con la tasa
-                de referencia. Estos valores son informativos y se calculan automáticamente.
+                guardada explicada a continuación. Estos valores son informativos y se calculan
+                automáticamente.
             </p>
             <p>
                 La conversión de un pago usa la fecha del propio pago. Por eso conviene mantener
                 configurada la tasa de cambio correspondiente a cada fecha de operación.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Tasa guardada en facturas, asientos y pagos</h2>
+            <p>
+                En los formularios principales aparece <strong>Tasa USD</strong> cuando USD es
+                la moneda de la compañía o la de referencia. Indica el valor de un dólar a partir
+                de la tasa guardada en el documento, independientemente de la moneda de la factura
+                o del pago. Mostrarla no consulta fechas ni vuelve a buscar tasas de cambio.
+            </p>
+            <ul>
+                <li>Si la moneda de referencia es USD, se muestra el valor guardado con el símbolo de la moneda de la compañía.</li>
+                <li>Si la compañía usa USD y la referencia es otra moneda, se muestra el inverso del valor guardado con el símbolo de la moneda de referencia.</li>
+                <li>Si ninguna de las dos monedas es USD, o no hay moneda de referencia, se conserva el valor guardado como <strong>Tasa de referencia</strong> con el símbolo de la moneda de la compañía; no se presenta como una cotización del dólar.</li>
+            </ul>
+            <p>
+                Por ejemplo, una tasa guardada de 1,25 USD por EUR se presenta como
+                <strong>Tasa USD: 0,80 &#8364;</strong>. El símbolo respeta su posición configurada
+                y el importe respeta el idioma del usuario. El indicador es de solo lectura y no
+                modifica la tasa original ni los importes contables. En notas de crédito conserva
+                la tasa que ya guardó el módulo, incluida la tasa original cuando corresponda.
+                Las columnas de tasa de los apuntes mantienen su significado de referencia.
+            </p>
+            <p>
+                La barra superior consulta la cotización actual; estos formularios presentan
+                la tasa guardada. Por eso ambos valores pueden ser distintos.
             </p>
         </div>
     </div>
@@ -153,18 +185,36 @@
 <section class="oe_container oe_dark">
     <div class="oe_row">
         <div class="oe_span12">
-            <h2 class="oe_slogan text-body">Tasa de referencia en la barra superior</h2>
+            <h2 class="oe_slogan text-body">Cotización del dólar en la barra superior</h2>
             <p>
                 Cuando la compañía activa tiene una moneda de referencia, la barra superior muestra
-                cuánto equivale una unidad de esa moneda en la moneda de la compañía, antes del
-                selector de compañías. Al abrir el menú se actualiza el valor mostrado.
+                cuánto cuesta <strong>1 USD</strong> en la moneda contraparte, antes del selector
+                de compañías. La etiqueta siempre es <strong>USD</strong>. Si la compañía usa USD,
+                la contraparte es la moneda de referencia; en los demás casos se usa la moneda
+                de la compañía, incluso si ninguna de las dos monedas configuradas es USD.
+            </p>
+            <p>
+                El importe respeta el idioma del usuario y la posición configurada del símbolo de
+                la moneda contraparte, incluidos sus decimales. Por ejemplo,
+                <strong>USD: 0,89 &#8364;</strong> significa que un dólar equivale a 0,89 euros.
+                Si ambas monedas configuradas son USD, se muestra una equivalencia de uno a uno;
+                si ambas son la misma moneda distinta de USD, se sigue mostrando cuánto cuesta
+                un dólar en esa moneda.
+            </p>
+            <p>
+                Al cargar la barra, abrir el menú o cambiar de compañía, el indicador consulta las
+                tasas registradas para la fecha actual. Abrir el menú no descarga tasas de un
+                proveedor ni requiere configurarlo. Si faltan tasas, se aplican los respaldos
+                estándar de Odoo; mantén las tasas al día para obtener una cotización fiable.
+                Esta presentación basada en USD no redefine la tasa de referencia ni la fecha
+                de conversión de los documentos y pagos.
             </p>
             <p>
                 Las personas administradoras de Ajustes y responsables de Contabilidad pueden usar
                 <strong>Actualizar ahora</strong>. La acción actualiza todas las monedas activas que
                 admita el proveedor configurado, no solo la moneda de referencia; tampoco activa
-                actualizaciones programadas ni cambia su intervalo. Para los demás usuarios la acción
-                aparece deshabilitada.
+                actualizaciones programadas ni cambia su intervalo. Después se vuelve a mostrar
+                la cotización. Para los demás usuarios la acción aparece deshabilitada.
             </p>
         </div>
     </div>
@@ -175,7 +225,7 @@
         <div class="oe_span12">
             <h2 class="oe_slogan text-body">Cómo se aplican las tasas</h2>
             <ul>
-                <li>La <strong>tasa de referencia</strong> expresa cuántas unidades de la moneda de la compañía equivalen a una unidad de la moneda de referencia.</li>
+                <li>La <strong>tasa de referencia guardada</strong> expresa cuántas unidades de la moneda de la compañía equivalen a una unidad de la moneda de referencia. El indicador <strong>Tasa USD</strong> de los formularios la presenta directamente o invertida, sin cambiar el valor original.</li>
                 <li>Las facturas y documentos usan su fecha de factura o su fecha contable para convertir los importes.</li>
                 <li>Los pagos usan su fecha de pago.</li>
                 <li>Las tasas se toman de la configuración estándar de monedas de Odoo.</li>

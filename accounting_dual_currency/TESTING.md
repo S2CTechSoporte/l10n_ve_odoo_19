@@ -128,6 +128,30 @@ Each scenario must assert:
 10. A USD company with EUR as reference posts a USD invoice, receives an EUR
    payment, and calculates both amounts correctly.
 
+### Mandatory Stored Document Rate Display
+
+1. Invoice, journal-entry, and payment main forms derive their displayed rate
+   only from their saved `conversion_rate`. Display computation must not call
+   date helpers, currency conversion, or rate lookup APIs.
+2. With a non-USD company and USD reference, display the saved rate with the
+   company symbol. With a USD company and non-USD reference, display its
+   reciprocal with the reference symbol. Use the label **USD Rate**.
+3. Company-, USD-, and third-currency invoices/bills and payments show the same
+   USD orientation for a given company/reference pair.
+4. When neither currency is USD, or no reference is configured, display the
+   unchanged saved rate in the company currency under **Reference Rate**.
+   Equal USD currencies retain a unit USD quotation.
+5. The display uses the counterpart's monetary precision, symbol position,
+   and user language. It must not overwrite or round the saved source rate.
+6. The presentation follows changes to the saved source. A non-positive source
+   must raise an explicit error if it would need to be inverted.
+7. Both inherited forms use readonly monetary fields and mutually exclusive
+   USD/reference labels. Journal-item reference-rate columns are unchanged.
+8. Company-currency credit notes and manual USD journal entries retain their
+   existing reference-rate behavior. The new display introduces no date rule.
+9. The demo company's saved EUR/USD rate produces a EUR monetary USD display.
+   This assertion must execute with demo data and skip explicitly without it.
+
 ### Mandatory Demo Validation
 
 When demo data is enabled:
@@ -140,6 +164,32 @@ When demo data is enabled:
 
 The demo test must skip explicitly when the database was initialized without
 demo data. It must execute, not skip, in the dedicated demo-data run.
+
+### Mandatory Navbar Quotation
+
+1. The navbar always uses USD as the base and displays the value of one dollar.
+2. A USD company with EUR reference displays the amount in EUR; an EUR company
+   with USD reference also displays the amount in EUR.
+3. If neither configured currency is USD, the counterpart is the company
+   currency, not the reference currency.
+4. Monetary formatting uses the counterpart currency's decimal precision and
+   configured symbol position, and the user's language. Spanish formatting with
+   EUR after the amount displays **USD: 0,89 &#8364;**, without an extra gap
+   before the colon. Formatting must not round the raw `amount` in the response.
+5. No reference currency hides the indicator. USD as both company and reference
+   currency keeps a unit quotation; equal non-USD company/reference currencies
+   still display the USD conversion into that currency, not a unit quotation.
+6. Opening the dropdown, changing the active company, and completing a manual
+   update refresh the quotation. Stale responses must not overwrite the newly
+   selected company's amount or counterpart symbol.
+7. The quotation uses the current date in the user's context, not a document
+   date. When a current rate exists, a future rate must not replace it.
+   Root-company rates are used for branches.
+8. Viewing the quotation does not require a provider. Updating requires the
+   existing permissions and a configured provider; errors propagate and a
+   successful retry must refresh the amount.
+9. Document reference rates and their date rules are not redefined by the
+   navbar's USD-based presentation.
 
 ### Acceptance Rule
 
@@ -156,9 +206,10 @@ Automate every [acceptance requirement](#acceptance-requirements) for Odoo 19.0.
 
 ### Framework
 
-Use Odoo 19.0 `TransactionCase` behavior through
-`AccountTestInvoicingCommon`. In Odoo 19 each test method already runs in a
-savepoint; the legacy recommendation to subclass `SavepointCase` does not apply.
+Accounting and report tests use Odoo 19.0 `TransactionCase` behavior through
+`AccountTestInvoicingCommon`; demo and navbar tests subclass `TransactionCase`
+directly. Each test method already runs in a savepoint; the legacy
+recommendation to subclass `SavepointCase` does not apply.
 
 Use `@tagged("post_install", "-at_install")` because the tests post accounting
 documents and exercise installed report handlers.
@@ -177,6 +228,16 @@ documents and exercise installed report handlers.
   reference defaults, and localization-independent dependency checks.
 - `tests/test_dual_currency_demo.py`: XML demo company, rate validation, and
   reference defaults for multiple company currencies.
+- `tests/test_secondary_currency_menu.py`: the USD quotation data contract,
+  counterpart selection, native rate selection, monetary formatting, manual
+  update permissions, provider errors, and the demo quotation.
+- `tests/test_stored_conversion_rate_display.py`: saved-rate presentation in
+  invoices, journal entries, and payments; transaction-currency independence,
+  fallback labels, no date/rate lookups, source preservation, monetary
+  formatting, invalid inverse rates, inherited views, and demo validation.
+- `static/tests/secondary_currency_menu.test.js`: quotation rendering and
+  formatting preservation, refresh/retry flows, company-change races,
+  visibility, and navbar position.
 
 ### Shared Fixtures
 
@@ -268,21 +329,32 @@ vendor amounts and balances against posted move-line values in both currencies.
 ### Demo And Non-Demo Runs
 
 The navbar tests in `tests/test_secondary_currency_menu.py` cover conversion
-direction, active-company isolation, missing/reference-equals-company behavior,
-Accounting manager authorization, denied employees and disallowed companies,
-root-company rates for branches, the standard manual updater, and provider
-errors. Provider responses are mocked; tests never download live rates.
+from USD in both company/reference configurations, the company-currency
+counterpart when neither configured currency is USD, exact Spanish monetary
+formatting with symbols before and after the amount, counterpart decimal
+precision without rounding the raw amount, current-date selection with past
+and future rates, active-company isolation, absent reference currencies,
+equal USD and equal non-USD configurations, Accounting manager authorization,
+denied employees and disallowed companies, root-company rates for branches,
+viewing without a provider, the standard manual updater, and provider errors.
+Provider responses are mocked; tests never download live rates.
 The demo assertion checks the declared USD/EUR rate separately.
 
-`static/tests/secondary_currency_menu.test.js` covers rendering, dropdown
-refresh, manual refresh, view-only access, error propagation, duplicate clicks,
-company-change races, and navbar position. Run it in `/web/tests` filtered by
-`accounting_dual_currency`.
+`static/tests/secondary_currency_menu.test.js` covers the USD label, localized
+counterpart symbols before and after the amount, dropdown refresh, manual
+refresh, view-only access, error propagation and successful retry, duplicate
+clicks, company-change races and visibility changes, and navbar position.
+Run it in `/web/tests?filter=accounting_dual_currency`.
 
-Use the interpreter and server configured in `.vscode/launch.json`:
+Run these commands from the workspace root, with the interpreter, environment,
+and server configured in `.vscode/launch.json`:
 
 ```bash
-./.venv/bin/python /opt/odoo/19.0/odoo/odoo-bin \
+export VIRTUAL_ENV="$PWD/.venv"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
+export TMPDIR="$PWD/tmp"
+
+./.venv/bin/python -X frozen_modules=off /opt/odoo/19.0/odoo/odoo-bin \
     -c odoo.conf \
     -d test_accounting_dual_currency_19 \
     -i accounting_dual_currency \
@@ -296,7 +368,7 @@ Use the interpreter and server configured in `.vscode/launch.json`:
 Run a second clean database with demo data:
 
 ```bash
-./.venv/bin/python /opt/odoo/19.0/odoo/odoo-bin \
+./.venv/bin/python -X frozen_modules=off /opt/odoo/19.0/odoo/odoo-bin \
     -c odoo.conf \
     -d test_accounting_dual_currency_demo_19 \
     -i accounting_dual_currency \
@@ -309,6 +381,11 @@ Run a second clean database with demo data:
 
 Both databases must be newly initialized so results do not depend on existing
 accounting records or installed custom modules.
+
+For a navbar-only regression run, use
+`--test-tags /accounting_dual_currency:TestSecondaryCurrencyMenu` in each
+command. To rerun an already initialized dedicated test database, replace
+`-i accounting_dual_currency` with `-u accounting_dual_currency`.
 
 ### Static Checks
 
@@ -339,3 +416,5 @@ The work is complete only when:
    payments, reference defaults, and localization-independent installation pass.
 5. The no-demo installation passes.
 6. The demo installation executes and passes the demo assertions.
+7. The navbar quotation tests pass in both runs, with an expected demo-test
+   skip only in the no-demo database, and the corresponding HOOT tests pass.

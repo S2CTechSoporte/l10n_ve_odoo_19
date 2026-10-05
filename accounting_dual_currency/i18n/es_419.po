@@ -74,8 +74,36 @@ msgstr "El documento usa la moneda de la compañía"
 #: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__conversion_rate
 #: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__conversion_rate
 #: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_move_form_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_payment_form_dual_currency
 msgid "Reference Rate"
 msgstr "Tasa de referencia"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__conversion_rate_display
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__conversion_rate_display
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__conversion_rate_display
+msgid "USD Rate"
+msgstr "Tasa USD"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__conversion_rate_display_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__conversion_rate_display_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__conversion_rate_display_currency_id
+msgid "Rate Display Currency"
+msgstr "Moneda de la tasa mostrada"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__conversion_rate_display_is_usd
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__conversion_rate_display_is_usd
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__conversion_rate_display_is_usd
+msgid "Rate Display Uses USD"
+msgstr "La tasa mostrada usa USD"
+
+#. module: accounting_dual_currency
+#. odoo-python
+#: code:addons/accounting_dual_currency/models/res_company.py:0
+msgid "The stored conversion rate must be positive to display a USD quotation."
+msgstr "La tasa de conversión guardada debe ser positiva para mostrar una cotización de USD."
 
 #. module: accounting_dual_currency
 #: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_untaxed_secondary_currency

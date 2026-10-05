@@ -7,7 +7,14 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group1']/field[@name='date']" position="after">
                 <field name="currency_equal" invisible="1"/>
-                <field name="conversion_rate" readonly="1"/>
+                <field name="conversion_rate_display_currency_id" invisible="1"/>
+                <field name="conversion_rate_display_is_usd" invisible="1"/>
+                <field name="conversion_rate_display" readonly="1" widget="monetary"
+                    invisible="not conversion_rate_display_is_usd"
+                    options="{'currency_field': 'conversion_rate_display_currency_id'}"/>
+                <field name="conversion_rate_display" string="Reference Rate" readonly="1" widget="monetary"
+                    invisible="conversion_rate_display_is_usd"
+                    options="{'currency_field': 'conversion_rate_display_currency_id'}"/>
                 <field name="amount_local" readonly="1"/>
                 <field name="amount_ref" readonly="1"/>
                 <field name="secondary_currency_id" readonly="1"/>

@@ -15,12 +15,12 @@ let update;
 
 beforeEach(() => {
     data = {
-        currency_name: "EUR",
-        amount: 1.12,
-        formatted_amount: "$ 1.12",
+        currency_name: "USD",
+        amount: 1 / 1.12,
+        formatted_amount: "0,89\u00a0\u20ac",
         can_update: true,
     };
-    update = async () => ({ ...data, amount: 1.2, formatted_amount: "$ 1.20" });
+    update = async () => ({ ...data, amount: 1 / 1.2, formatted_amount: "0,83\u00a0\u20ac" });
     mockService("orm", {
         async call(model, method, args) {
             expect(model).toBe("res.company");
@@ -34,12 +34,13 @@ beforeEach(() => {
     });
 });
 
-test("bill icon, bold reference code and conversion; manual update refreshes amount", async () => {
+test("bill icon, bold USD code and localized quotation; manual update refreshes amount", async () => {
     await mountWithCleanup(SecondaryCurrencyMenu);
     expect(".o_secondary_currency_menu .fa-money").toHaveCount(1);
     expect(".o_secondary_currency_menu .fa-money").toHaveClass("o_secondary_currency_menu_icon");
-    expect(".o_secondary_currency_menu strong").toHaveText("EUR");
-    expect(".o_secondary_currency_menu button").toHaveText("EUR: $ 1.12");
+    expect(".o_secondary_currency_menu strong").toHaveText("USD");
+    expect(".o_secondary_currency_menu button").toHaveText("USD: 0,89 \u20ac");
+    expect(".o_secondary_currency_menu button > span").toHaveStyle({ marginLeft: "0px" });
     await contains(".o_secondary_currency_menu button").click();
     expect(".dropdown-item > i:first-child").toHaveClass(
         "fa-refresh fa-fw o_secondary_currency_menu_icon"
@@ -48,14 +49,35 @@ test("bill icon, bold reference code and conversion; manual update refreshes amo
     expect(".dropdown-item > span").toHaveText("Update Now");
     expect(".dropdown-item").toHaveText("Update Now");
     await contains(".dropdown-item").click();
-    expect(".o_secondary_currency_menu button").toHaveText("EUR: $ 1.20");
+    expect(".o_secondary_currency_menu button").toHaveText("USD: 0,83 \u20ac");
     expect(".o_notification").toHaveText("Exchange rates updated.");
+});
+
+test("counterpart currency symbol before the amount is preserved", async () => {
+    data.formatted_amount = "\u20ac\u00a00,89";
+    await mountWithCleanup(SecondaryCurrencyMenu);
+    expect(".o_secondary_currency_menu strong").toHaveText("USD");
+    expect(".o_secondary_currency_menu button").toHaveText("USD: \u20ac 0,89");
 });
 
 test("no reference currency hides the navbar item", async () => {
     data = false;
     await mountWithCleanup(SecondaryCurrencyMenu);
     expect(".o_secondary_currency_menu").toHaveCount(0);
+});
+
+test("company changes hide and restore the USD quotation", async () => {
+    await mountWithCleanup(SecondaryCurrencyMenu);
+    const quotation = data;
+    data = false;
+    userBus.trigger("ACTIVE_COMPANIES_CHANGED");
+    await animationFrame();
+    expect(".o_secondary_currency_menu").toHaveCount(0);
+    data = quotation;
+    userBus.trigger("ACTIVE_COMPANIES_CHANGED");
+    await animationFrame();
+    expect(".o_secondary_currency_menu strong").toHaveText("USD");
+    expect(".o_secondary_currency_menu button").toHaveText("USD: 0,89 \u20ac");
 });
 
 test("view-only users cannot click the update action", async () => {
@@ -67,13 +89,14 @@ test("view-only users cannot click the update action", async () => {
 
 test("active-company changes and dropdown opening reload the current rate", async () => {
     await mountWithCleanup(SecondaryCurrencyMenu);
-    data = { ...data, currency_name: "USD", formatted_amount: "0.80 EUR" };
+    data = { ...data, amount: 0.8, formatted_amount: "\u00a3 0,80" };
     userBus.trigger("ACTIVE_COMPANIES_CHANGED");
     await animationFrame();
     expect(".o_secondary_currency_menu strong").toHaveText("USD");
-    data = { ...data, formatted_amount: "0.90 EUR" };
+    expect(".o_secondary_currency_menu button").toHaveText("USD: \u00a3 0,80");
+    data = { ...data, amount: 0.9, formatted_amount: "\u00a3 0,90" };
     await contains(".o_secondary_currency_menu button").click();
-    expect(".o_secondary_currency_menu button").toHaveText("USD: 0.90 EUR");
+    expect(".o_secondary_currency_menu button").toHaveText("USD: \u00a3 0,90");
 });
 
 test("errors propagate without a success notification and allow retry", async () => {
@@ -82,7 +105,13 @@ test("errors propagate without a success notification and allow retry", async ()
     await expect(component.updateRates()).rejects.toThrow("Provider unavailable");
     expect(component.state.updating).toBe(false);
     expect(".o_notification").toHaveCount(0);
-    expect(".o_secondary_currency_menu button").toHaveText("EUR: $ 1.12");
+    expect(".o_secondary_currency_menu button").toHaveText("USD: 0,89 \u20ac");
+    update = async () => ({ ...data, amount: 1 / 1.2, formatted_amount: "0,83\u00a0\u20ac" });
+    await component.updateRates();
+    await animationFrame();
+    expect(component.state.updating).toBe(false);
+    expect(".o_secondary_currency_menu button").toHaveText("USD: 0,83 \u20ac");
+    expect(".o_notification").toHaveText("Exchange rates updated.");
 });
 
 test("duplicate updates are blocked; an old response cannot overwrite the new company", async () => {
@@ -96,13 +125,14 @@ test("duplicate updates are blocked; an old response cannot overwrite the new co
     const pending = component.updateRates();
     await component.updateRates();
     expect(calls).toBe(1);
-    data = { ...data, currency_name: "USD", formatted_amount: "0.80 EUR" };
+    data = { ...data, amount: 0.8, formatted_amount: "\u00a3 0,80" };
     userBus.trigger("ACTIVE_COMPANIES_CHANGED");
     await animationFrame();
-    deferred.resolve({ ...data, currency_name: "EUR", formatted_amount: "$ 1.20" });
+    deferred.resolve({ ...data, amount: 1 / 1.2, formatted_amount: "0,83\u00a0\u20ac" });
     await pending;
     await animationFrame();
     expect(".o_secondary_currency_menu strong").toHaveText("USD");
+    expect(".o_secondary_currency_menu button").toHaveText("USD: \u00a3 0,80");
 });
 
 test("navbar item is anchored immediately before the company selector", () => {

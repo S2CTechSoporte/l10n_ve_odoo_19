@@ -7,7 +7,7 @@
                     <button title="Reference Currency" t-att-disabled="state.updating">
                         <i class="fa fa-money me-1 o_secondary_currency_menu_icon" role="img" aria-label="Reference Currency"/>
                         <strong t-esc="state.data.currency_name"/>
-                        <span class="ms-1">: <t t-esc="state.data.formatted_amount"/></span>
+                        <span>: <t t-esc="state.data.formatted_amount"/></span>
                     </button>
                     <t t-set-slot="content">
                         <DropdownItem tag="'button'" onSelected.bind="updateRates"

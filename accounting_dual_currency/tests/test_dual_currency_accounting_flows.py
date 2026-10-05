@@ -36,6 +36,8 @@ class TestDualCurrencyAccountingFlows(DualCurrencyTestCommon):
 
         self.assertAlmostEqual(invoice.conversion_rate, 50.0, places=2)
         self.assertAlmostEqual(credit_note.conversion_rate, 50.0, places=2)
+        self.assertAlmostEqual(credit_note.conversion_rate_display, 50.0, places=2)
+        self.assertEqual(credit_note.conversion_rate_display_currency_id, self.ves)
         self.assertAlmostEqual(credit_line.conversion_rate, 50.0, places=2)
         self.assertAlmostEqual(abs(credit_line.balance_secondary_currency), 100.0, places=2)
         self.assertAlmostEqual(abs(term_line.balance_secondary_currency), 100.0, places=2)
@@ -81,6 +83,8 @@ class TestDualCurrencyAccountingFlows(DualCurrencyTestCommon):
 
         move = move_form.save()
         self.assertAlmostEqual(move.conversion_rate, 50.0, places=2)
+        self.assertAlmostEqual(move.conversion_rate_display, 50.0, places=2)
+        self.assertEqual(move.conversion_rate_display_currency_id, self.ves)
         foreign_lines = move.line_ids.filtered(lambda line: line.currency_id == self.usd)
         self.assertEqual(len(foreign_lines), 2)
         self.assertEqual(

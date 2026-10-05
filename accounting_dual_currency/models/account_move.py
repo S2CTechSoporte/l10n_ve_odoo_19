@@ -24,6 +24,20 @@ class AccountMove(models.Model):
         digits=0,
         help="Company-currency units for one unit of the reference currency.",
     )
+    conversion_rate_display_currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        string="Rate Display Currency",
+        compute="_compute_conversion_rate_display",
+    )
+    conversion_rate_display_is_usd = fields.Boolean(
+        string="Rate Display Uses USD",
+        compute="_compute_conversion_rate_display",
+    )
+    conversion_rate_display = fields.Monetary(
+        string="USD Rate",
+        currency_field="conversion_rate_display_currency_id",
+        compute="_compute_conversion_rate_display",
+    )
     amount_untaxed_secondary_currency = fields.Monetary(
         string="Untaxed Amount (Reference)",
         currency_field="secondary_currency_id",
@@ -99,6 +113,12 @@ class AccountMove(models.Model):
     def _compute_same_currency(self):
         for move in self:
             move.same_currency = move.currency_id == move.company_currency_id
+
+    @api.depends("conversion_rate", "company_currency_id", "secondary_currency_id")
+    def _compute_conversion_rate_display(self):
+        for move in self:
+            company = move.company_id or self.env.company
+            move.update(company._get_conversion_rate_display(move.conversion_rate))
 
     def _get_dual_currency_reference_rate_date(self):
         """Return the rate date, preserving the source rate for local refunds."""
