@@ -1,0 +1,174 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * accounting_dual_currency
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Spanish (Latin America)\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: accounting_dual_currency
+#. odoo-javascript
+#: code:addons/accounting_dual_currency/static/src/components/secondary_currency_menu/secondary_currency_menu.xml:0
+msgid "Update Now"
+msgstr "Actualizar ahora"
+
+#. module: accounting_dual_currency
+#. odoo-javascript
+#: code:addons/accounting_dual_currency/static/src/components/secondary_currency_menu/secondary_currency_menu.js:0
+msgid "Exchange rates updated."
+msgstr "Tasas de cambio actualizadas."
+
+#. module: accounting_dual_currency
+#: code:addons/accounting_dual_currency/models/res_company.py:0
+msgid "Only Settings administrators and Accounting managers can update exchange rates."
+msgstr "Solo los administradores de Ajustes y los responsables de Contabilidad pueden actualizar las tasas de cambio."
+
+#. module: accounting_dual_currency
+#: code:addons/accounting_dual_currency/models/res_company.py:0
+msgid "Configure an exchange rate provider in Accounting settings first."
+msgstr "Primero configura un proveedor de tasas de cambio en los ajustes de Contabilidad."
+
+#. module: accounting_dual_currency
+#. odoo-javascript
+#: code:addons/accounting_dual_currency/static/src/components/secondary_currency_menu/secondary_currency_menu.xml:0
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_res_company__secondary_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_res_config_settings__secondary_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__secondary_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__secondary_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__secondary_currency_id
+msgid "Reference Currency"
+msgstr "Moneda de referencia"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_partial_reconcile__company_secondary_currency_id
+msgid "Company Reference Currency"
+msgstr "Moneda de referencia de la compañía"
+
+#. module: accounting_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.res_config_settings_view_form_dual_currency
+msgid "Dual Currency"
+msgstr "Dualidad de moneda"
+
+#. module: accounting_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.res_config_settings_view_form_dual_currency
+msgid "Display accounting amounts in the company currency and this reference currency."
+msgstr "Muestra los importes contables en la moneda de la compañía y en esta moneda de referencia."
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__same_currency
+msgid "Document Uses Company Currency"
+msgstr "El documento usa la moneda de la compañía"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__conversion_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__conversion_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__conversion_rate
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_move_form_dual_currency
+msgid "Reference Rate"
+msgstr "Tasa de referencia"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_untaxed_secondary_currency
+msgid "Untaxed Amount (Reference)"
+msgstr "Base imponible (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_tax_secondary_currency
+msgid "Tax (Reference)"
+msgstr "Impuestos (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_total_secondary_currency
+msgid "Total (Reference)"
+msgstr "Total (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_residual_secondary_currency
+msgid "Amount Due (Reference)"
+msgstr "Importe adeudado (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_total_signed_secondary_currency
+msgid "Signed Total (Reference)"
+msgstr "Total con signo (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_untaxed_local_currency
+msgid "Untaxed Amount (Company Currency)"
+msgstr "Base imponible (moneda de la compañía)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_tax_local_currency
+msgid "Tax (Company Currency)"
+msgstr "Impuestos (moneda de la compañía)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_total_local_currency
+msgid "Total (Company Currency)"
+msgstr "Total (moneda de la compañía)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_residual_local_currency
+msgid "Amount Due (Company Currency)"
+msgstr "Importe adeudado (moneda de la compañía)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__amount_total_signed_local_currency
+msgid "Signed Total (Company Currency)"
+msgstr "Total con signo (moneda de la compañía)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__debit_secondary_currency
+msgid "Debit (Reference)"
+msgstr "Débito (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__credit_secondary_currency
+msgid "Credit (Reference)"
+msgstr "Crédito (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__balance_secondary_currency
+msgid "Balance (Reference)"
+msgstr "Balance (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__amount_residual_secondary_currency
+msgid "Residual (Reference)"
+msgstr "Residual (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__price_unit_secondary_currency
+msgid "Unit Price (Reference)"
+msgstr "Precio unitario (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move_line__price_subtotal_secondary_currency
+msgid "Subtotal (Reference)"
+msgstr "Subtotal (referencia)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__amount_local
+msgid "Amount (Company Currency)"
+msgstr "Importe (moneda de la compañía)"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__amount_ref
+msgid "Amount (Reference)"
+msgstr "Importe (referencia)"
+
+#. module: accounting_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_invoice_list_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_move_list_dual_currency
+msgid "Reference Total"
+msgstr "Total de referencia"

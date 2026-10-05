@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_line_list_dual_currency" model="ir.ui.view">
+        <field name="name">account.move.line.list.dual.currency</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit']" position="after">
+                <field name="secondary_currency_id" column_invisible="True"/>
+                <field name="conversion_rate" optional="hide"/>
+                <field name="debit_secondary_currency" sum="Total Reference Debit" optional="hide"/>
+                <field name="credit_secondary_currency" sum="Total Reference Credit" optional="hide"/>
+                <field name="balance_secondary_currency" sum="Total Reference Balance" optional="hide"/>
+                <field
+                    name="amount_residual_secondary_currency"
+                    sum="Total Reference Residual"
+                    optional="hide"
+                    readonly="1"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_move_line_payment_list_dual_currency" model="ir.ui.view">
+        <field name="name">account.move.line.payment.list.dual.currency</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_residual']" position="after">
+                <field name="secondary_currency_id" column_invisible="True"/>
+                <field
+                    name="amount_residual_secondary_currency"
+                    string="Reference Residual"
+                    sum="Total Reference Residual"
+                    optional="hide"
+                    readonly="1"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_move_line_form_dual_currency" model="ir.ui.view">
+        <field name="name">account.move.line.form.dual.currency</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='balance']" position="after">
+                <field name="secondary_currency_id" readonly="1"/>
+                <field name="conversion_rate" readonly="1"/>
+                <field name="debit_secondary_currency" readonly="1"/>
+                <field name="credit_secondary_currency" readonly="1"/>
+                <field name="balance_secondary_currency" readonly="1"/>
+                <field name="amount_residual_secondary_currency" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
