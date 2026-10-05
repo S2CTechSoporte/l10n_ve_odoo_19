@@ -25,5 +25,5 @@
             "l10n_ve_dual_currency/static/src/components/aged_partner_balance/**/*",
         ],
     },
-    "installable": True,
+    "installable": False,
 }
