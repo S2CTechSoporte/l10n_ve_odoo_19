@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -53,6 +55,13 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
         cls._set_rate(cls.usd, cls.company, cls.rate_date_second, 52.0)
         cls._set_rate(cls.usd, cls.company, cls.rate_date_third, 54.0)
 
+    @contextmanager
+    def _assert_error(self, exception, pattern):
+        """Assert an error and roll the failed operation back, like ``assertRaises``."""
+        with self.assertRaisesRegex(exception, pattern):
+            with self.env.cr.savepoint():
+                yield
+
     @classmethod
     def _set_rate(cls, currency, company, rate_date, inverse_rate):
         values = {
@@ -83,12 +92,29 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
             False,
         )
 
+    def _manual_convert(self, amount, from_currency, to_currency, manual_rate):
+        """Convert between VES and USD with a manual rate expressed as VES per USD."""
+        if from_currency == to_currency:
+            return amount
+        if (from_currency, to_currency) == (self.usd, self.ves):
+            return amount * manual_rate
+        if (from_currency, to_currency) == (self.ves, self.usd):
+            return amount / manual_rate
+        raise AssertionError("A manual rate only converts between VES and USD.")
+
+    def _convert_at(self, amount, from_currency, to_currency, rate_date, manual_rate=None):
+        """Convert at the manual rate of a document, or at the system rate of a date."""
+        if manual_rate:
+            return self._manual_convert(amount, from_currency, to_currency, manual_rate)
+        return self._convert(amount, from_currency, to_currency, rate_date)
+
     def _create_invoice(
         self,
         currency,
         amount,
         invoice_date,
         move_type="out_invoice",
+        manual_rate=None,
     ):
         partner = (
             self.partner_customer
@@ -100,46 +126,96 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
             if move_type.startswith("out_")
             else self.purchase_journal
         )
-        invoice = self.env["account.move"].create(
-            {
-                "move_type": move_type,
-                "invoice_date": invoice_date,
-                "date": invoice_date,
-                "partner_id": partner.id,
-                "journal_id": journal.id,
-                "currency_id": currency.id,
-                "invoice_line_ids": [
-                    Command.create(
-                        {
-                            "product_id": self.product.id,
-                            "name": self.product.name,
-                            "quantity": 1.0,
-                            "price_unit": amount,
-                            "tax_ids": [Command.clear()],
-                        }
-                    )
-                ],
-            }
-        )
+        values = {
+            "move_type": move_type,
+            "invoice_date": invoice_date,
+            "date": invoice_date,
+            "partner_id": partner.id,
+            "journal_id": journal.id,
+            "currency_id": currency.id,
+            "invoice_line_ids": [
+                Command.create(
+                    {
+                        "product_id": self.product.id,
+                        "name": self.product.name,
+                        "quantity": 1.0,
+                        "price_unit": amount,
+                        "tax_ids": [Command.clear()],
+                    }
+                )
+            ],
+        }
+        if manual_rate:
+            values.update({"manual_rate": True, "manual_conversion_rate": manual_rate})
+        invoice = self.env["account.move"].create(values)
         invoice.action_post()
         return invoice
 
-    def _create_payment(self, invoice, currency, amount, payment_date):
+    def _create_payment(self, invoice, currency, amount, payment_date, manual_rate=None):
+        values = {
+            "payment_date": payment_date,
+            "journal_id": self.bank_journal.id,
+            "amount": amount,
+            "currency_id": currency.id,
+        }
+        if manual_rate:
+            values.update({"manual_rate": True, "manual_conversion_rate": manual_rate})
         wizard = self.env["account.payment.register"].with_context(
             active_model="account.move",
             active_ids=invoice.ids,
-        ).create(
-            {
-                "payment_date": payment_date,
-                "journal_id": self.bank_journal.id,
-                "amount": amount,
-                "currency_id": currency.id,
-            }
-        )
+        ).create(values)
         payment = wizard._create_payments()
         if payment.state == "in_process":
             payment.action_validate()
         return payment
+
+    def _create_direct_payment(
+        self,
+        currency,
+        amount,
+        payment_date,
+        payment_type="outbound",
+        manual_rate=None,
+        post=True,
+    ):
+        """Create a payment of the vendor (outbound) or of the customer (inbound)."""
+        partner = (
+            self.partner_vendor if payment_type == "outbound" else self.partner_customer
+        )
+        values = {
+            "payment_type": payment_type,
+            "partner_type": "supplier" if payment_type == "outbound" else "customer",
+            "partner_id": partner.id,
+            "amount": amount,
+            "date": payment_date,
+            "currency_id": currency.id,
+            "journal_id": self.bank_journal.id,
+        }
+        if manual_rate:
+            values.update({"manual_rate": True, "manual_conversion_rate": manual_rate})
+        payment = self.env["account.payment"].create(values)
+        if post:
+            payment.action_post()
+        return payment
+
+    def _create_credit_note(self, invoice, reversal_date):
+        wizard = self.env["account.move.reversal"].with_context(
+            active_model="account.move",
+            active_ids=invoice.ids,
+        ).create(
+            {
+                "move_ids": [(6, 0, invoice.ids)],
+                "company_id": self.company.id,
+                "journal_id": invoice.journal_id.id,
+                "date": reversal_date,
+                "reason": "Dual currency reversal test",
+            }
+        )
+        wizard.refund_moves()
+        credit_note = wizard.new_move_ids[:1]
+        if credit_note.state == "draft":
+            credit_note.action_post()
+        return credit_note
 
     def _get_payment_term_line(self, move):
         return move.line_ids.filtered(
@@ -212,7 +288,7 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
             delta=self.usd.rounding * 2,
         )
 
-    def _assert_move_line_dual_fields(self, move):
+    def _assert_move_line_dual_fields(self, move, manual_rate=None):
         for line in move.line_ids.filtered(
             lambda candidate: candidate.display_type
             not in ("line_section", "line_subsection", "line_note")
@@ -234,19 +310,32 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
 
         product_line = move.invoice_line_ids[:1]
         if product_line:
-            self.assertAlmostEqual(
-                product_line.price_subtotal_secondary_currency,
-                move.currency_id._convert(
+            expected_subtotal = (
+                self._manual_convert(
+                    product_line.price_subtotal,
+                    move.currency_id,
+                    self.usd,
+                    manual_rate,
+                )
+                if manual_rate
+                else move.currency_id._convert(
                     product_line.price_subtotal,
                     self.usd,
                     self.company,
                     move._get_dual_currency_reference_rate_date(),
                     False,
-                ),
+                )
+            )
+            self.assertAlmostEqual(
+                product_line.price_subtotal_secondary_currency,
+                expected_subtotal,
                 delta=self.usd.rounding,
             )
 
-    def _assert_partial_reference_amounts(self, invoice):
+    def _assert_partial_reference_amounts(self, invoice, manual_rates=None):
+        """Check the reference amount of the partials; ``manual_rates`` maps the id of a
+        payment journal entry to the manual rate (VES per USD) of that payment."""
+        manual_rates = manual_rates or {}
         term_line = self._get_payment_term_line(invoice)
         partials = term_line.matched_debit_ids | term_line.matched_credit_ids
         for partial in partials:
@@ -256,11 +345,15 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
             elif partial.credit_currency_id == self.usd:
                 expected = partial.credit_amount_currency
             else:
-                expected = self._convert(
+                manual_rate = manual_rates.get(
+                    partial.debit_move_id.move_id.id
+                ) or manual_rates.get(partial.credit_move_id.move_id.id)
+                expected = self._convert_at(
                     partial.amount,
                     self.ves,
                     self.usd,
                     partial.max_date,
+                    manual_rate,
                 )
             self.assertAlmostEqual(
                 partial.amount_secondary_currency,
@@ -321,23 +414,31 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
         invoice_currency,
         invoice_amount,
         payments,
+        invoice_manual_rate=None,
+        move_type="out_invoice",
     ):
+        """Run an invoice/payments scenario at the system rates of the dates or, when a
+        document has a ``manual_rate`` (VES per USD), at the manual rate of that document."""
         invoice = self._create_invoice(
             invoice_currency,
             invoice_amount,
             self.rate_date_invoice,
+            move_type=move_type,
+            manual_rate=invoice_manual_rate,
         )
-        expected_total_local = self._convert(
+        expected_total_local = self._convert_at(
             invoice_amount,
             invoice_currency,
             self.ves,
             self.rate_date_invoice,
+            invoice_manual_rate,
         )
-        expected_total_reference = self._convert(
+        expected_total_reference = self._convert_at(
             invoice_amount,
             invoice_currency,
             self.usd,
             self.rate_date_invoice,
+            invoice_manual_rate,
         )
         self._assert_invoice_dual_totals(
             invoice,
@@ -351,24 +452,30 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
             expected_total_local,
             expected_total_reference,
         )
-        self._assert_move_line_dual_fields(invoice)
+        self._assert_move_line_dual_fields(invoice, manual_rate=invoice_manual_rate)
 
         expected_document_residual = invoice_amount
         expected_reference_amounts = []
         expected_local_amounts = []
+        payment_manual_rates = {}
 
         for index, payment_values in enumerate(payments):
+            payment_manual_rate = payment_values.get("manual_rate")
             payment = self._create_payment(
                 invoice,
                 payment_values["currency"],
                 payment_values["amount"],
                 payment_values["date"],
+                manual_rate=payment_manual_rate,
             )
-            expected_document_payment = self._convert(
+            if payment_manual_rate:
+                payment_manual_rates[payment.move_id.id] = payment_manual_rate
+            expected_document_payment = self._convert_at(
                 payment_values["amount"],
                 payment_values["currency"],
                 invoice_currency,
                 payment_values["date"],
+                payment_manual_rate,
             )
             expected_document_residual = max(
                 0.0,
@@ -377,26 +484,29 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
                 ),
             )
             expected_reference_amounts.append(
-                self._convert(
+                self._convert_at(
                     payment_values["amount"],
                     payment_values["currency"],
                     self.usd,
                     payment_values["date"],
+                    payment_manual_rate,
                 )
             )
             expected_local_amounts.append(
-                self._convert(
+                self._convert_at(
                     payment_values["amount"],
                     payment_values["currency"],
                     self.ves,
                     payment_values["date"],
+                    payment_manual_rate,
                 )
             )
-            expected_local_residual = self._convert(
+            expected_local_residual = self._convert_at(
                 expected_document_residual,
                 invoice_currency,
                 self.ves,
                 self.rate_date_invoice,
+                invoice_manual_rate,
             )
             expected_reference_residual = (
                 0.0
@@ -415,8 +525,8 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
                 expected_reference_amounts,
                 expected_local_amounts,
             )
-            self._assert_move_line_dual_fields(invoice)
-            self._assert_partial_reference_amounts(invoice)
+            self._assert_move_line_dual_fields(invoice, manual_rate=invoice_manual_rate)
+            self._assert_partial_reference_amounts(invoice, payment_manual_rates)
 
             self.assertAlmostEqual(
                 payment.amount_local,

@@ -36,6 +36,35 @@ class ResCompany(models.Model):
             "conversion_rate_display": conversion_rate,
         }
 
+    def _get_conversion_rate_from_display(self, display_rate):
+        """Return the stored rate (company units per reference unit) of a displayed rate.
+
+        This is the inverse of `_get_conversion_rate_display`: a rate captured as the
+        USD quotation (e.g. 880.0 bolivars per dollar) is stored with the orientation
+        of ``conversion_rate`` whichever of the two currencies is the USD.
+        """
+        self.ensure_one()
+        if display_rate <= 0:
+            raise UserError(_("The manual rate must be strictly positive."))
+        usd = self.env.ref("base.USD")
+        reference_currency = self.secondary_currency_id
+        invert = bool(
+            reference_currency
+            and self.currency_id == usd
+            and reference_currency != usd
+        )
+        return 1.0 / display_rate if invert else display_rate
+
+    def _get_manual_rate_spec(self, display_rate):
+        """Return the ``dual_currency_manual_rate`` context value for a displayed rate."""
+        self.ensure_one()
+        return (
+            self.root_id.id,
+            self.currency_id.id,
+            self.secondary_currency_id.id,
+            self._get_conversion_rate_from_display(display_rate),
+        )
+
     @api.model
     def get_secondary_currency_systray(self):
         """Return one USD in the active company's counterpart currency."""

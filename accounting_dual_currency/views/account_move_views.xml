@@ -15,7 +15,36 @@
                 <field name="conversion_rate_display" string="Reference Rate" readonly="1" widget="monetary"
                     invisible="conversion_rate_display_is_usd"
                     options="{'currency_field': 'conversion_rate_display_currency_id'}"/>
+                <!-- Manual rate: visible to accounting administrators on vendor documents only.
+                     The helper fields have no group so that the modifiers of every user can read
+                     them; the controls below disappear for users without the group. -->
+                <field name="manual_rate_available" invisible="1"/>
+                <field name="manual_rate_active" invisible="1"/>
+                <field name="manual_rate_is_usd" invisible="1"/>
+                <field name="manual_rate"
+                    groups="account.group_account_manager"
+                    invisible="not manual_rate_available or move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
+                    readonly="state != 'draft'"/>
+                <label for="manual_conversion_rate" string="Manual USD Rate"
+                    groups="account.group_account_manager"
+                    invisible="not manual_rate or not manual_rate_available or not manual_rate_is_usd or move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+                <label for="manual_conversion_rate" string="Manual Reference Rate"
+                    groups="account.group_account_manager"
+                    invisible="not manual_rate or not manual_rate_available or manual_rate_is_usd or move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+                <div class="o_row" name="manual_conversion_rate_div"
+                    groups="account.group_account_manager"
+                    invisible="not manual_rate or not manual_rate_available or move_type not in ('in_invoice', 'in_refund', 'in_receipt')">
+                    <field name="manual_conversion_rate" digits="[12, 6]"
+                        required="manual_rate"
+                        readonly="state != 'draft'"/>
+                    <field name="manual_rate_currency_id" readonly="1" options="{'no_open': True}"/>
+                </div>
                 <field name="same_currency" invisible="1"/>
+            </xpath>
+
+            <!-- With the manual rate in use the native rate follows it, so it is not editable. -->
+            <xpath expr="//field[@name='invoice_currency_rate']" position="attributes">
+                <attribute name="readonly">state != 'draft' or manual_rate_active</attribute>
             </xpath>
 
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']" position="after">

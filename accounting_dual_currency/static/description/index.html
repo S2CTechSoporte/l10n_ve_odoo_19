@@ -22,6 +22,7 @@
                 <li>Muestra totales, impuestos, importes adeudados y pagos convertidos en documentos contables.</li>
                 <li>Añade importes de referencia y tasas de referencia en apuntes contables y pagos.</li>
                 <li>Permite consultar los reportes de cuentas vencidas, el Libro mayor de la empresa, el Balance general y el Estado de cuenta del cliente en la moneda de la compañía o en la de referencia.</li>
+                <li>Permite registrar facturas de proveedor y pagos con una <strong>tasa manual</strong> en lugar de la tasa de cambio de Odoo.</li>
             </ul>
         </div>
     </div>
@@ -76,9 +77,12 @@
         <div class="oe_span6">
             <h2 class="oe_slogan text-body">Notas de crédito</h2>
             <p>
-                Una nota de crédito emitida en la moneda de la compañía a partir de una factura
-                conserva la tasa de referencia de la factura original. Si la nota usa otra moneda,
-                utiliza la tasa correspondiente a su propia fecha.
+                Una nota de crédito creada a partir de una factura conserva la tasa de la factura
+                original para sus importes de referencia. En moneda extranjera lo hace cuando se
+                crea con el asistente de reversión de Odoo, que copia la tasa de la factura, y la
+                nota cancela la factura sin diferencia de cambio. Si la reversión no conserva esa
+                tasa, la nota utiliza la tasa correspondiente a su propia fecha. Si la factura
+                tiene tasa manual, la nota de crédito la conserva.
             </p>
         </div>
     </div>
@@ -95,9 +99,79 @@
                 automáticamente.
             </p>
             <p>
-                La conversión de un pago usa la fecha del propio pago. Por eso conviene mantener
-                configurada la tasa de cambio correspondiente a cada fecha de pago.
+                La conversión de un pago usa la fecha del propio pago, salvo que el pago tenga una
+                <a href="#manual-rate">tasa manual</a>. Por eso conviene mantener configurada la
+                tasa de cambio correspondiente a cada fecha de pago.
             </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark" id="manual-rate">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <h2 class="oe_slogan text-body">Tasa manual en facturas de proveedor y pagos</h2>
+            <p>
+                Normalmente el módulo convierte con las tasas de cambio de Odoo de la fecha del
+                documento. La <strong>tasa manual</strong> permite registrar una factura de
+                proveedor, o el pago que la liquida, con la tasa que la empresa pactó o pagó
+                realmente. Solo afecta al documento que la activa; los demás siguen usando la tasa
+                del sistema.
+            </p>
+            <h3 class="text-body">Quién la ve y cuándo está disponible</h3>
+            <ul>
+                <li>Aparece a los administradores de Contabilidad, y solo en facturas, notas de crédito y recibos de proveedor, en pagos de proveedor y en el asistente <strong>Pagar</strong> cuando se paga a un proveedor. Los demás usuarios no ven el control.</li>
+                <li>La compañía debe tener una moneda de referencia distinta de la moneda de la compañía, y el documento debe estar en una de esas dos monedas. Con una tercera moneda el control no aparece y Odoo no permite activarlo.</li>
+                <li>Se puede cambiar mientras el documento está en borrador. Para cambiarla en un documento publicado, restablécelo primero a borrador.</li>
+            </ul>
+            <h3 class="text-body">Cómo registrar una factura de proveedor con tasa manual</h3>
+            <ol>
+                <li>Abre <strong>Contabilidad &gt; Proveedores &gt; Facturas</strong> y crea o abre una factura en borrador.</li>
+                <li>Elige la moneda de la factura (la de la compañía o la de referencia) y la fecha de la factura.</li>
+                <li>Activa <strong>Tasa manual</strong>. Odoo propone la tasa del sistema de esa fecha como punto de partida.</li>
+                <li>Escribe la tasa en <strong>Tasa USD manual</strong> (o en <strong>Tasa de referencia manual</strong> si ninguna de las monedas es USD).</li>
+                <li>Confirma la factura.</li>
+            </ol>
+            <p>
+                La tasa se escribe como el indicador <strong>Tasa USD</strong>: es el valor de un
+                dólar en la otra moneda. Si un dólar cuesta 880 bolívares, escribe <strong>880</strong>
+                tanto si la compañía lleva la contabilidad en bolívares con referencia en dólares,
+                como si la lleva en dólares con referencia en bolívares. Cuando ninguna de las dos
+                monedas es USD, el campo es <strong>Tasa de referencia manual</strong> y expresa
+                cuántas unidades de la moneda de la compañía vale una unidad de la moneda de
+                referencia. La tasa se muestra con seis decimales.
+            </p>
+            <h3 class="text-body">Qué se calcula con la tasa manual</h3>
+            <ul>
+                <li>En una factura en la moneda de referencia, el débito y el crédito de los apuntes contables, los impuestos y los totales en la moneda de la compañía. La tasa de cambio estándar de la factura toma ese valor y queda de solo lectura mientras la tasa manual está activa.</li>
+                <li>Los importes de referencia de la factura, de sus apuntes y de sus pagos, también en una factura en la moneda de la compañía.</li>
+                <li>Los reportes en moneda de referencia, que suman los importes guardados con esa tasa y no vuelven a convertir con la tasa de la fecha del reporte.</li>
+                <li>La nota de crédito creada a partir de la factura, que conserva la tasa manual.</li>
+            </ul>
+            <p>
+                El indicador <strong>Tasa USD</strong> del documento muestra la tasa manual que
+                escribiste.
+            </p>
+            <h3 class="text-body">Pagos con tasa manual</h3>
+            <p>
+                En un pago de proveedor en borrador, o en el asistente que abre el botón
+                <strong>Pagar</strong> de la factura, activa <strong>Tasa manual</strong> y escribe la tasa del pago. El
+                asistente solo ofrece la tasa cuando crea un único pago. Con la tasa manual, el
+                importe sugerido, los apuntes del pago y la parte de la factura que el pago liquida
+                se calculan con esa tasa.
+            </p>
+            <ul>
+                <li>Cada documento tiene su propia tasa: un pago sin tasa manual usa la tasa del sistema de su fecha, aunque la factura tenga tasa manual.</li>
+                <li>Si la tasa del pago es distinta de la de la factura, Odoo registra la diferencia de cambio habitual al conciliarlos.</li>
+                <li>Un pago pendiente en otra moneda se muestra y se aplica a la factura con su propia tasa manual.</li>
+            </ul>
+            <h3 class="text-body">Recomendaciones</h3>
+            <ul>
+                <li>Usa la tasa manual solo cuando la tasa del sistema no corresponda a la operación; con tasas de cambio al día no la necesitas.</li>
+                <li>Revisa el valor antes de confirmar: Odoo exige que sea positiva, pero no lo compara con ningún rango.</li>
+                <li>No cambies la moneda de referencia de la compañía cuando ya existan documentos con tasa manual.</li>
+                <li>La tasa manual no cambia la cotización del dólar de la barra superior.</li>
+            </ul>
         </div>
     </div>
 </section>
@@ -225,6 +299,7 @@
                 <li>La <strong>tasa de referencia guardada</strong> expresa cuántas unidades de la moneda de la compañía equivalen a una unidad de la moneda de referencia. El indicador <strong>Tasa USD</strong> de los formularios la presenta directamente o invertida, sin cambiar el valor original.</li>
                 <li>Las facturas y documentos usan su fecha de factura o su fecha contable para convertir los importes.</li>
                 <li>Los pagos usan su fecha de pago.</li>
+                <li>Si un documento tiene <a href="#manual-rate">tasa manual</a>, esa tasa sustituye a la tasa del sistema en todas sus conversiones entre la moneda de la compañía y la de referencia, sin importar su fecha.</li>
                 <li>Las tasas se toman de la configuración estándar de tasas de cambio de Odoo.</li>
                 <li>En los reportes, los importes de referencia conservan la tasa de cada asiento; el total no se vuelve a convertir con la tasa de la fecha del reporte.</li>
                 <li>Si no existe una moneda de referencia para la compañía, los cálculos utilizan la moneda de la compañía como respaldo; el selector de moneda y el indicador de la barra superior no se muestran.</li>

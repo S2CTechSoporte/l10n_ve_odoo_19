@@ -16,6 +16,26 @@ class AccountPartialReconcile(models.Model):
         store=True,
     )
 
+    def _get_dual_currency_conversion_context(self):
+        """Return the conversion context of the document that settles the partial.
+
+        A payment settles an invoice at its own rate, so the manual rate of the payment
+        wins; otherwise the latest document that has a manual rate is used.
+        """
+        self.ensure_one()
+        manual_moves = (
+            (self.debit_move_id | self.credit_move_id).move_id.filtered("manual_rate")
+        ).sorted(
+            key=lambda move: (
+                not move.origin_payment_id,
+                -move.date.toordinal() if move.date else 0,
+            )
+        )
+        for move in manual_moves:
+            if move._get_manual_rate_spec():
+                return move._get_dual_currency_conversion_context()
+        return {"manual_rate": False, "dual_currency_manual_rate": False}
+
     @api.depends(
         "amount",
         "debit_amount_currency",
@@ -25,6 +45,10 @@ class AccountPartialReconcile(models.Model):
         "max_date",
         "company_id.currency_id",
         "company_id.secondary_currency_id",
+        "debit_move_id.move_id.manual_rate",
+        "debit_move_id.move_id.manual_conversion_rate",
+        "credit_move_id.move_id.manual_rate",
+        "credit_move_id.move_id.manual_conversion_rate",
     )
     def _compute_amount_secondary_currency(self):
         for partial in self:
@@ -37,7 +61,7 @@ class AccountPartialReconcile(models.Model):
                 partial.amount_secondary_currency = partial.credit_amount_currency
             else:
                 partial.amount_secondary_currency = company_currency.with_context(
-                    manual_rate=False
+                    **partial._get_dual_currency_conversion_context()
                 )._convert(
                     partial.amount,
                     reference_currency,

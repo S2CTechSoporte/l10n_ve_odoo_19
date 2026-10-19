@@ -200,3 +200,138 @@ msgstr "Importe (referencia)"
 #: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_move_list_dual_currency
 msgid "Reference Total"
 msgstr "Total de referencia"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__manual_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__manual_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__manual_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment_register__manual_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_dual_currency_manual_rate_mixin__manual_rate
+msgid "Manual Rate"
+msgstr "Tasa manual"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__manual_conversion_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__manual_conversion_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__manual_conversion_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment_register__manual_conversion_rate
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_dual_currency_manual_rate_mixin__manual_conversion_rate
+msgid "Manual Rate Value"
+msgstr "Valor de la tasa manual"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__manual_rate_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__manual_rate_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__manual_rate_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment_register__manual_rate_currency_id
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_dual_currency_manual_rate_mixin__manual_rate_currency_id
+msgid "Manual Rate Currency"
+msgstr "Moneda de la tasa manual"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__manual_rate_is_usd
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__manual_rate_is_usd
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__manual_rate_is_usd
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment_register__manual_rate_is_usd
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_dual_currency_manual_rate_mixin__manual_rate_is_usd
+msgid "Manual Rate Uses USD"
+msgstr "La tasa manual usa USD"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__manual_rate_available
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__manual_rate_available
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__manual_rate_available
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment_register__manual_rate_available
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_dual_currency_manual_rate_mixin__manual_rate_available
+msgid "Manual Rate Available"
+msgstr "Tasa manual disponible"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_bank_statement_line__manual_rate_active
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_move__manual_rate_active
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment__manual_rate_active
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_account_payment_register__manual_rate_active
+#: model:ir.model.fields,field_description:accounting_dual_currency.field_dual_currency_manual_rate_mixin__manual_rate_active
+msgid "Manual Rate In Use"
+msgstr "Tasa manual en uso"
+
+#. module: accounting_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_move_form_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_payment_form_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_payment_register_form_dual_currency
+msgid "Manual USD Rate"
+msgstr "Tasa USD manual"
+
+#. module: accounting_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_move_form_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_payment_form_dual_currency
+#: model_terms:ir.ui.view,arch_db:accounting_dual_currency.account_payment_register_form_dual_currency
+msgid "Manual Reference Rate"
+msgstr "Tasa de referencia manual"
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,help:accounting_dual_currency.field_account_bank_statement_line__manual_rate
+#: model:ir.model.fields,help:accounting_dual_currency.field_account_move__manual_rate
+#: model:ir.model.fields,help:accounting_dual_currency.field_account_payment__manual_rate
+#: model:ir.model.fields,help:accounting_dual_currency.field_account_payment_register__manual_rate
+#: model:ir.model.fields,help:accounting_dual_currency.field_dual_currency_manual_rate_mixin__manual_rate
+msgid ""
+"Convert the company and reference currency amounts with the manual rate of "
+"this document instead of the exchange rates of Odoo."
+msgstr ""
+"Convierte los importes entre la moneda de la compañía y la de referencia con "
+"la tasa manual de este documento en lugar de las tasas de cambio de Odoo."
+
+#. module: accounting_dual_currency
+#: model:ir.model.fields,help:accounting_dual_currency.field_account_bank_statement_line__manual_conversion_rate
+#: model:ir.model.fields,help:accounting_dual_currency.field_account_move__manual_conversion_rate
+#: model:ir.model.fields,help:accounting_dual_currency.field_account_payment__manual_conversion_rate
+#: model:ir.model.fields,help:accounting_dual_currency.field_account_payment_register__manual_conversion_rate
+#: model:ir.model.fields,help:accounting_dual_currency.field_dual_currency_manual_rate_mixin__manual_conversion_rate
+msgid ""
+"Manual rate with the orientation of the USD Rate indicator: the value of one"
+" dollar in the other currency of the pair, e.g. 880.0 bolivars per dollar "
+"whichever the company currency is. Without USD in the pair it is the number "
+"of company currency units per reference currency unit."
+msgstr ""
+"Tasa manual con la orientación del indicador Tasa USD: el valor de un dólar "
+"en la otra moneda del par, por ejemplo 880,0 bolívares por dólar sea cual "
+"sea la moneda de la compañía. Sin USD en el par es el número de unidades de "
+"la moneda de la compañía por unidad de la moneda de referencia."
+
+#. module: accounting_dual_currency
+#. odoo-python
+#: code:addons/accounting_dual_currency/models/manual_rate_mixin.py:0
+msgid ""
+"The manual rate is only available when the company has a reference currency "
+"and the document uses the company currency or the reference currency."
+msgstr ""
+"La tasa manual solo está disponible cuando la compañía tiene una moneda de "
+"referencia y el documento usa la moneda de la compañía o la de referencia."
+
+#. module: accounting_dual_currency
+#. odoo-python
+#: code:addons/accounting_dual_currency/models/manual_rate_mixin.py:0
+#: code:addons/accounting_dual_currency/models/res_company.py:0
+msgid "The manual rate must be strictly positive."
+msgstr "La tasa manual debe ser estrictamente positiva."
+
+#. module: accounting_dual_currency
+#. odoo-python
+#: code:addons/accounting_dual_currency/models/account_move.py:0
+msgid ""
+"You cannot modify the manual rate of the posted document %(move)s. Reset it "
+"to draft first."
+msgstr ""
+"No puedes modificar la tasa manual del documento publicado %(move)s. "
+"Restablécelo primero a borrador."
+
+#. module: accounting_dual_currency
+#. odoo-python
+#: code:addons/accounting_dual_currency/models/account_payment.py:0
+msgid ""
+"You cannot modify the manual rate of a payment that is not in draft. Reset "
+"it to draft first."
+msgstr ""
+"No puedes modificar la tasa manual de un pago que no está en borrador. "
+"Restablécelo primero a borrador."

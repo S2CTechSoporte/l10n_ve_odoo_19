@@ -44,7 +44,7 @@ class TestDualCurrencyAccountingFlows(DualCurrencyTestCommon):
         self.assertAlmostEqual(credit_note.amount_total_secondary_currency, 100.0, places=2)
         self.assertAlmostEqual(invoice.amount_residual_secondary_currency, 0.0, places=2)
 
-    def test_usd_credit_note_uses_reversal_date(self):
+    def test_usd_credit_note_reuses_original_invoice_rate(self):
         invoice = self._create_invoice(
             self.usd,
             100.0,
@@ -53,6 +53,34 @@ class TestDualCurrencyAccountingFlows(DualCurrencyTestCommon):
         credit_note = self._create_credit_note(invoice, self.rate_date_third)
         credit_line = credit_note.invoice_line_ids[:1]
 
+        # Odoo copies the rate of the invoice in the reversal wizard, so the credit
+        # note cancels it in company currency and its reference amounts follow it.
+        self.assertAlmostEqual(credit_note.invoice_currency_rate, 1 / 50.0, places=9)
+        self.assertAlmostEqual(abs(credit_line.balance), 5000.0, places=2)
+        self.assertAlmostEqual(credit_line.conversion_rate, 50.0, places=2)
+        self.assertAlmostEqual(abs(credit_line.balance_secondary_currency), 100.0, places=2)
+        self.assertAlmostEqual(
+            credit_note.amount_total_local_currency,
+            5000.0,
+            places=2,
+        )
+        self.assertAlmostEqual(credit_note.amount_total_secondary_currency, 100.0, places=2)
+
+    def test_usd_credit_note_without_the_original_rate_uses_its_own_date(self):
+        invoice = self._create_invoice(
+            self.usd,
+            100.0,
+            self.rate_date_invoice,
+        )
+        credit_note = invoice._reverse_moves(
+            [{"date": self.rate_date_third, "invoice_date": self.rate_date_third}]
+        )
+        credit_note.action_post()
+        credit_line = credit_note.invoice_line_ids[:1]
+
+        # A reversal that does not copy the rate converts at the date of the note.
+        self.assertAlmostEqual(credit_note.invoice_currency_rate, 1 / 54.0, places=9)
+        self.assertAlmostEqual(abs(credit_line.balance), 5400.0, places=2)
         self.assertAlmostEqual(credit_line.conversion_rate, 54.0, places=2)
         self.assertAlmostEqual(abs(credit_line.balance_secondary_currency), 100.0, places=2)
         self.assertAlmostEqual(
@@ -60,6 +88,7 @@ class TestDualCurrencyAccountingFlows(DualCurrencyTestCommon):
             5400.0,
             places=2,
         )
+        self.assertAlmostEqual(credit_note.amount_total_secondary_currency, 100.0, places=2)
 
     def test_manual_usd_entry_keeps_ves_and_reference_balances(self):
         move_form = Form(
