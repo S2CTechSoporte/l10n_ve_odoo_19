@@ -54,27 +54,10 @@ class AccountMove(models.Model):
 
     wh_muni_id = fields.Many2one('municipality.tax', string='Withholding municipal tax', readonly=True, copy=False)
 
-    def conv_div_nac(self,valor):
-        self.currency_id.id
-        fecha_contable_doc=self.date
-        monto_factura=self.amount_total
-        valor_aux=0
-        #raise UserError(_('moneda compañia: %s')%self.company_id.currency_id.id)
-        if self.currency_id.id!=self.company_id.currency_id.id:
-            dt = fields.datetime.combine(self.date, fields.datetime.max.time())
-            tasa= self.env['res.currency.rate'].search(
-                [('currency_id','=',self.currency_id.id),
-                ('rate_date','<=', dt)],
-                order="rate_date asc")
-            for det_tasa in tasa:
-                if fecha_contable_doc>=det_tasa.name:
-                    valor_aux=det_tasa.rate
-            rate=round(1/valor_aux,4)  # LANTA
-            #rate=round(valor_aux,2)  # ODOO SH
-            resultado=valor*rate
-        else:
-            resultado=valor
-        return resultado
+    def conv_div_nac(self, valor):
+        """Convert an amount of the invoice currency into the company currency at the
+        rate of the invoice (see ``_wh_to_company_currency`` of l10n_ve_full)."""
+        return self._wh_to_company_currency(valor)
 
     def _create_muni_wh_voucher(self):
 

@@ -50,7 +50,7 @@ class TestMunicipalWithholding(TransactionCase):
             'name': 'Municipal Withholding Supplier',
             'company_type': 'company',
             'supplier_rank': 1,
-            'vat': 'J-87654321-3',
+            'vat': 'J876543213',
             'street': 'Av. Principal',
             'city': 'Machiques',
             'property_account_receivable_id': cls.receivable_account.id,

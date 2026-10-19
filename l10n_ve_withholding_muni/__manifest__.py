@@ -3,7 +3,7 @@
 
 {
         'name': 'Municipal Taxes for Venezuela Localization',
-        'version': '19.0.1.0.0',
+        'version': '19.0.1.0.1',
         'author': 'S2C Technology',
         'maintainer': 'Juan Córdoba <jgcordobac@gmail.com>',
         'description': 'Municipal Taxes',

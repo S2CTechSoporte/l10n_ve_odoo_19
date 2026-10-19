@@ -393,6 +393,8 @@ class MUnicipalityTax(models.Model):
         balances=cero-valores
         journal_lines = []
 
+        # The withholding is expressed at the rate of its invoice
+        invoice = self.invoice_id
         journal_lines.append(
             (0, 0, {
                 'account_id': cuenta_haber,
@@ -400,6 +402,7 @@ class MUnicipalityTax(models.Model):
                 'name': name,
                 'debit': 0.00,
                 'credit': valores,
+                **invoice._wh_get_line_currency_vals(-valores),
             }),
         )
         journal_lines.append(
@@ -409,6 +412,7 @@ class MUnicipalityTax(models.Model):
                 'name': name,
                 'debit': valores,
                 'credit': 0.00,
+                **invoice._wh_get_line_currency_vals(valores),
             }),
         )
 
