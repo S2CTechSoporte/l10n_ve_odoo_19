@@ -517,6 +517,9 @@ class TestManualRateDocuments(DualCurrencyTestCommon):
                 if model != "account.payment.register":
                     self.assertEqual(flag.get("readonly"), "state != 'draft'")
                     self.assertEqual(value.get("readonly"), "state != 'draft'")
+                    self.assertIn("state != 'draft'", value.getparent().get("invisible"))
+                    for label in arch.xpath("//label[@for='manual_conversion_rate']"):
+                        self.assertIn("state != 'draft'", label.get("invisible"))
 
     def test_forms_restrict_the_manual_rate_to_accounting_managers(self):
         for xmlid in (
