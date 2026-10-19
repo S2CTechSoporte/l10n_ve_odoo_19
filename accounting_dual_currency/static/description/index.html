@@ -1,12 +1,12 @@
 <section class="oe_container">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
-            <h2 class="oe_slogan text-body">Contabilidad en dos monedas</h2>
+            <h2 class="oe_slogan text-body">Contabilidad en doble moneda</h2>
             <h3 class="oe_slogan text-body">Consulta tus importes en la moneda de tu compañía y otra de referencia</h3>
             <p>
                 <strong>Accounting Dual Currency</strong> permite consultar documentos y saldos
                 en la moneda de la compañía y en una moneda de referencia. Puedes configurar
-                cualquier moneda disponible en Odoo sin necesitar una localización específica.
+                cualquier moneda disponible en Odoo sin necesitar una localización de país.
             </p>
         </div>
     </div>
@@ -17,11 +17,11 @@
         <div class="oe_span12">
             <h2 class="oe_slogan text-body">Qué agrega el módulo</h2>
             <ul>
-                <li>Respeta la moneda principal de cada compañía y permite elegir una moneda de referencia diferente.</li>
-                <li>Permite definir una moneda de referencia por compañía; se propone USD si la moneda principal es distinta de USD.</li>
-                <li>Muestra totales, impuestos, saldos pendientes y pagos convertidos en documentos contables.</li>
-                <li>Añade importes de referencia y tasas de conversión en apuntes contables y pagos.</li>
-                <li>Permite consultar los reportes de vencimiento, el libro mayor de socios, el balance general y los estados de cuenta en la moneda de la compañía o en la de referencia.</li>
+                <li>Respeta la moneda de cada compañía y permite elegir una moneda de referencia diferente.</li>
+                <li>Permite definir una moneda de referencia por compañía; se propone USD si la moneda de la compañía es distinta de USD.</li>
+                <li>Muestra totales, impuestos, importes adeudados y pagos convertidos en documentos contables.</li>
+                <li>Añade importes de referencia y tasas de referencia en apuntes contables y pagos.</li>
+                <li>Permite consultar los reportes de cuentas vencidas, el Libro mayor de la empresa, el Balance general y el Estado de cuenta del cliente en la moneda de la compañía o en la de referencia.</li>
             </ul>
         </div>
     </div>
@@ -40,9 +40,9 @@
             <ol>
                 <li>Abre <strong>Contabilidad &gt; Configuración &gt; Ajustes</strong>.</li>
                 <li>Selecciona la compañía que vas a configurar.</li>
-                <li>Comprueba la moneda principal de la compañía antes de registrar documentos.</li>
+                <li>Comprueba la moneda de la compañía antes de registrar documentos.</li>
                 <li>En <strong>Dualidad de moneda</strong> (<strong>Dual Currency</strong> en inglés), selecciona la moneda de referencia. Se propone USD si la compañía usa otra moneda; si ya usa USD, elige una moneda distinta.</li>
-                <li>Mantén las tasas de cambio de las monedas utilizadas y de USD en la configuración estándar de monedas de Odoo. La barra superior siempre necesita cotizar USD, aunque no sea la moneda principal ni la de referencia.</li>
+                <li>Mantén las tasas de cambio de las monedas utilizadas y de USD en la configuración estándar de tasas de cambio de Odoo. La barra superior siempre necesita cotizar USD, aunque no sea la moneda de la compañía ni la de referencia.</li>
             </ol>
             <p>
                 La moneda de referencia se configura por compañía. Si trabajas con varias compañías,
@@ -63,13 +63,13 @@
             <h2 class="oe_slogan text-body">Facturas y documentos</h2>
             <p>
                 En el formulario de una factura o recibo, el módulo muestra totales, impuestos y
-                saldos pendientes en la moneda de referencia si el documento está en la moneda de
+                importes adeudados en la moneda de referencia si el documento está en la moneda de
                 la compañía. Si el documento usa otra moneda, muestra esos importes en la moneda
                 de la compañía. También convierte el detalle de las líneas y los pagos relacionados.
             </p>
             <p>
                 En las listas de facturas, asientos y apuntes contables puedes activar las columnas
-                opcionales de importes de referencia, saldo residual y tasa de conversión desde el
+                opcionales de importes de referencia, residual y tasa de referencia desde el
                 selector de columnas.
             </p>
         </div>
@@ -89,14 +89,14 @@
         <div class="oe_span12">
             <h2 class="oe_slogan text-body">Pagos</h2>
             <p>
-                Al registrar un pago, Odoo conserva el importe operativo y muestra los importes
+                Al registrar un pago, Odoo conserva el importe en moneda de transacción y muestra los importes
                 equivalentes en la moneda de la compañía y en la de referencia junto con la tasa
                 guardada explicada a continuación. Estos valores son informativos y se calculan
                 automáticamente.
             </p>
             <p>
                 La conversión de un pago usa la fecha del propio pago. Por eso conviene mantener
-                configurada la tasa de cambio correspondiente a cada fecha de operación.
+                configurada la tasa de cambio correspondiente a cada fecha de pago.
             </p>
         </div>
     </div>
@@ -136,22 +136,21 @@
 <section class="oe_container oe_dark">
     <div class="oe_row">
         <div class="oe_span12">
-            <h2 class="oe_slogan text-body">Reportes de vencimiento</h2>
+            <h2 class="oe_slogan text-body">Reportes de cuentas vencidas</h2>
             <p>
-                En los reportes estándar de <strong>cuentas por cobrar vencidas</strong> y
-                <strong>cuentas por pagar vencidas</strong> aparece un selector de moneda cuando
-                la compañía tiene configurada una moneda de referencia distinta de su moneda principal.
-                De forma predeterminada, el reporte usa la moneda de la compañía.
+                En los reportes estándar <strong>Cuenta por cobrar vencida</strong> (<strong>Aged Receivable</strong>) y
+                <strong>Cuenta por pagar vencida</strong> (<strong>Aged Payable</strong>) aparece un selector de moneda cuando
+                la compañía tiene configurada una moneda de referencia distinta de la moneda de la compañía.
+                Por defecto, el reporte usa la moneda de la compañía.
             </p>
             <ol>
-                <li>Abre el reporte de cuentas por cobrar o de cuentas por pagar vencidas.</li>
+                <li>Abre el reporte Cuenta por cobrar vencida o Cuenta por pagar vencida.</li>
                 <li>Abre el selector de moneda situado junto a los filtros del reporte.</li>
                 <li>Selecciona la moneda de la compañía o la de referencia.</li>
             </ol>
             <p>
-                El reporte conserva la fecha de corte y distribuye los saldos en sus períodos de
-                vencimiento. Las conciliaciones se consideran hasta esa fecha, por lo que puedes
-                cambiar la moneda sin perder el alcance temporal del informe.
+                El reporte conserva la fecha de corte y distribuye los saldos en sus tramos de antigüedad. Las conciliaciones se consideran hasta esa fecha, por lo que puedes
+                cambiar la moneda sin perder el alcance temporal del reporte.
             </p>
         </div>
     </div>
@@ -162,21 +161,19 @@
         <div class="oe_span12">
             <h2 class="oe_slogan text-body">Otros reportes contables</h2>
             <p>
-                El selector de moneda también está disponible en el libro mayor de socios
-                (<strong>Partner Ledger</strong>), el balance general (<strong>Balance Sheet</strong>)
-                y el estado de cuenta (<strong>Customer Statement</strong>). Elige la moneda de la
-                compañía o la de referencia; inicialmente se selecciona la moneda de la compañía.
+                El selector de moneda también está disponible en el Libro mayor de la empresa
+                (<strong>Partner Ledger</strong>), el Balance general (<strong>Balance Sheet</strong>)
+                y el Estado de cuenta del cliente (<strong>Customer Statement</strong>). Elige la moneda de la
+                compañía o la de referencia; por defecto se selecciona la moneda de la compañía.
             </p>
             <p>
-                En el libro mayor y los estados de cuenta, los saldos, saldos iniciales,
-                conciliaciones y líneas de detalle usan la moneda elegida. En el balance general,
-                también cambian los totales de cuentas y grupos y sus líneas desplegadas. En el libro
-                mayor y el estado de cuenta, la columna que muestra el importe en la moneda de la
-                transacción conserva la moneda original del documento.
+                En el Libro mayor de la empresa y en el Estado de cuenta del cliente, los saldos, saldos iniciales,
+                conciliaciones y líneas de detalle usan la moneda elegida. En el Balance general,
+                también cambian los totales de cuentas y grupos y sus líneas desplegadas. En el Libro mayor de la empresa y en el Estado de cuenta del cliente, la columna Importe en moneda conserva la moneda original del documento.
             </p>
             <ul>
-                <li>Al abrir el estado de cuenta desde una fila de socio en un reporte de vencimiento, se conserva la moneda seleccionada. Si se abre directamente desde la lista de clientes, se usa la moneda de la compañía.</li>
-                <li>En estos tres reportes, el selector se oculta si las compañías seleccionadas no comparten la misma moneda principal y la misma moneda de referencia.</li>
+                <li>Al abrir el Estado de cuenta del cliente desde una fila de contacto en un reporte de cuentas vencidas, se conserva la moneda seleccionada. Si se abre directamente desde la lista de clientes, se usa la moneda de la compañía.</li>
+                <li>En estos tres reportes, el selector se oculta si las compañías seleccionadas no comparten la misma moneda de la compañía y la misma moneda de referencia.</li>
             </ul>
         </div>
     </div>
@@ -189,7 +186,7 @@
             <p>
                 Cuando la compañía activa tiene una moneda de referencia, la barra superior muestra
                 cuánto cuesta <strong>1 USD</strong> en la moneda contraparte, antes del selector
-                de compañías. La etiqueta siempre es <strong>USD</strong>. Si la compañía usa USD,
+                de compañía. La etiqueta siempre es <strong>USD</strong>. Si la compañía usa USD,
                 la contraparte es la moneda de referencia; en los demás casos se usa la moneda
                 de la compañía, incluso si ninguna de las dos monedas configuradas es USD.
             </p>
@@ -197,20 +194,20 @@
                 El importe respeta el idioma del usuario y la posición configurada del símbolo de
                 la moneda contraparte, incluidos sus decimales. Por ejemplo,
                 <strong>USD: 0,89 &#8364;</strong> significa que un dólar equivale a 0,89 euros.
-                Si ambas monedas configuradas son USD, se muestra una equivalencia de uno a uno;
+                Si ambas monedas configuradas son USD, se muestra una cotización unitaria;
                 si ambas son la misma moneda distinta de USD, se sigue mostrando cuánto cuesta
                 un dólar en esa moneda.
             </p>
             <p>
-                Al cargar la barra, abrir el menú o cambiar de compañía, el indicador consulta las
-                tasas registradas para la fecha actual. Abrir el menú no descarga tasas de un
+                Al cargar la barra, abrir el desplegable o cambiar de compañía, el indicador consulta las
+                tasas almacenadas para la fecha actual. Abrir el desplegable no descarga tasas de un
                 proveedor ni requiere configurarlo. Si faltan tasas, se aplican los respaldos
                 estándar de Odoo; mantén las tasas al día para obtener una cotización fiable.
                 Esta presentación basada en USD no redefine la tasa de referencia ni la fecha
                 de conversión de los documentos y pagos.
             </p>
             <p>
-                Las personas administradoras de Ajustes y responsables de Contabilidad pueden usar
+                Los administradores de Ajustes y los responsables de Contabilidad pueden usar
                 <strong>Actualizar ahora</strong>. La acción actualiza todas las monedas activas que
                 admita el proveedor configurado, no solo la moneda de referencia; tampoco activa
                 actualizaciones programadas ni cambia su intervalo. Después se vuelve a mostrar
@@ -228,7 +225,7 @@
                 <li>La <strong>tasa de referencia guardada</strong> expresa cuántas unidades de la moneda de la compañía equivalen a una unidad de la moneda de referencia. El indicador <strong>Tasa USD</strong> de los formularios la presenta directamente o invertida, sin cambiar el valor original.</li>
                 <li>Las facturas y documentos usan su fecha de factura o su fecha contable para convertir los importes.</li>
                 <li>Los pagos usan su fecha de pago.</li>
-                <li>Las tasas se toman de la configuración estándar de monedas de Odoo.</li>
+                <li>Las tasas se toman de la configuración estándar de tasas de cambio de Odoo.</li>
                 <li>En los reportes, los importes de referencia conservan la tasa de cada asiento; el total no se vuelve a convertir con la tasa de la fecha del reporte.</li>
                 <li>Si no existe una moneda de referencia para la compañía, los cálculos utilizan la moneda de la compañía como respaldo; el selector de moneda y el indicador de la barra superior no se muestran.</li>
             </ul>
@@ -241,9 +238,9 @@
         <div class="oe_span12">
             <h2 class="oe_slogan text-body">Consideraciones importantes</h2>
             <ul>
-                <li>El módulo no cambia automáticamente la moneda principal de una compañía existente. Comprueba su moneda antes de registrar operaciones contables.</li>
-                <li>Las columnas adicionales de listas pueden estar ocultas inicialmente; actívalas desde las opciones de la lista cuando las necesites.</li>
-                <li>El selector está disponible en los reportes de vencimiento, el libro mayor de socios, el balance general y el estado de cuenta, sujeto a la compatibilidad de compañías descrita arriba.</li>
+                <li>El módulo no cambia automáticamente la moneda de la compañía en las compañías existentes. Comprueba su moneda antes de registrar operaciones contables.</li>
+                <li>Las columnas opcionales de las listas pueden estar ocultas por defecto; actívalas desde las opciones de la lista cuando las necesites.</li>
+                <li>El selector está disponible en los reportes Cuenta por cobrar vencida, Cuenta por pagar vencida, Libro mayor de la empresa, Balance general y Estado de cuenta del cliente, sujeto a la compatibilidad de compañías descrita arriba.</li>
                 <li>Para obtener conversiones coherentes, registra las tasas de cambio antes de trabajar con documentos y pagos de las fechas correspondientes.</li>
             </ul>
         </div>

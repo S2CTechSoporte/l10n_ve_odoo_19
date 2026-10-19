@@ -1,266 +1,273 @@
-# Testing
+# Pruebas
 
-This document defines the blocking acceptance contract and automated test plan
-for `accounting_dual_currency` on Odoo 19.0.
+Este documento define el contrato bloqueante de aceptación y el plan de pruebas
+automatizadas de `accounting_dual_currency` en Odoo 19.0.
 
-## Acceptance Requirements
+## Requisitos de aceptación
 
-### Accounting Assumptions
+### Supuestos contables
 
-- No required country localization; `account_reports` provides the reporting
-   dependency.
-- Main test fixture: German company with a generic chart of accounts, a
-   company currency denoted by CCY, and USD as reference. The fixture currencies
-   are test data, not requirements; CCY is a placeholder, not a currency code.
-- CCY below means the company currency; USD means the reference currency used
-   in the main fixture.
-- Additional company-currency example: EUR company currency and USD reference currency.
-- Additional reference fixture: USD company currency and EUR reference currency.
-- Invoice date, 2026-01-10: 1 USD = 50 CCY in the main fixture.
-- Second payment date, 2026-01-20: 1 USD = 52 CCY.
-- Third payment date, 2026-01-30: 1 USD = 54 CCY.
-- Tests do not use taxes unless the behavior under test requires them.
+- No se requiere una localización de país; `account_reports` aporta la dependencia de
+  reportes.
+- Fixture principal: compañía alemana con un plan de cuentas genérico, moneda de la
+  compañía denominada CCY y USD como moneda de referencia. Las monedas del fixture son
+  datos de prueba, no requisitos; CCY es un marcador de posición, no un código de moneda.
+- CCY significa la moneda de la compañía; USD significa la moneda de referencia usada en
+  el fixture principal.
+- Ejemplo adicional: compañía con EUR como moneda de la compañía y USD como moneda de referencia.
+- Fixture de referencia adicional: moneda de la compañía USD y moneda de referencia EUR.
+- Fecha de factura, 2026-01-10: 1 USD = 50 CCY en el fixture principal.
+- Segunda fecha de pago, 2026-01-20: 1 USD = 52 CCY.
+- Tercera fecha de pago, 2026-01-30: 1 USD = 54 CCY.
+- Las pruebas no usan impuestos, salvo que el comportamiento probado los requiera.
 
-The rates are deterministic test fixtures, not historical or forecast exchange
-rates.
+Las tasas son fixtures de prueba deterministas, no tasas de cambio históricas ni
+proyectadas.
 
-### Mandatory Invoice And Payment Matrix
+### Matriz obligatoria de facturas y pagos
 
-1. USD invoice with one full USD payment.
-2. USD invoice with one full CCY payment.
-3. CCY invoice with one full USD payment.
-4. CCY invoice with one full CCY payment.
-5. USD invoice with multiple partial USD payments.
-6. USD invoice with multiple partial CCY payments.
-7. USD invoice with mixed USD/CCY partial payments on different dates.
-8. CCY invoice with multiple partial USD payments.
-9. CCY invoice with multiple partial CCY payments.
-10. CCY invoice with mixed USD/CCY partial payments on different dates.
+1. Factura en USD con un pago completo en USD.
+2. Factura en USD con un pago completo en CCY.
+3. Factura en CCY con un pago completo en USD.
+4. Factura en CCY con un pago completo en CCY.
+5. Factura en USD con varios pagos parciales en USD.
+6. Factura en USD con varios pagos parciales en CCY.
+7. Factura en USD con pagos parciales mixtos en USD/CCY en fechas diferentes.
+8. Factura en CCY con varios pagos parciales en USD.
+9. Factura en CCY con varios pagos parciales en CCY.
+10. Factura en CCY con pagos parciales mixtos en USD/CCY en fechas diferentes.
 
-| # | Invoice | Payments | Required outcome |
+| # | Factura | Pagos | Resultado requerido |
 |---|---|---|---|
-| 1 | USD 100 at 50 | USD 100 at 50 | Both residuals are zero; one USD payment is shown; invoice is settled. |
-| 2 | USD 100 at 50 | CCY 5,000 at 50 | Native and dual totals remain coherent; both residuals are zero. |
-| 3 | CCY 5,000 at 50 | USD 100 at 50 | The reference widget shows USD 100; both residuals are zero. |
-| 4 | CCY 5,000 at 50 | CCY 5,000 at 50 | Native company-currency accounting is unchanged; both residuals are zero. |
-| 5 | USD 100 at 50 | USD 40, then USD 60 | USD residual changes from 100 to 60 to 0; two payments are shown. |
-| 6 | USD 100 at 50 | CCY 2,000, then CCY 3,000 | Residual changes consistently in CCY and USD and finishes at zero. |
-| 7 | USD 100 at 50 | USD 30 at 50, CCY 2,080 at 52, USD 30 at 54 | Each payment uses its own date; no final residual drift remains. |
-| 8 | CCY 5,000 at 50 | USD 25, then USD 75 at 50 | CCY and USD residuals decrease after each payment and finish at zero. |
-| 9 | CCY 5,000 at 50 | CCY 2,000, then CCY 3,000 | Company-currency residual changes from 5,000 to 3,000 to 0. |
-| 10 | CCY 5,000 at 50 | USD 25 at 50, CCY 1,050 at 52, USD 50 at 54 | Mixed-date reconciliation settles the invoice and exposes the rate impact without corrupting helper fields. |
+| 1 | USD 100 a tasa 50 | USD 100 a tasa 50 | Ambos importes adeudados son cero; se muestra un pago en USD; la factura queda saldada. |
+| 2 | USD 100 a tasa 50 | CCY 5.000 a tasa 50 | Los totales nativos y duales siguen siendo coherentes; ambos importes adeudados son cero. |
+| 3 | CCY 5.000 a tasa 50 | USD 100 a tasa 50 | El widget de referencia muestra USD 100; ambos importes adeudados son cero. |
+| 4 | CCY 5.000 a tasa 50 | CCY 5.000 a tasa 50 | La contabilidad nativa en moneda de la compañía no cambia; ambos importes adeudados son cero. |
+| 5 | USD 100 a tasa 50 | USD 40 y luego USD 60 | El importe adeudado en USD pasa de 100 a 60 y luego a 0; se muestran dos pagos. |
+| 6 | USD 100 a tasa 50 | CCY 2.000 y luego CCY 3.000 | El importe adeudado cambia de forma coherente en CCY y en USD, y termina en cero. |
+| 7 | USD 100 a tasa 50 | USD 30 a tasa 50, CCY 2.080 a tasa 52, USD 30 a tasa 54 | Cada pago usa su propia fecha; no queda ninguna desviación final del importe adeudado. |
+| 8 | CCY 5.000 a tasa 50 | USD 25 y luego USD 75 a tasa 50 | Los importes adeudados en CCY y en USD disminuyen tras cada pago y terminan en cero. |
+| 9 | CCY 5.000 a tasa 50 | CCY 2.000 y luego CCY 3.000 | El importe adeudado en moneda de la compañía pasa de 5.000 a 3.000 y luego a 0. |
+| 10 | CCY 5.000 a tasa 50 | USD 25 a tasa 50, CCY 1.050 a tasa 52, USD 50 a tasa 54 | La conciliación con fechas mixtas salda la factura y expone el impacto de la tasa sin corromper los campos auxiliares. |
 
-### Assertions Per Matrix Scenario
+### Aserciones por escenario de la matriz
 
-Each scenario must assert:
+Cada escenario debe comprobar:
 
-1. The invoice posts in the requested document currency.
-2. `secondary_currency_id` is USD.
-3. Document, company-currency, and reference-currency totals are correct at the
-   invoice date.
-4. Native and dual residuals are correct after every payment.
-5. `account.partial.reconcile.amount_secondary_currency` uses the reference-currency
-   partial when either reconciled side is in USD, and otherwise converts at the
-   reconciliation date.
-6. Reference and company-currency payment widgets contain the expected non-exchange
-   payments in the selected display currency.
-7. Journal-item `balance_secondary_currency`, `debit_secondary_currency`,
-   `credit_secondary_currency`, and `amount_residual_secondary_currency` remain coherent.
-8. Intermediate states are `partial` where applicable.
-9. The final residual is zero and the final payment state is the valid Odoo
-   settled state (`paid` or `in_payment`, depending on installed accounting
-   features).
-10. Exchange-difference entries generated by Odoo do not create duplicate
-    business payments in the assertions.
+1. La factura se registra en la moneda del documento solicitada.
+2. `secondary_currency_id` es USD.
+3. Los totales del documento, en moneda de la compañía y en moneda de referencia, son
+   correctos en la fecha de la factura.
+4. Los importes adeudados nativos y duales son correctos después de cada pago.
+5. `account.partial.reconcile.amount_secondary_currency` usa la conciliación parcial en
+   moneda de referencia cuando alguno de los lados conciliados está en USD; en caso
+   contrario, convierte en la fecha de conciliación.
+6. Los widgets de pagos en moneda de referencia y en moneda de la compañía contienen los
+   pagos esperados, sin diferencias de cambio, en la moneda de visualización seleccionada.
+7. Los campos de apunte contable `balance_secondary_currency`,
+   `debit_secondary_currency`, `credit_secondary_currency` y
+   `amount_residual_secondary_currency` se mantienen coherentes.
+8. Los estados intermedios son `partial` cuando corresponde.
+9. El importe adeudado final es cero, y el estado final de pago es el estado válido de factura
+   saldada en Odoo (`paid` o `in_payment`, según las funciones contables instaladas).
+10. Los asientos de diferencia de cambio generados por Odoo no crean pagos de negocio
+    duplicados en las aserciones.
 
-### Mandatory Reporting Tests
+### Pruebas obligatorias de reportes
 
-1. Aged receivable defaults to the company currency and exposes it and the
-   reference currency (CCY and USD in the main fixture).
-2. Aged receivable in USD honors the report cutoff: a payment after the cutoff
-   must not reduce an earlier report.
-3. Aged receivable USD partner totals equal the grand total for an isolated
-   partner and equal the sum of all period buckets.
-4. Aged payable in USD uses the correct sign, partner total, and period bucket.
-5. Monetary columns use the currency selected in `dual_currency_id`.
-6. With an EUR company and USD reference, the selector defaults to EUR and
-   offers EUR and USD.
-7. With a USD company and EUR reference, the selector defaults to USD and
-   offers USD and EUR.
-8. Partner Ledger and Balance Sheet offer the company and reference currencies
-   for compatible companies and hide the selector for incompatible selections.
-9. Partner Ledger partner and journal-item totals use posted reference debit
-   and balance amounts; initial balances, indirect reconciliations, and
-   expanded lines retain those amounts.
-10. Balance Sheet assets, receivables, liabilities, equity, and precalculated
-   column-group totals use posted reference balances when selected, while the
-   company-currency totals remain unchanged.
-11. Balance Sheet expanded account lines reconcile with their parent group
-   totals in the reference currency.
-12. Partner Ledger and Balance Sheet use the selected report company, not the
-   active company, when choosing reference amounts.
-13. Customer Statement defaults to the company currency when opened directly,
-    offers both currencies, and inherits the selected currency from Aged
-    Receivable and Aged Payable. Customer and vendor amounts and balances use
-    posted company/reference values; incompatible company selections hide the
-    currency dropdown.
+1. Cuenta por cobrar vencida (Aged Receivable) usa por defecto la moneda de la compañía y
+   muestra esa moneda y la de referencia (CCY y USD en el fixture principal).
+2. Cuenta por cobrar vencida en USD respeta la fecha de corte del reporte: un pago posterior
+   a la fecha de corte no debe reducir un reporte anterior.
+3. Los totales por contacto de Cuenta por cobrar vencida en USD son iguales al total general
+   de un contacto aislado y a la suma de todos los tramos de antigüedad.
+4. Cuenta por pagar vencida (Aged Payable) en USD usa el signo, el total por contacto y el
+   tramo de antigüedad correctos.
+5. Las columnas monetarias usan la moneda seleccionada en `dual_currency_id`.
+6. Con una compañía en EUR y referencia en USD, el selector usa EUR por defecto y ofrece EUR
+   y USD.
+7. Con una compañía en USD y referencia en EUR, el selector usa USD por defecto y ofrece USD
+   y EUR.
+8. El Libro mayor de la empresa (Partner Ledger) y el Balance general (Balance Sheet) ofrecen
+   la moneda de la compañía y la de referencia para compañías compatibles, y ocultan el
+   selector en selecciones incompatibles.
+9. Los totales por contacto y por apunte contable del Libro mayor de la empresa usan los
+   importes registrados de débito y de saldo de referencia; los saldos iniciales, las
+   conciliaciones indirectas y las líneas desplegadas conservan esos importes.
+10. Los activos, cuentas por cobrar, pasivos, patrimonio y totales precalculados por grupo de
+    columnas del Balance general usan los saldos de referencia registrados cuando se
+    selecciona esa moneda, mientras que los totales en moneda de la compañía no cambian.
+11. Las líneas de cuenta desplegadas del Balance general cuadran con los totales de su grupo
+    padre en moneda de referencia.
+12. El Libro mayor de la empresa y el Balance general usan la compañía del reporte
+    seleccionada, no la compañía activa, para elegir los importes de referencia.
+13. El Estado de cuenta del cliente (Customer Statement) usa por defecto la moneda de la
+    compañía al abrirse directamente, ofrece ambas monedas y hereda la moneda seleccionada en
+    Cuenta por cobrar vencida y Cuenta por pagar vencida. Los importes y saldos de clientes y
+    proveedores usan los valores registrados de compañía y de referencia; las selecciones de
+    compañías incompatibles ocultan el selector de moneda.
 
-### Mandatory Additional Flows
+### Flujos adicionales obligatorios
 
-1. A company-currency credit note created from a company-currency invoice reuses the original invoice
-   rate for reference fields.
-2. A USD credit note uses its own accounting date for company-currency conversion.
-3. A manual USD journal entry keeps the converted company-currency debit and credit after
-   saving and balances in USD reference fields.
-4. Payment helper fields calculate company and reference amounts for both CCY and
-   USD payments.
-5. If the company has no reference currency, computations fall back safely to
-   the company currency.
-6. The module installs without a required country localization and does not
-   activate additional currencies or change a country's currency on installation.
-   Test fixtures may activate the currencies they use.
-7. The manifest has no country-localization dependency and does not depend on
+1. Una nota de crédito en moneda de la compañía creada a partir de una factura en moneda de
+   la compañía reutiliza la tasa original de la factura en los campos de referencia.
+2. Una nota de crédito en USD usa su propia fecha contable para la conversión a moneda de la
+   compañía.
+3. Un asiento contable manual en USD conserva el débito y el crédito convertidos a moneda de
+   la compañía después de guardarlo, y cuadra en los campos de referencia en USD.
+4. Los campos auxiliares de pago calculan los importes de compañía y de referencia tanto para
+   pagos en CCY como en USD.
+5. Si la compañía no tiene moneda de referencia, los cálculos recurren de forma segura a la
+   moneda de la compañía.
+6. El módulo se instala sin una localización de país obligatoria y no activa monedas
+   adicionales ni cambia la moneda de un país durante la instalación. Los fixtures de prueba
+   pueden activar las monedas que usan.
+7. El manifiesto no tiene dependencias de localización de país y no depende de
    `account_report_multi_currency`.
-8. A company using EUR and USD as reference posts an EUR invoice, receives a
-   USD payment, and calculates both amounts correctly.
-9. The reference-currency default offers USD for non-USD company currencies,
-   including EUR, and does not force a reference currency for companies using USD.
-10. A USD company with EUR as reference posts a USD invoice, receives an EUR
-   payment, and calculates both amounts correctly.
+8. Una compañía que usa EUR y USD como referencia registra una factura en EUR, recibe un pago
+   en USD y calcula correctamente ambos importes.
+9. El valor por defecto de la moneda de referencia ofrece USD para las monedas de la compañía
+   distintas de USD, incluido EUR, y no fuerza una moneda de referencia en las compañías que
+   usan USD.
+10. Una compañía en USD con EUR como referencia registra una factura en USD, recibe un pago en
+    EUR y calcula correctamente ambos importes.
 
-### Mandatory Stored Document Rate Display
+### Presentación obligatoria de la tasa guardada del documento
 
-1. Invoice, journal-entry, and payment main forms derive their displayed rate
-   only from their saved `conversion_rate`. Display computation must not call
-   date helpers, currency conversion, or rate lookup APIs.
-2. With a non-USD company and USD reference, display the saved rate with the
-   company symbol. With a USD company and non-USD reference, display its
-   reciprocal with the reference symbol. Use the label **USD Rate**.
-3. Company-, USD-, and third-currency invoices/bills and payments show the same
-   USD orientation for a given company/reference pair.
-4. When neither currency is USD, or no reference is configured, display the
-   unchanged saved rate in the company currency under **Reference Rate**.
-   Equal USD currencies retain a unit USD quotation.
-5. The display uses the counterpart's monetary precision, symbol position,
-   and user language. It must not overwrite or round the saved source rate.
-6. The presentation follows changes to the saved source. A non-positive source
-   must raise an explicit error if it would need to be inverted.
-7. Both inherited forms use readonly monetary fields and mutually exclusive
-   USD/reference labels. Journal-item reference-rate columns are unchanged.
-8. Company-currency credit notes and manual USD journal entries retain their
-   existing reference-rate behavior. The new display introduces no date rule.
-9. The demo company's saved EUR/USD rate produces a EUR monetary USD display.
-   This assertion must execute with demo data and skip explicitly without it.
+1. Los formularios principales de factura, asiento contable y pago derivan la tasa mostrada
+   únicamente de su `conversion_rate` guardada. El cálculo de la visualización no debe llamar
+   a funciones auxiliares de fecha, a conversiones de moneda ni a las API de búsqueda de tasas.
+2. Con una compañía distinta de USD y referencia en USD, muestra la tasa guardada con el
+   símbolo de la compañía. Con una compañía en USD y una referencia distinta de USD, muestra su
+   inverso con el símbolo de la referencia. Usa la etiqueta **Tasa USD**.
+3. Las facturas de cliente y de proveedor y los pagos en moneda de la compañía, en USD o en una
+   tercera moneda muestran la misma orientación hacia USD para un mismo par compañía/referencia.
+4. Cuando ninguna moneda es USD, o no hay referencia configurada, muestra la tasa guardada sin
+   cambios en la moneda de la compañía bajo **Tasa de referencia**. Cuando ambas monedas son
+   USD, se conserva una cotización unitaria en USD.
+5. La visualización usa la precisión monetaria y la posición del símbolo de la contraparte, así
+   como el idioma del usuario. No debe sobrescribir ni redondear la tasa de origen guardada.
+6. La presentación sigue los cambios de la fuente guardada. Una fuente no positiva debe generar
+   un error explícito si necesita invertirse.
+7. Ambos formularios heredados usan campos monetarios de solo lectura y etiquetas USD/referencia
+   mutuamente excluyentes. Las columnas de tasa de referencia de los apuntes contables no cambian.
+8. Las notas de crédito en moneda de la compañía y los asientos contables manuales en USD
+   conservan su comportamiento actual de tasa de referencia. La nueva visualización no introduce
+   ninguna regla de fecha.
+9. La tasa EUR/USD guardada de la compañía de demostración produce una visualización monetaria de
+   la Tasa USD en EUR. Esta aserción debe ejecutarse con datos de demostración y omitirse de
+   forma explícita sin ellos.
 
-### Mandatory Demo Validation
+### Validación obligatoria de datos de demostración
 
-When demo data is enabled:
+Cuando los datos de demostración están habilitados:
 
-1. `accounting_dual_currency.demo_company_eur` exists.
-2. This example company's country is Germany, its company currency is EUR,
-   and its reference currency is USD.
-3. `accounting_dual_currency.demo_rate_usd_20260110` belongs to that company and
-   represents 1 USD = 0.8 EUR.
+1. `accounting_dual_currency.demo_company_eur` existe.
+2. Esta compañía de ejemplo tiene como país Alemania, como moneda de la compañía EUR y como
+   moneda de referencia USD.
+3. `accounting_dual_currency.demo_rate_usd_20260110` pertenece a esa compañía y representa
+   1 USD = 0,8 EUR.
 
-The demo test must skip explicitly when the database was initialized without
-demo data. It must execute, not skip, in the dedicated demo-data run.
+La prueba de demostración debe omitirse de forma explícita cuando la base de datos se
+inicializó sin datos de demostración. Debe ejecutarse, no omitirse, en la ejecución dedicada
+con datos de demostración.
 
-### Mandatory Navbar Quotation
+### Cotización obligatoria de la barra superior
 
-1. The navbar always uses USD as the base and displays the value of one dollar.
-2. A USD company with EUR reference displays the amount in EUR; an EUR company
-   with USD reference also displays the amount in EUR.
-3. If neither configured currency is USD, the counterpart is the company
-   currency, not the reference currency.
-4. Monetary formatting uses the counterpart currency's decimal precision and
-   configured symbol position, and the user's language. Spanish formatting with
-   EUR after the amount displays **USD: 0,89 &#8364;**, without an extra gap
-   before the colon. Formatting must not round the raw `amount` in the response.
-5. No reference currency hides the indicator. USD as both company and reference
-   currency keeps a unit quotation; equal non-USD company/reference currencies
-   still display the USD conversion into that currency, not a unit quotation.
-6. Opening the dropdown, changing the active company, and completing a manual
-   update refresh the quotation. Stale responses must not overwrite the newly
-   selected company's amount or counterpart symbol.
-7. The quotation uses the current date in the user's context, not a document
-   date. When a current rate exists, a future rate must not replace it.
-   Root-company rates are used for branches.
-8. Viewing the quotation does not require a provider. Updating requires the
-   existing permissions and a configured provider; errors propagate and a
-   successful retry must refresh the amount.
-9. Document reference rates and their date rules are not redefined by the
-   navbar's USD-based presentation.
+1. La barra superior usa siempre USD como base y muestra el valor de un dólar.
+2. Una compañía en USD con referencia en EUR muestra el importe en EUR; una compañía en EUR con
+   referencia en USD también muestra el importe en EUR.
+3. Si ninguna de las monedas configuradas es USD, la contraparte es la moneda de la compañía, no
+   la moneda de referencia.
+4. El formato monetario usa la precisión decimal y la posición configurada del símbolo de la
+   moneda contraparte, así como el idioma del usuario. El formato español con EUR después del
+   importe muestra **USD: 0,89 &#8364;**, sin un espacio adicional antes de los dos puntos. El
+   formato no debe redondear el `amount` sin procesar de la respuesta.
+5. Sin moneda de referencia, el indicador se oculta. Si USD es a la vez la moneda de la compañía
+   y la de referencia, se conserva una cotización unitaria; si la compañía y la referencia son la
+   misma moneda distinta de USD, sigue mostrándose la conversión de USD a esa moneda, no una
+   cotización unitaria.
+6. Abrir el desplegable, cambiar la compañía activa y completar una actualización manual
+   actualizan la cotización. Las respuestas obsoletas no deben sobrescribir el importe ni el
+   símbolo de la contraparte de la compañía recién seleccionada.
+7. La cotización usa la fecha actual del contexto del usuario, no la fecha de un documento.
+   Cuando existe una tasa vigente, una tasa futura no debe reemplazarla. Las sucursales usan las
+   tasas de la compañía raíz.
+8. Ver la cotización no requiere un proveedor. Actualizar requiere los permisos existentes y un
+   proveedor configurado; los errores se propagan y un reintento exitoso debe actualizar el
+   importe.
+9. La presentación en USD de la barra superior no redefine las tasas de referencia de los
+   documentos ni sus reglas de fecha.
 
-### Acceptance Rule
+### Regla de aceptación
 
-Acceptance requires the module to install and all applicable tests to pass in
-both [demo and non-demo runs](#demo-and-non-demo-runs). Static test files without
-executed results do not satisfy this contract. Migrating a previously installed
-module name requires a separate database migration.
+La aceptación requiere que el módulo se instale y que todas las pruebas aplicables pasen en
+ambas [ejecuciones con y sin datos de demostración](#ejecuciones-con-y-sin-datos-de-demostración).
+Los archivos de prueba estáticos sin resultados ejecutados no cumplen este contrato. Migrar un
+nombre de módulo ya instalado requiere una migración de base de datos aparte.
 
-## Test Plan
+## Plan de pruebas
 
-### Goal
+### Objetivo
 
-Automate every [acceptance requirement](#acceptance-requirements) for Odoo 19.0.
+Automatizar cada [requisito de aceptación](#requisitos-de-aceptación) para Odoo 19.0.
 
-### Framework
+### Marco de pruebas
 
-Accounting and report tests use Odoo 19.0 `TransactionCase` behavior through
-`AccountTestInvoicingCommon`; demo and navbar tests subclass `TransactionCase`
-directly. Each test method already runs in a savepoint; the legacy
-recommendation to subclass `SavepointCase` does not apply.
+Las pruebas de contabilidad y reportes usan el comportamiento de `TransactionCase` de Odoo
+19.0 mediante `AccountTestInvoicingCommon`; las pruebas de demostración y de la barra superior
+heredan directamente de `TransactionCase`. Cada método de prueba ya se ejecuta en un savepoint;
+la recomendación antigua de heredar de `SavepointCase` no aplica.
 
-Use `@tagged("post_install", "-at_install")` because the tests post accounting
-documents and exercise installed report handlers.
+Usa `@tagged("post_install", "-at_install")` porque las pruebas registran documentos contables y
+ejercitan los manejadores de reportes instalados.
 
-### Test Layout
+### Estructura de las pruebas
 
-- `tests/common.py`: German test company with a generic chart of accounts and
-   sample CCY/USD rates, journals, partners, products, helpers, and assertions.
-- `tests/test_dual_currency_invoice_payments.py`: the mandatory ten-scenario
-  matrix and payment helper fields.
-- `tests/test_dual_currency_aged_reports.py`: aged-report options, cutoff dates,
-  receivable/payable buckets, and column currency formatting; Partner Ledger
-  and Balance Sheet options, totals, and expanded lines.
-- `tests/test_dual_currency_accounting_flows.py`: manual journal entries,
-  credit notes, fallback behavior, EUR/USD and USD/EUR invoice/payment flows,
-  reference defaults, and localization-independent dependency checks.
-- `tests/test_dual_currency_demo.py`: XML demo company, rate validation, and
-  reference defaults for multiple company currencies.
-- `tests/test_secondary_currency_menu.py`: the USD quotation data contract,
-  counterpart selection, native rate selection, monetary formatting, manual
-  update permissions, provider errors, and the demo quotation.
-- `tests/test_stored_conversion_rate_display.py`: saved-rate presentation in
-  invoices, journal entries, and payments; transaction-currency independence,
-  fallback labels, no date/rate lookups, source preservation, monetary
-  formatting, invalid inverse rates, inherited views, and demo validation.
-- `static/tests/secondary_currency_menu.test.js`: quotation rendering and
-  formatting preservation, refresh/retry flows, company-change races,
-  visibility, and navbar position.
+- `tests/common.py`: compañía de prueba alemana con un plan de cuentas genérico, tasas de
+  ejemplo CCY/USD, diarios, contactos, productos, funciones auxiliares y aserciones.
+- `tests/test_dual_currency_invoice_payments.py`: la matriz obligatoria de diez escenarios y los
+  campos auxiliares de pago.
+- `tests/test_dual_currency_aged_reports.py`: opciones de los reportes de cuentas vencidas, fechas de
+  corte, tramos de cuentas por cobrar y por pagar, y formato de moneda de las columnas; opciones,
+  totales y líneas desplegadas del Libro mayor de la empresa y del Balance general.
+- `tests/test_dual_currency_accounting_flows.py`: asientos contables manuales, notas de crédito,
+  comportamiento de respaldo, flujos de factura y pago EUR/USD y USD/EUR, valores por defecto de
+  referencia y comprobaciones de dependencias independientes de la localización.
+- `tests/test_dual_currency_demo.py`: compañía de demostración en XML, validación de tasas y
+  valores por defecto de referencia para varias monedas de la compañía.
+- `tests/test_secondary_currency_menu.py`: contrato de datos de la cotización en USD, selección de
+  contraparte, selección nativa de tasas, formato monetario, permisos de actualización manual,
+  errores del proveedor y cotización de la demostración.
+- `tests/test_stored_conversion_rate_display.py`: presentación de la tasa guardada en facturas,
+  asientos contables y pagos; independencia de la moneda de transacción; etiquetas de respaldo;
+  ausencia de búsquedas de fecha o tasa; preservación del origen; formato monetario; tasas inversas
+  no válidas; vistas heredadas y validación de la demostración.
+- `static/tests/secondary_currency_menu.test.js`: renderizado de la cotización y conservación del
+  formato, flujos de actualización y reintento, condiciones de carrera al cambiar de compañía,
+  visibilidad y posición en la barra superior.
 
-### Shared Fixtures
+### Fixtures compartidos
 
-The common class uses a deterministic company-currency fixture, denoted here
-by CCY, without requiring that currency for companies using the module. It must
-configure:
+La clase común usa un fixture determinista de moneda de la compañía, denotada aquí por CCY, sin
+exigir esa moneda a las compañías que usan el módulo. Debe configurar:
 
-1. Country `base.de` with Odoo's `generic_coa` chart template.
-2. An active company currency (CCY) and reference currency `base.USD`.
-3. Company currency CCY and `company.secondary_currency_id` USD.
-4. Standard Odoo sale, purchase, bank, and miscellaneous journals.
-5. A German customer and vendor.
-6. A tax-free service product.
-7. Company-specific rates of 50, 52, and 54 CCY per USD on 2026-01-10,
-   2026-01-20, and 2026-01-30.
+1. País `base.de` con la plantilla de plan de cuentas `generic_coa` de Odoo.
+2. Una moneda de la compañía activa (CCY) y la moneda de referencia `base.USD`.
+3. Moneda de la compañía CCY y `company.secondary_currency_id` USD.
+4. Diarios estándar de Odoo: ventas, compras, banco y varios.
+5. Un cliente y un proveedor alemanes.
+6. Un producto de servicio sin impuestos.
+7. Tasas específicas de la compañía de 50, 52 y 54 CCY por USD el 2026-01-10, el 2026-01-20 y el
+   2026-01-30.
 
-An additional case changes the test company's currency to EUR, uses USD as
-reference at 0.8 EUR per USD, and verifies invoice totals, payment conversion,
-and aged-report currency options. Another case uses a USD company with EUR
-reference at 1.25 USD per EUR to verify an alternative reference currency.
-Default selection is also checked for EUR and for companies already using USD.
+Un caso adicional cambia la moneda de la compañía de prueba a EUR, usa USD como referencia a 0,8
+EUR por USD y verifica los totales de factura, la conversión de pagos y las opciones de moneda de
+los reportes de cuentas vencidas. Otro caso usa una compañía en USD con referencia en EUR a 1,25 USD por
+EUR para verificar una moneda de referencia alternativa. También se comprueba la selección por
+defecto para EUR y para las compañías que ya usan USD.
 
-### Required Helpers
+### Funciones auxiliares requeridas
 
 - `_set_rate(currency, company, rate_date, inverse_rate)`
 - `_create_invoice(currency, amount, invoice_date, move_type="out_invoice")`
@@ -273,81 +280,80 @@ Default selection is also checked for EUR and for companies already using USD.
 - `_run_invoice_payment_scenario(...)`
 - `_get_report_options(report_xmlid, date_to, currency)`
 
-Helpers must use standard Odoo currency conversion and payment registration
-APIs instead of reproducing Odoo reconciliation logic.
+Las funciones auxiliares deben usar las APIs estándar de conversión de moneda y de registro de
+pagos de Odoo, en lugar de reproducir la lógica de conciliación de Odoo.
 
-### Scenario Coverage
+### Cobertura de escenarios
 
-The methods in `tests/test_dual_currency_invoice_payments.py` cover these
-logical scenarios, using CCY to describe the company currency independently
-of currency-specific implementation names:
+Los métodos de `tests/test_dual_currency_invoice_payments.py` cubren estos escenarios lógicos,
+usando CCY para describir la moneda de la compañía de forma independiente de los nombres de
+implementación específicos de cada moneda:
 
-1. USD invoice with full USD payment.
-2. USD invoice with full CCY payment.
-3. CCY invoice with full USD payment.
-4. CCY invoice with full CCY payment.
-5. USD invoice with partial USD payments.
-6. USD invoice with partial CCY payments.
-7. USD invoice with mixed partial payments on different dates.
-8. CCY invoice with partial USD payments.
-9. CCY invoice with partial CCY payments.
-10. CCY invoice with mixed partial payments on different dates.
+1. Factura en USD con pago completo en USD.
+2. Factura en USD con pago completo en CCY.
+3. Factura en CCY con pago completo en USD.
+4. Factura en CCY con pago completo en CCY.
+5. Factura en USD con pagos parciales en USD.
+6. Factura en USD con pagos parciales en CCY.
+7. Factura en USD con pagos parciales mixtos en fechas diferentes.
+8. Factura en CCY con pagos parciales en USD.
+9. Factura en CCY con pagos parciales en CCY.
+10. Factura en CCY con pagos parciales mixtos en fechas diferentes.
 
-`test_eur_company_invoice_payment_and_aged_currency_options` covers
-the EUR/USD accounting flow; `test_usd_company_eur_reference_invoice_and_payment`
-covers a non-USD reference. `test_reference_currency_default_for_other_company_currency`
-and `test_secondary_currency_default_depends_on_company_currency` cover defaults.
+`test_eur_company_invoice_payment_and_aged_currency_options` cubre el flujo contable EUR/USD;
+`test_usd_company_eur_reference_invoice_and_payment` cubre una referencia distinta de USD.
+`test_reference_currency_default_for_other_company_currency` y
+`test_secondary_currency_default_depends_on_company_currency` cubren los valores por defecto.
 
-### Report Strategy
+### Estrategia de reportes
 
-Obtain options from the standard aged report with `report.get_options()`.
-Select the reference currency (USD in the main fixture) by passing
-`dual_currency_id` in previous options. Invoke
-`_aged_partner_report_custom_engine_common()` for:
+Obtén las opciones del reporte estándar de cuentas vencidas con `report.get_options()`. Selecciona la
+moneda de referencia (USD en el fixture principal) pasando `dual_currency_id` en las opciones
+anteriores. Invoca `_aged_partner_report_custom_engine_common()` para:
 
-- Grand total: no current groupby.
-- Partner total: `current_groupby="partner_id"`.
-- Journal item: `current_groupby="id"` when validating detail values.
+- Total general: sin groupby actual.
+- Total por contacto: `current_groupby="partner_id"`.
+- Apunte contable: `current_groupby="id"` al validar los valores de detalle.
 
-Assert that payments whose `max_date` is later than `options.date.date_to` are
-excluded from the report residual.
+Verifica que los pagos cuyo `max_date` es posterior a `options.date.date_to` queden excluidos del
+importe adeudado del reporte.
 
-For Partner Ledger and Balance Sheet, use `report.get_options()` with
-`dual_currency_id` to compare company and reference amounts. Check Partner
-Ledger partner, initial-balance, journal-item, and expanded lines against
-posted secondary amounts and reconciliations. For Balance Sheet, use
-`get_report_information()` to verify the displayed lines and precalculated
-`column_groups_totals`, then verify expanded account lines with
-`get_expanded_lines()`. Check that the selector is hidden for incompatible
-companies and that the selected report company determines the currency.
+Para el Libro mayor de la empresa y el Balance general, usa `report.get_options()` con
+`dual_currency_id` para comparar los importes de compañía y de referencia. Verifica las líneas de
+contacto, de saldo inicial, de apunte contable y desplegadas del Libro mayor de la empresa frente a
+los importes secundarios registrados y a las conciliaciones. En el Balance general, usa
+`get_report_information()` para verificar las líneas mostradas y los `column_groups_totals`
+precalculados; después, verifica las líneas de cuenta desplegadas con `get_expanded_lines()`.
+Comprueba que el selector se oculte en compañías incompatibles y que la compañía del reporte
+seleccionada determine la moneda.
 
-For Customer Statement, check the company-currency default of the direct
-partner action, the selectable company/reference currencies, and the currency
-passed from Aged Receivable and Aged Payable. Compare displayed customer and
-vendor amounts and balances against posted move-line values in both currencies.
+Para el Estado de cuenta del cliente, comprueba el valor por defecto de la moneda de la compañía en la
+acción directa del contacto, las monedas de la compañía y de referencia seleccionables, y la moneda que
+llega desde Cuenta por cobrar vencida y Cuenta por pagar vencida. Compara los importes y saldos de
+clientes y proveedores mostrados con los valores registrados de los apuntes en ambas monedas.
 
-### Demo And Non-Demo Runs
+### Ejecuciones con y sin datos de demostración
 
-The navbar tests in `tests/test_secondary_currency_menu.py` cover conversion
-from USD in both company/reference configurations, the company-currency
-counterpart when neither configured currency is USD, exact Spanish monetary
-formatting with symbols before and after the amount, counterpart decimal
-precision without rounding the raw amount, current-date selection with past
-and future rates, active-company isolation, absent reference currencies,
-equal USD and equal non-USD configurations, Accounting manager authorization,
-denied employees and disallowed companies, root-company rates for branches,
-viewing without a provider, the standard manual updater, and provider errors.
-Provider responses are mocked; tests never download live rates.
-The demo assertion checks the declared USD/EUR rate separately.
+Las pruebas de la barra superior en `tests/test_secondary_currency_menu.py` cubren la conversión
+desde USD en ambas configuraciones de compañía y referencia; la contraparte en moneda de la
+compañía cuando ninguna moneda configurada es USD; el formato monetario español exacto, con
+símbolos antes y después del importe; la precisión decimal de la contraparte sin redondear el
+importe sin procesar; la selección por fecha actual con tasas pasadas y futuras; el aislamiento de
+la compañía activa; la ausencia de monedas de referencia; las configuraciones con monedas iguales
+en USD y con monedas iguales distintas de USD; la autorización de los responsables de Contabilidad;
+los empleados sin permiso y las compañías no permitidas; las tasas de la compañía raíz para las
+sucursales; la visualización sin proveedor; el actualizador manual estándar y los errores del
+proveedor. Las respuestas del proveedor se simulan; las pruebas nunca descargan tasas en vivo. La
+aserción de demostración verifica por separado la tasa USD/EUR declarada.
 
-`static/tests/secondary_currency_menu.test.js` covers the USD label, localized
-counterpart symbols before and after the amount, dropdown refresh, manual
-refresh, view-only access, error propagation and successful retry, duplicate
-clicks, company-change races and visibility changes, and navbar position.
-Run it in `/web/tests?filter=accounting_dual_currency`.
+`static/tests/secondary_currency_menu.test.js` cubre la etiqueta USD, los símbolos localizados de
+la contraparte antes y después del importe, la actualización del desplegable, la actualización
+manual, el acceso de solo visualización, la propagación de errores y el reintento exitoso, los
+clics duplicados, las condiciones de carrera al cambiar de compañía, los cambios de visibilidad y
+la posición en la barra superior. Ejecútala en `/web/tests?filter=accounting_dual_currency`.
 
-Run these commands from the workspace root, with the interpreter, environment,
-and server configured in `.vscode/launch.json`:
+Ejecuta estos comandos desde la raíz del espacio de trabajo, con el intérprete, el entorno y el
+servidor configurados en `.vscode/launch.json`:
 
 ```bash
 export VIRTUAL_ENV="$PWD/.venv"
@@ -365,7 +371,7 @@ export TMPDIR="$PWD/tmp"
     --stop-after-init
 ```
 
-Run a second clean database with demo data:
+Ejecuta una segunda base de datos limpia con datos de demostración:
 
 ```bash
 ./.venv/bin/python -X frozen_modules=off /opt/odoo/19.0/odoo/odoo-bin \
@@ -379,42 +385,44 @@ Run a second clean database with demo data:
     --stop-after-init
 ```
 
-Both databases must be newly initialized so results do not depend on existing
-accounting records or installed custom modules.
+Ambas bases de datos deben inicializarse desde cero, para que los resultados no dependan de
+registros contables existentes ni de módulos personalizados instalados.
 
-For a navbar-only regression run, use
-`--test-tags /accounting_dual_currency:TestSecondaryCurrencyMenu` in each
-command. To rerun an already initialized dedicated test database, replace
-`-i accounting_dual_currency` with `-u accounting_dual_currency`.
+Para una ejecución de regresión solo de la barra superior, usa
+`--test-tags /accounting_dual_currency:TestSecondaryCurrencyMenu` en cada comando. Para volver a
+ejecutar una base de datos de prueba dedicada ya inicializada, reemplaza
+`-i accounting_dual_currency` por `-u accounting_dual_currency`.
 
-### Static Checks
+### Comprobaciones estáticas
 
-Before the Odoo runs:
+Antes de las ejecuciones de Odoo:
 
-1. Compile all Python files.
-2. Parse all XML files.
-3. Confirm that no view contains `attrs`.
-4. Confirm that no runtime code references `l10n_cr`, Costa Rica, CRC, or
-  `account_report_multi_currency`; negative assertions and documentation about
-  removed dependencies are intentional.
-5. Confirm that company-currency field labels and defaults do not force a
-   specific currency; test currency activation is limited to fixtures, not
-   module installation.
-6. Confirm that the manifest and data files do not require a country
-   localization, activate additional currencies, or modify a country's currency.
+1. Compila todos los archivos Python.
+2. Analiza sintácticamente todos los archivos XML.
+3. Confirma que ninguna vista contiene `attrs`.
+4. Confirma que ningún código en ejecución hace referencia a `l10n_cr`, Costa Rica, CRC ni a
+   `account_report_multi_currency`; las aserciones negativas y la documentación sobre dependencias
+   eliminadas son intencionales.
+5. Confirma que las etiquetas y los valores por defecto de los campos de moneda de la compañía no
+   fuerzan una moneda específica; la activación de monedas de prueba se limita a los fixtures, no a
+   la instalación del módulo.
+6. Confirma que el manifiesto y los archivos de datos no requieren una localización de país, no
+   activan monedas adicionales ni modifican la moneda de un país.
 
-### Completion Criteria
+### Criterios de finalización
 
-The work is complete only when:
+El trabajo solo se considera completo cuando:
 
-1. All ten invoice/payment scenarios pass.
-2. Aged receivable and payable tests pass in company and reference currencies;
-  the EUR/USD and USD/EUR selectors are also covered.
-3. Partner Ledger and Balance Sheet options and totals pass in company and
-  reference currencies, with reference-currency expanded lines verified.
-4. Manual entries, refunds, fallback behavior, EUR/USD and USD/EUR invoices and
-   payments, reference defaults, and localization-independent installation pass.
-5. The no-demo installation passes.
-6. The demo installation executes and passes the demo assertions.
-7. The navbar quotation tests pass in both runs, with an expected demo-test
-   skip only in the no-demo database, and the corresponding HOOT tests pass.
+1. Pasan los diez escenarios de facturas y pagos.
+2. Pasan las pruebas de los reportes de cuentas vencidas (Cuenta por cobrar vencida y Cuenta por pagar vencida) en
+   moneda de la compañía y de referencia; también están cubiertos los selectores EUR/USD y USD/EUR.
+3. Pasan las opciones y los totales del Libro mayor de la empresa y del Balance general en moneda
+   de la compañía y de referencia, con las líneas desplegadas en moneda de referencia verificadas.
+4. Pasan los asientos manuales, las notas de crédito (devoluciones), el comportamiento de respaldo,
+   las facturas y pagos EUR/USD y USD/EUR, los valores por defecto de referencia y la instalación
+   independiente de la localización.
+5. Pasa la instalación sin datos de demostración.
+6. La instalación con datos de demostración se ejecuta y pasa las aserciones de demostración.
+7. Las pruebas de la cotización de la barra superior pasan en ambas ejecuciones, con la omisión
+   esperada de la prueba de demostración solo en la base de datos sin datos de demostración, y
+   pasan las pruebas HOOT correspondientes.
