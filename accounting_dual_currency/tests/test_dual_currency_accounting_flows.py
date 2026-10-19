@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.tests import Form, tagged
 
 from .common import DualCurrencyTestCommon
@@ -215,5 +216,108 @@ class TestDualCurrencyAccountingFlows(DualCurrencyTestCommon):
         )
         dependencies = set(module.dependencies_id.mapped("name"))
         self.assertNotIn("l10n_ve", dependencies)
+        self.assertNotIn("l10n_ve_full", dependencies)
         self.assertIn("account_reports", dependencies)
         self.assertNotIn("account_report_multi_currency", dependencies)
+
+    def _create_stated_rate_entry(self, entry_date=None):
+        """Entry that states 100 USD for 5.280 VES: a rate of 52.8, not the system rate of 50."""
+        accounts = self.company_data
+        entry = self.env["account.move"].create(
+            {
+                "move_type": "entry",
+                "journal_id": self.misc_journal.id,
+                "date": entry_date or self.rate_date_invoice,
+                "line_ids": [
+                    Command.create(
+                        {
+                            "name": "USD debit",
+                            "account_id": accounts["default_account_expense"].id,
+                            "currency_id": self.usd.id,
+                            "amount_currency": 100.0,
+                            "balance": 5280.0,
+                        }
+                    ),
+                    Command.create(
+                        {
+                            "name": "USD credit",
+                            "account_id": accounts["default_account_revenue"].id,
+                            "currency_id": self.usd.id,
+                            "amount_currency": -100.0,
+                            "balance": -5280.0,
+                        }
+                    ),
+                ],
+            }
+        )
+        entry.action_post()
+        return entry
+
+    def test_entry_items_in_the_reference_currency_keep_their_own_amount(self):
+        entry = self._create_stated_rate_entry()
+        debit_item, credit_item = entry.line_ids.sorted("id")
+        self.assertAlmostEqual(debit_item.balance, 5280.0)
+        # The reference amount is the amount in currency, not 5.280 / 50 of the date.
+        self.assertAlmostEqual(debit_item.balance_secondary_currency, 100.0)
+        self.assertAlmostEqual(debit_item.debit_secondary_currency, 100.0)
+        self.assertAlmostEqual(debit_item.credit_secondary_currency, 0.0)
+        self.assertAlmostEqual(credit_item.balance_secondary_currency, -100.0)
+        self.assertAlmostEqual(credit_item.credit_secondary_currency, 100.0)
+        # The rate of the item is the one it states.
+        self.assertAlmostEqual(debit_item.conversion_rate, 52.8)
+        self.assertAlmostEqual(credit_item.conversion_rate, 52.8)
+
+    def test_reversal_of_an_entry_cancels_its_reference_amounts_at_any_date(self):
+        entry = self._create_stated_rate_entry()
+        reversal = self._create_credit_note(entry, self.rate_date_third)
+        for item, original in zip(
+            reversal.line_ids.sorted("id"), entry.line_ids.sorted("id")
+        ):
+            self.assertAlmostEqual(item.balance, -original.balance)
+            self.assertAlmostEqual(
+                item.balance_secondary_currency, -original.balance_secondary_currency
+            )
+
+    def test_entry_items_without_an_amount_in_currency_keep_converting_the_balance(self):
+        accounts = self.company_data
+        entry = self.env["account.move"].create(
+            {
+                "move_type": "entry",
+                "journal_id": self.misc_journal.id,
+                "date": self.rate_date_invoice,
+                "line_ids": [
+                    # Like the exchange difference items: a balance without amount in currency.
+                    Command.create(
+                        {
+                            "name": "Exchange difference",
+                            "account_id": accounts["default_account_expense"].id,
+                            "currency_id": self.usd.id,
+                            "amount_currency": 0.0,
+                            "balance": 52.0,
+                        }
+                    ),
+                    Command.create(
+                        {
+                            "name": "Company currency item",
+                            "account_id": accounts["default_account_revenue"].id,
+                            "currency_id": self.ves.id,
+                            "amount_currency": -52.0,
+                            "balance": -52.0,
+                        }
+                    ),
+                ],
+            }
+        )
+        entry.action_post()
+        exchange_item, company_item = entry.line_ids.sorted("id")
+        self.assertAlmostEqual(exchange_item.balance_secondary_currency, 52.0 / 50.0)
+        self.assertAlmostEqual(exchange_item.conversion_rate, 50.0)
+        self.assertAlmostEqual(company_item.balance_secondary_currency, -52.0 / 50.0)
+
+    def test_invoice_items_keep_converting_the_balance_at_the_rate_of_the_invoice(self):
+        invoice = self._create_invoice(self.usd, 100.0, self.rate_date_invoice)
+        receivable = self._get_payment_term_line(invoice)
+        self.assertEqual(receivable.currency_id, self.usd)
+        self.assertFalse(receivable._has_own_reference_amount())
+        self.assertAlmostEqual(receivable.conversion_rate, 50.0)
+        self.assertAlmostEqual(receivable.balance_secondary_currency, 100.0)

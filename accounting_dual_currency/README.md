@@ -29,11 +29,11 @@ principal de pruebas contables usa las monedas de la compañía y de referencia 
 - Conserva la tasa original de la factura en las notas de crédito creadas a partir de ella
   cuando la nota conserva la tasa de la factura: siempre en moneda de la compañía y, en moneda
   extranjera, cuando se crea con el asistente de reversión, que copia esa tasa.
-- Permite capturar una **tasa manual** en las facturas, notas de crédito y recibos de
-  proveedor, en los pagos y en el asistente de registro de pagos. Con la tasa manual activa,
-  todas las conversiones entre la moneda de la compañía y la de referencia del documento,
-  incluidos el débito y el crédito de los apuntes contables, usan esa tasa en lugar de la tasa
-  de cambio de Odoo.
+- Permite capturar una **tasa manual** en las facturas, notas de crédito y recibos, de cliente
+  y de proveedor, en los asientos contables manuales, en los pagos y en el asistente de registro
+  de pagos. Con la tasa manual activa, todas las conversiones entre la moneda de la compañía y la
+  de referencia del documento, incluidos el débito y el crédito de los apuntes contables, usan esa
+  tasa en lugar de la tasa de cambio de Odoo.
 - Muestra un USD expresado en la moneda contraparte en la barra superior, justo antes del
   selector de compañía.
 
@@ -116,7 +116,8 @@ La tasa manual registra un documento con la tasa pactada o pagada en lugar de la
 de Odoo. Solo afecta a los documentos que la activan; los demás siguen usando las tasas del
 sistema.
 
-1. Abre una factura de proveedor en borrador, un pago de proveedor o el asistente **Pagar**.
+1. Abre en borrador una factura, nota de crédito o recibo (de cliente o de proveedor), un asiento
+   contable manual, un pago o el asistente **Pagar**.
 2. Marca **Tasa manual**. El valor se completa con la tasa del sistema de la fecha del documento
    como punto de partida; edítalo con la tasa que corresponda.
 3. Confirma el documento.
@@ -132,22 +133,35 @@ Con la tasa manual activa:
 - El débito y el crédito de los apuntes de una factura en moneda de referencia se calculan con la
   tasa manual, igual que los impuestos, el total y el importe adeudado en la moneda de la
   compañía. La `invoice_currency_rate` estándar de Odoo toma ese valor y queda de solo lectura.
+- En un asiento contable manual, los apuntes en la moneda de referencia calculan su débito y su
+  crédito con la tasa del asiento (`saldo = importe en moneda / tasa`); los apuntes en la moneda
+  de la compañía conservan su importe. Al capturar, cambiar o quitar la tasa de un asiento en
+  borrador, Odoo vuelve a convertir sus apuntes en moneda de referencia y el asiento debe quedar
+  cuadrado.
 - Los importes de referencia del documento, de sus apuntes y de sus pagos se calculan con la tasa
-  manual, también en una factura en moneda de la compañía.
+  manual, también en una factura o un asiento en moneda de la compañía.
 - Los reportes usan esos importes guardados, por lo que no vuelven a convertir con la tasa de
   la fecha del reporte.
-- Una nota de crédito creada a partir de la factura conserva la tasa manual.
+- Una nota de crédito creada a partir de la factura conserva la tasa manual. La reversa de un
+  asiento también.
 - Un pago con tasa manual convierte con ella los apuntes del pago, sus importes y la parte de la
   factura que liquida. Si la tasa del pago difiere de la de la factura, Odoo registra la
   diferencia de cambio habitual.
 
 El control se muestra por defecto a los administradores de Contabilidad
-(`account.group_account_manager`) y solo en documentos de proveedor: facturas, notas de crédito y
-recibos de proveedor, pagos de proveedor y el asistente cuando paga a un proveedor. Se puede
-editar mientras el documento está en borrador. Está disponible únicamente si la compañía tiene
-una moneda de referencia distinta de la de la compañía y el documento usa una de las dos
-monedas; con una tercera moneda se oculta y Odoo rechaza activarla. En el asistente solo está
-disponible cuando crea un único pago.
+(`account.group_account_manager`) y de Ajustes (`base.group_system`), en facturas, notas de
+crédito y recibos de cliente y de proveedor, en asientos contables manuales, en pagos de cliente
+y de proveedor y en el asistente cuando paga a un cliente o a un proveedor. El asiento de un pago
+no lo muestra: toma la tasa del pago. Se puede editar mientras el documento está en borrador.
+Está disponible únicamente si la compañía tiene una moneda de referencia distinta de la de la
+compañía y el documento usa una de las dos monedas; con una tercera moneda se oculta y Odoo
+rechaza activarla. Un documento con tasa manual solo admite apuntes en la moneda de la compañía o
+en la de referencia. En el asistente solo está disponible cuando crea un único pago.
+
+El servidor aplica los mismos grupos: un usuario sin ellos recibe un error de acceso si intenta
+establecer o cambiar la tasa manual por cualquier vía (importación, API, otro módulo). Sí puede
+conservar la de un documento origen: la reversa de un documento con tasa manual, o el asiento de
+un pago que un administrador capturó con tasa manual.
 
 ## Diseño técnico
 
@@ -182,7 +196,14 @@ disponible cuando crea un único pago.
   USD sin modificarla.
 - `account.payment` usa la misma presentación de tasa guardada en su formulario.
 - `account.move.line` almacena los campos auxiliares convertidos de débito, crédito, saldo,
-  precio y residual.
+  precio y residual. Convierte el saldo con la tasa del documento, salvo en los apuntes de un
+  asiento que no es el de un pago cuando están expresados en la moneda de referencia y tienen
+  importe en moneda: esos toman su propio importe en moneda como importe de referencia, y la tasa
+  que implican (`saldo / importe`) como `conversion_rate` (`_has_own_reference_amount()`).
+  Quien construye el asiento (un asiento manual, o un módulo que lo genera) ya decidió esa
+  tasa, y convertir el saldo con la tasa de la fecha la sustituiría por otra. Las facturas y los
+  pagos siguen convirtiendo, porque su tasa es la de su documento, y los apuntes sin importe
+  en moneda, como los de las diferencias de cambio, también.
 - `account.partial.reconcile.amount_secondary_currency` usa el importe conciliado del lado
   de la moneda de referencia cuando existe; en caso contrario, convierte el importe en
   moneda de la compañía en la fecha `max_date`, o con la tasa manual del documento que liquida
@@ -254,15 +275,43 @@ El mixin añade a `account.move`, `account.payment` y `account.payment.register`
 |---|---|
 | `manual_rate` | Activa la tasa manual. No se copia al duplicar. |
 | `manual_conversion_rate` | Tasa capturada con la orientación de `conversion_rate_display`. No se copia al duplicar. |
-| `manual_rate_available` | No almacenado. Verdadero si la compañía tiene una moneda de referencia distinta de la suya y el documento usa una de las dos monedas. En `account.move` excluye los asientos que no son el asiento de un pago; en el asistente exige un único pago editable. |
+| `manual_rate_available` | No almacenado. Verdadero si la compañía tiene una moneda de referencia distinta de la suya y el documento usa una de las dos monedas. Lo cumplen las facturas, los asientos manuales y los asientos de pagos; en el asistente exige un único pago editable. |
 | `manual_rate_active` | No almacenado. `manual_rate` con disponibilidad y valor positivo; es el único criterio para aplicarla. |
 | `manual_rate_currency_id`, `manual_rate_is_usd` | No almacenados. Moneda y etiqueta (**USD** o **referencia**) del campo de captura. |
 
-Una restricción rechaza `manual_rate` no disponible y valores no positivos. Los campos son
+Una restricción rechaza `manual_rate` no disponible y valores no positivos. En `account.move`,
+`_check_manual_rate_line_currencies()` rechaza además los apuntes en una tercera moneda: un
+documento con tasa manual solo admite apuntes en la moneda de la compañía o en la de referencia
+(la restricción de `account.move.line` revisa también el cambio de moneda de un apunte). La
+moneda de un asiento es la de su diario y cada apunte puede tener la suya, de modo que la
+disponibilidad se comprueba con la moneda del asiento y esta restricción con la de los apuntes.
+Los campos son
 columnas simples sin cálculo, de modo que instalar o actualizar el módulo no recalcula los
 documentos existentes. En `account.move` y `account.payment` se registran en el chatter
 (`tracking`). Un documento publicado y un pago que no está en borrador rechazan cambios de la
 tasa manual, porque modificarla alteraría los importes de referencia sin mover los apuntes.
+
+#### Permisos en servidor
+
+Los controles de las vistas se limitan por grupo, pero la vista no protege el modelo: el mixin
+sobrescribe `create()` y `write()` y llama a `_check_manual_rate_access()`. Solo los grupos
+`account.group_account_manager` y `base.group_system` (`MANUAL_RATE_GROUPS`), o el entorno
+`sudo()`, pueden introducir o cambiar la tasa manual; los demás reciben un `AccessError`. Los campos
+no llevan `groups` porque Odoo los lee en los cálculos de cualquier usuario, y el recálculo no
+se ve afectado.
+
+La comparación es sobre el estado efectivo `(activa, valor)`: un valor sin `manual_rate`
+activo no tiene efecto y escribir el valor actual no es un cambio. Un registro puede además
+conservar la tasa de su documento origen, que ya capturó alguien con permiso, mediante
+`_get_inherited_manual_rate_vals()`:
+
+- el asiento de un pago hereda la del pago (`origin_payment_id`), de modo que un usuario de
+  facturación puede publicar o editar el pago que un administrador capturó con tasa manual;
+- una reversa hereda la del documento que revierte (`reversed_entry_id`), de modo que un usuario
+  de facturación puede crear la nota de crédito de una factura con tasa manual.
+
+La exención compara los valores con los del documento origen, no usa una clave de contexto, y por
+eso no puede forzarse desde el cliente.
 
 #### Conversión estándar
 
@@ -289,13 +338,27 @@ El contexto se aplica en alcances acotados y no se devuelve al cliente.
   oculta, porque la tasa esperada coincide con la manual.
   `_compute_dual_currency_amounts()`, `_compute_secondary_currency_fields()` y los widgets de pagos
   usan `_get_dual_currency_conversion_context()`.
+- Asientos manuales (`account.move` de tipo `entry` sin `origin_payment_id`): Odoo no calcula una
+  `invoice_currency_rate` para ellos y convierte cada apunte con la tasa de su fecha, así que
+  `account.move.line._compute_currency_rate()` se sobrescribe para calcular los apuntes de un
+  asiento con tasa manual en el contexto de esa tasa. El núcleo deriva el `balance` de un apunte
+  de su importe en moneda solo cuando se edita el apunte (`_inverse_amount_currency`), por lo que
+  `_convert_reference_currency_items()` vuelve a convertir los apuntes en moneda de referencia
+  (`balance = importe en moneda / tasa`) al cambiar `manual_rate` o `manual_conversion_rate`, en
+  `write()` y en el `onchange`. Los apuntes en la moneda de la compañía conservan su importe.
+  `write()` envuelve el cambio en `_check_balanced()` del núcleo, que se anida: la validación de
+  cuadre se hace después de la conversión y no antes. Si la tasa descuadra un asiento mixto, Odoo
+  rechaza el cambio con «The entry is not balanced» y hay que corregir también la contrapartida
+  en la misma escritura.
 - `account.move.line`: sus importes de referencia usan el contexto de su asiento.
   `_prepare_move_line_residual_amounts()` enlaza la tasa manual del propio asiento de la línea
   y de la moneda de la contraparte, porque Odoo convierte una línea en moneda de la compañía
-  mediante la moneda de la línea opuesta.
+  mediante la moneda de la línea opuesta. `_compute_currency_rate()` aplica la tasa manual a los
+  apuntes de un asiento manual, como se describe arriba.
 - `account.partial.reconcile`: la conciliación entre líneas que no están en moneda de
-  referencia convierte con la tasa manual del asiento que liquida: primero el de un pago y, si no,
-  el más reciente con tasa manual.
+  referencia convierte con la tasa manual del documento que liquida. La prioridad es: pago,
+  factura y, en último lugar, asiento manual; dentro de cada tipo, el más reciente con tasa
+  manual. Así un asiento manual posterior no desplaza la tasa de la factura que liquida.
 - `account.payment`: `_prepare_move_lines_per_type()` convierte los apuntes del pago con su tasa
   manual. `_generate_move_vals()` y `_synchronize_to_moves()` llevan `manual_rate` y
   `manual_conversion_rate` al asiento del pago, para que sus apuntes calculen los importes de
@@ -304,7 +367,10 @@ El contexto se aplica en alcances acotados y no se devuelve al cliente.
   la tasa del asistente, y `_compute_amount()` y `_compute_payment_difference()` dependen de
   ella. `_create_payment_vals_from_wizard()` entrega la tasa al pago. El asistente solo ofrece la
   tasa cuando crea un único pago (`can_edit_wizard`).
-- Notas de crédito: `_reverse_moves()` copia la tasa manual de la factura. Odoo (commit
+- Notas de crédito y reversas: `_reverse_moves()` copia la tasa manual de cualquier documento que
+  la tenga: factura, recibo, asiento manual o asiento de un pago. La reversa de un asiento copia
+  explícitamente `balance` e `importe en moneda`, y con la misma tasa sus importes de referencia
+  son exactamente los opuestos a los del original. Odoo (commit
   `acd119333`, 2026-09-30) hace que el asistente de reversión copie también
   `invoice_currency_rate`, por lo que una nota en moneda extranjera usa la fecha de la factura
   original para sus importes de referencia cuando conserva esa tasa
@@ -315,20 +381,53 @@ El contexto se aplica en alcances acotados y no se devuelve al cliente.
 #### Vistas y seguridad
 
 Los controles se añaden en `account.view_move_form`, `account.view_account_payment_form` y
-`account.view_account_payment_register_form` con `groups="account.group_account_manager"` y se
-ocultan fuera de los documentos de proveedor (`move_type` de proveedor en facturas,
-`partner_type == 'supplier'` en pagos y asistente). Los campos del modelo no tienen `groups`,
-porque Odoo los lee en los cálculos de cualquier usuario; solo la vista los restringe.
+`account.view_account_payment_register_form` con
+`groups="account.group_account_manager,base.group_system"`. Su visibilidad depende solo de
+`manual_rate_available` (y del estado), no del tipo de documento ni del tipo de contacto: sirven
+a clientes y a proveedores. El formulario de `account.move` oculta además los controles cuando el
+documento es el asiento de un pago (`origin_payment_id`, un campo que el formulario del núcleo ya
+incluye), porque esa tasa se edita en el pago. Los campos del modelo no tienen `groups`,
+porque Odoo los lee en los cálculos de cualquier usuario; solo la vista los restringe y el
+servidor lo comprueba en `create()` y `write()` (ver «Permisos en servidor»).
 
 #### Límites conocidos
 
-- No hay tasa manual para una tercera moneda ni para asientos manuales; la tasa se define para el
-  par compañía/referencia.
+- No hay tasa manual para una tercera moneda; la tasa se define para el par compañía/referencia.
+  Un asiento con tasa manual rechaza los apuntes en una tercera moneda.
+- Un asiento manual lleva una sola tasa para todos sus apuntes; no hay tasa por apunte.
 - No se valida un rango razonable para la tasa; solo que sea positiva.
 - Cambiar la moneda de referencia de la compañía con documentos de tasa manual existentes deja
   de aplicar esa tasa a los documentos que dejan de cumplir la disponibilidad.
 - El asistente aplica la tasa manual a un único pago; para pagar varias facturas con tasas
   distintas se registra un pago por factura.
+- Un asiento con tasa manual cambiada en borrador debe quedar cuadrado: si la tasa descuadra un
+  asiento mixto (apuntes en moneda de referencia y en moneda de la compañía), hay que corregir
+  también la contrapartida en la misma escritura.
+- Las retenciones de una factura en la moneda de la compañía que tiene tasa manual de referencia
+  usan la tasa del sistema de su fecha para los importes de referencia de su asiento, porque la
+  tasa de una factura así no se guarda en ningún campo estándar. La conciliación sí usa la tasa
+  manual de la factura.
+
+### Asientos de otros módulos: retenciones
+
+`accounting_dual_currency` no depende de ninguna localización, y `l10n_ve_full` (retenciones de
+IVA, ISLR y municipal) no depende de este módulo: se pueden instalar por separado. Se entienden a
+través de campos y funciones estándar de Odoo, sin que ninguno conozca al otro:
+
+- Este módulo hace que la `invoice_currency_rate` estándar de una factura tome la tasa manual.
+- `l10n_ve_full` convierte los importes de la retención con la `invoice_currency_rate` de la
+  factura de la que nace (`account.move._wh_to_company_currency()`), no con la tasa de una fecha;
+  así hereda la tasa manual de la factura cuando existe, y su tasa estándar cuando no.
+- `l10n_ve_full` genera el asiento de la retención con apuntes en la moneda de la factura y con
+  el importe en moneda a la tasa de la factura (`account.move._wh_get_line_currency_vals()`). Al
+  conciliarlo con la factura, ambos lados están en la misma moneda y Odoo no registra diferencia
+  de cambio.
+- Este módulo calcula los importes de referencia de esos apuntes con su propio importe en moneda
+  (`_has_own_reference_amount()`), de modo que el Libro mayor de la empresa en moneda de
+  referencia muestra la retención con el mismo importe que el comprobante.
+
+Con una factura en la moneda de la compañía y tasa manual de referencia no hay un campo estándar
+que lleve esa tasa al asiento de la retención; ver «Límites conocidos».
 
 ### Contrato de datos de la barra superior
 
@@ -361,6 +460,15 @@ quedan sin tasa manual. Antes de actualizar, ten en cuenta que Odoo 19.0 desde e
 reversión, y que el módulo sigue esa tasa para los importes de referencia de las notas en moneda
 extranjera.
 
+La actualización a 19.0.1.3.0 no añade columnas ni recalcula documentos publicados. Los
+asientos manuales pasan a admitir tasa manual; los existentes quedan sin ella. Los importes de
+referencia de los apuntes de asiento expresados en la moneda de referencia (ver
+`_has_own_reference_amount()`) se calculan así a partir de ese momento: los apuntes existentes
+conservan sus valores guardados hasta que cambien su saldo o su importe en moneda. El servidor
+exige ahora los grupos de Contabilidad (administradores) o de Ajustes para establecer una tasa
+manual, también al importar o por API: los usuarios de facturación que ya lo hacían por esas
+vías reciben un error de acceso.
+
 Cambiar el nombre técnico de un módulo no equivale a una actualización *in situ*. Antes de
 reemplazar un predecesor instalado, migra los metadatos del módulo instalado y de los IDs
 externos, y revisa sus vistas y datos existentes en una copia de la base de datos. Las
@@ -390,4 +498,9 @@ escenarios con tasa manual en facturas de proveedor y de cliente. Las demás pru
 [pagos, el asistente y la conciliación](tests/test_manual_rate_payments.py), los
 [reportes](tests/test_manual_rate_reports.py) y la
 [compañía de demostración](tests/test_manual_rate_demo.py), que se omite sin datos de
-demostración.
+demostración. Los documentos de cliente (facturas, recibos, cobros y asistente) tienen sus
+[pruebas propias](tests/test_manual_rate_customers.py); los
+[asientos manuales](tests/test_manual_rate_entries.py) verifican los importes, el cambio de tasa
+en borrador, las terceras monedas, el formulario, las reversas y la conciliación; y los
+[permisos en servidor](tests/test_manual_rate_access.py) verifican quién puede capturar la tasa
+y qué documentos pueden conservarla.

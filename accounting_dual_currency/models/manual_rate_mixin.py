@@ -1,13 +1,21 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
+from odoo.tools import float_compare
+
+MANUAL_RATE_FIELDS = frozenset({"manual_rate", "manual_conversion_rate"})
+MANUAL_RATE_GROUPS = ("account.group_account_manager", "base.group_system")
 
 
 class DualCurrencyManualRateMixin(models.AbstractModel):
-    """Manual rate shared by invoices, payments and the register payment wizard.
+    """Manual rate shared by invoices, journal entries, payments and the payment wizard.
 
     The rate is captured with the orientation of ``conversion_rate_display`` (e.g.
     880.0 bolivars per dollar whichever of the two currencies is the USD) and applies
     to the conversions between the company and the reference currency.
+
+    Only accounting administrators and settings administrators may capture or change
+    it. A document can carry the rate of its source document (the entry of a payment
+    carries the rate of the payment, a reversal that of the entry it reverses).
     """
 
     _name = "dual.currency.manual.rate.mixin"
@@ -45,6 +53,73 @@ class DualCurrencyManualRateMixin(models.AbstractModel):
         string="Manual Rate In Use",
         compute="_compute_manual_rate_active",
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not MANUAL_RATE_FIELDS.isdisjoint(vals):
+                self._check_manual_rate_access(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if not MANUAL_RATE_FIELDS.isdisjoint(vals):
+            for record in self:
+                record._check_manual_rate_access(vals)
+        return super().write(vals)
+
+    def _can_set_manual_rate(self):
+        """Whether the current user may capture or change a manual rate."""
+        return self.env.su or any(
+            self.env.user.has_group(group) for group in MANUAL_RATE_GROUPS
+        )
+
+    def _get_inherited_manual_rate_vals(self, vals):
+        """Return the manual rate values this record carries from its source document.
+
+        The rate of a source document was already captured by someone allowed to, so
+        carrying it does not require the right to set a manual rate. Return None when
+        the record has no source document.
+        """
+        return None
+
+    @staticmethod
+    def _get_manual_rate_state(manual_rate, manual_conversion_rate):
+        """Return the effective (enabled, rate) pair: the rate only counts when enabled."""
+        return (True, manual_conversion_rate) if manual_rate else (False, 0.0)
+
+    def _check_manual_rate_access(self, vals):
+        """Reject a manual rate captured by a user who is not allowed to set it."""
+        if self._can_set_manual_rate():
+            return
+        current = self._get_manual_rate_state(
+            self.manual_rate, self.manual_conversion_rate
+        )
+        requested = self._get_manual_rate_state(
+            vals.get("manual_rate", self.manual_rate),
+            vals.get("manual_conversion_rate", self.manual_conversion_rate),
+        )
+        if self._is_same_manual_rate(requested, current):
+            return
+        inherited = self._get_inherited_manual_rate_vals(vals)
+        if inherited is not None and self._is_same_manual_rate(
+            requested,
+            self._get_manual_rate_state(
+                inherited["manual_rate"], inherited["manual_conversion_rate"]
+            ),
+        ):
+            return
+        raise AccessError(
+            _(
+                "Only accounting administrators and settings administrators can "
+                "set or change the manual rate."
+            )
+        )
+
+    @staticmethod
+    def _is_same_manual_rate(state, other_state):
+        return state[0] == other_state[0] and not float_compare(
+            state[1], other_state[1], precision_digits=8
+        )
 
     def _get_manual_rate_company(self):
         return self.company_id

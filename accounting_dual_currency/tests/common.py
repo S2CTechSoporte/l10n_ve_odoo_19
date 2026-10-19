@@ -217,6 +217,38 @@ class DualCurrencyTestCommon(AccountTestInvoicingCommon):
             credit_note.action_post()
         return credit_note
 
+    def _create_entry(self, items, entry_date=None, manual_rate=None, post=True, **values):
+        """Create a manual journal entry from ``(account, currency, amount, values)`` items.
+
+        The amount is expressed in the currency of the item: Odoo derives the balance of
+        the items in a foreign currency from the rate of the entry. ``values`` is
+        optional and completes the item.
+        """
+        entry_values = {
+            "move_type": "entry",
+            "journal_id": self.misc_journal.id,
+            "date": entry_date or self.rate_date_invoice,
+            "line_ids": [
+                Command.create(
+                    {
+                        "name": account.name,
+                        "account_id": account.id,
+                        "currency_id": currency.id,
+                        "amount_currency": amount,
+                        **(item_values[0] if item_values else {}),
+                    }
+                )
+                for account, currency, amount, *item_values in items
+            ],
+            **values,
+        }
+        if manual_rate:
+            entry_values.update({"manual_rate": True, "manual_conversion_rate": manual_rate})
+        entry = self.env["account.move"].create(entry_values)
+        if post:
+            entry.action_post()
+        return entry
+
     def _get_payment_term_line(self, move):
         return move.line_ids.filtered(
             lambda line: line.account_id.account_type

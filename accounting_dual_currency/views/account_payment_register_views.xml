@@ -5,23 +5,24 @@
         <field name="model">account.payment.register</field>
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
-            <!-- Manual rate of the single payment created by the wizard: visible to accounting
-                 administrators when paying a vendor and only while the wizard is editable. -->
+            <!-- Manual rate of the single payment created by the wizard: visible to accounting and
+                 settings administrators, for customers and vendors, and only while the wizard is
+                 editable. -->
             <xpath expr="//field[@name='payment_date']" position="after">
                 <field name="manual_rate_available" invisible="1"/>
                 <field name="manual_rate_is_usd" invisible="1"/>
                 <field name="manual_rate"
-                    groups="account.group_account_manager"
-                    invisible="not manual_rate_available or partner_type != 'supplier'"/>
+                    groups="account.group_account_manager,base.group_system"
+                    invisible="not manual_rate_available"/>
                 <label for="manual_conversion_rate" string="Manual USD Rate"
-                    groups="account.group_account_manager"
-                    invisible="not manual_rate or not manual_rate_available or not manual_rate_is_usd or partner_type != 'supplier'"/>
+                    groups="account.group_account_manager,base.group_system"
+                    invisible="not manual_rate or not manual_rate_available or not manual_rate_is_usd"/>
                 <label for="manual_conversion_rate" string="Manual Reference Rate"
-                    groups="account.group_account_manager"
-                    invisible="not manual_rate or not manual_rate_available or manual_rate_is_usd or partner_type != 'supplier'"/>
+                    groups="account.group_account_manager,base.group_system"
+                    invisible="not manual_rate or not manual_rate_available or manual_rate_is_usd"/>
                 <div class="o_row" name="manual_conversion_rate_div"
-                    groups="account.group_account_manager"
-                    invisible="not manual_rate or not manual_rate_available or partner_type != 'supplier'">
+                    groups="account.group_account_manager,base.group_system"
+                    invisible="not manual_rate or not manual_rate_available">
                     <field name="manual_conversion_rate" digits="[12, 6]"
                         required="manual_rate"/>
                     <field name="manual_rate_currency_id" readonly="1" options="{'no_open': True}"/>

@@ -318,6 +318,16 @@ msgstr "La tasa manual debe ser estrictamente positiva."
 
 #. module: accounting_dual_currency
 #. odoo-python
+#: code:addons/accounting_dual_currency/models/manual_rate_mixin.py:0
+msgid ""
+"Only accounting administrators and settings administrators can set or change "
+"the manual rate."
+msgstr ""
+"Solo los administradores de Contabilidad y de Ajustes pueden establecer o "
+"modificar la tasa manual."
+
+#. module: accounting_dual_currency
+#. odoo-python
 #: code:addons/accounting_dual_currency/models/account_move.py:0
 msgid ""
 "You cannot modify the manual rate of the posted document %(move)s. Reset it "
@@ -325,6 +335,16 @@ msgid ""
 msgstr ""
 "No puedes modificar la tasa manual del documento publicado %(move)s. "
 "Restablécelo primero a borrador."
+
+#. module: accounting_dual_currency
+#. odoo-python
+#: code:addons/accounting_dual_currency/models/account_move.py:0
+msgid ""
+"A document with a manual rate can only have journal items in the company "
+"currency or in the reference currency."
+msgstr ""
+"Un documento con tasa manual solo puede tener apuntes contables en la moneda "
+"de la compañía o en la moneda de referencia."
 
 #. module: accounting_dual_currency
 #. odoo-python

@@ -20,14 +20,17 @@ class AccountPartialReconcile(models.Model):
         """Return the conversion context of the document that settles the partial.
 
         A payment settles an invoice at its own rate, so the manual rate of the payment
-        wins; otherwise the latest document that has a manual rate is used.
+        wins; then comes an invoice, and a journal entry is the last resort. Within each
+        kind, the latest document that has a manual rate is used.
         """
         self.ensure_one()
         manual_moves = (
             (self.debit_move_id | self.credit_move_id).move_id.filtered("manual_rate")
         ).sorted(
             key=lambda move: (
-                not move.origin_payment_id,
+                0
+                if move.origin_payment_id
+                else 1 if move.is_invoice(include_receipts=True) else 2,
                 -move.date.toordinal() if move.date else 0,
             )
         )

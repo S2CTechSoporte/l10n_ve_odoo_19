@@ -22,7 +22,7 @@
                 <li>Muestra totales, impuestos, importes adeudados y pagos convertidos en documentos contables.</li>
                 <li>Añade importes de referencia y tasas de referencia en apuntes contables y pagos.</li>
                 <li>Permite consultar los reportes de cuentas vencidas, el Libro mayor de la empresa, el Balance general y el Estado de cuenta del cliente en la moneda de la compañía o en la de referencia.</li>
-                <li>Permite registrar facturas de proveedor y pagos con una <strong>tasa manual</strong> en lugar de la tasa de cambio de Odoo.</li>
+                <li>Permite registrar facturas, asientos contables manuales y pagos, de clientes y de proveedores, con una <strong>tasa manual</strong> en lugar de la tasa de cambio de Odoo.</li>
             </ul>
         </div>
     </div>
@@ -110,23 +110,24 @@
 <section class="oe_container oe_dark" id="manual-rate">
     <div class="oe_row">
         <div class="oe_span12">
-            <h2 class="oe_slogan text-body">Tasa manual en facturas de proveedor y pagos</h2>
+            <h2 class="oe_slogan text-body">Tasa manual en facturas, asientos y pagos</h2>
             <p>
                 Normalmente el módulo convierte con las tasas de cambio de Odoo de la fecha del
-                documento. La <strong>tasa manual</strong> permite registrar una factura de
-                proveedor, o el pago que la liquida, con la tasa que la empresa pactó o pagó
-                realmente. Solo afecta al documento que la activa; los demás siguen usando la tasa
-                del sistema.
+                documento. La <strong>tasa manual</strong> permite registrar una factura o un asiento
+                contable manual, de un cliente o de un proveedor, y el pago que lo liquida, con la
+                tasa que la empresa pactó o pagó realmente. Solo afecta al documento que la activa;
+                los demás siguen usando la tasa del sistema.
             </p>
             <h3 class="text-body">Quién la ve y cuándo está disponible</h3>
             <ul>
-                <li>Aparece a los administradores de Contabilidad, y solo en facturas, notas de crédito y recibos de proveedor, en pagos de proveedor y en el asistente <strong>Pagar</strong> cuando se paga a un proveedor. Los demás usuarios no ven el control.</li>
-                <li>La compañía debe tener una moneda de referencia distinta de la moneda de la compañía, y el documento debe estar en una de esas dos monedas. Con una tercera moneda el control no aparece y Odoo no permite activarlo.</li>
+                <li>Aparece a los administradores de Contabilidad y de Ajustes, en facturas, notas de crédito y recibos de cliente y de proveedor, en asientos contables manuales, en pagos y en el asistente <strong>Pagar</strong>. Los demás usuarios no ven el control, y Odoo tampoco les permite capturar la tasa por otras vías, como importar datos.</li>
+                <li>El asiento contable de un pago no muestra el control: toma la tasa del pago.</li>
+                <li>La compañía debe tener una moneda de referencia distinta de la moneda de la compañía, y el documento debe estar en una de esas dos monedas. Con una tercera moneda el control no aparece y Odoo no permite activarlo. Un asiento con tasa manual solo admite apuntes en la moneda de la compañía o en la de referencia.</li>
                 <li>Se puede cambiar mientras el documento está en borrador. Para cambiarla en un documento publicado, restablécelo primero a borrador.</li>
             </ul>
-            <h3 class="text-body">Cómo registrar una factura de proveedor con tasa manual</h3>
+            <h3 class="text-body">Cómo registrar una factura con tasa manual</h3>
             <ol>
-                <li>Abre <strong>Contabilidad &gt; Proveedores &gt; Facturas</strong> y crea o abre una factura en borrador.</li>
+                <li>Abre <strong>Contabilidad &gt; Clientes &gt; Facturas</strong> o <strong>Contabilidad &gt; Proveedores &gt; Facturas</strong> y crea o abre una factura en borrador.</li>
                 <li>Elige la moneda de la factura (la de la compañía o la de referencia) y la fecha de la factura.</li>
                 <li>Activa <strong>Tasa manual</strong>. Odoo propone la tasa del sistema de esa fecha como punto de partida.</li>
                 <li>Escribe la tasa en <strong>Tasa USD manual</strong> (o en <strong>Tasa de referencia manual</strong> si ninguna de las monedas es USD).</li>
@@ -144,31 +145,59 @@
             <h3 class="text-body">Qué se calcula con la tasa manual</h3>
             <ul>
                 <li>En una factura en la moneda de referencia, el débito y el crédito de los apuntes contables, los impuestos y los totales en la moneda de la compañía. La tasa de cambio estándar de la factura toma ese valor y queda de solo lectura mientras la tasa manual está activa.</li>
-                <li>Los importes de referencia de la factura, de sus apuntes y de sus pagos, también en una factura en la moneda de la compañía.</li>
+                <li>Los importes de referencia del documento, de sus apuntes y de sus pagos, también en una factura o un asiento en la moneda de la compañía.</li>
                 <li>Los reportes en moneda de referencia, que suman los importes guardados con esa tasa y no vuelven a convertir con la tasa de la fecha del reporte.</li>
-                <li>La nota de crédito creada a partir de la factura, que conserva la tasa manual.</li>
+                <li>La nota de crédito creada a partir de la factura, que conserva la tasa manual. La reversa de un asiento también la conserva.</li>
             </ul>
             <p>
                 El indicador <strong>Tasa USD</strong> del documento muestra la tasa manual que
                 escribiste.
             </p>
+            <h3 class="text-body">Asientos contables manuales con tasa manual</h3>
+            <p>
+                Abre un asiento en borrador en <strong>Contabilidad &gt; Contabilidad &gt;
+                Transacciones &gt; Asientos contables</strong>, activa <strong>Tasa manual</strong>
+                y escribe la tasa. Con ella:
+            </p>
+            <ul>
+                <li>Los apuntes en la moneda de referencia calculan su débito y su crédito con la tasa del asiento (el importe en moneda dividido entre la tasa). Los apuntes en la moneda de la compañía conservan su importe.</li>
+                <li>Al activar, cambiar o quitar la tasa de un asiento en borrador, Odoo convierte de nuevo los apuntes en moneda de referencia. El asiento debe quedar cuadrado; si no, Odoo rechaza el cambio y no modifica nada. En un asiento con apuntes en las dos monedas, corrige también la contrapartida al mismo tiempo.</li>
+                <li>Si cambias el importe en moneda de un apunte, se convierte con la tasa del asiento.</li>
+            </ul>
+            <p>
+                Sin tasa manual, el importe de referencia de un apunte de asiento expresado en la
+                moneda de referencia es su propio importe en esa moneda.
+            </p>
+            <h3 class="text-body">Retenciones de la factura</h3>
+            <p>
+                Si usas las retenciones de la localización venezolana (IVA, ISLR y municipal), la
+                retención nace de la factura y usa la misma tasa que la factura, sea la manual o la
+                del sistema de la fecha de la factura. Su asiento contable queda en la moneda de la
+                factura a esa tasa, así que al conciliarlo con la factura Odoo no registra
+                diferencia de cambio y el saldo pendiente coincide en la moneda del documento y en
+                la de referencia. Con una factura en la moneda de la compañía que tiene tasa manual
+                de referencia, el asiento de la retención usa la tasa del sistema de su fecha para
+                sus importes de referencia.
+            </p>
             <h3 class="text-body">Pagos con tasa manual</h3>
             <p>
-                En un pago de proveedor en borrador, o en el asistente que abre el botón
-                <strong>Pagar</strong> de la factura, activa <strong>Tasa manual</strong> y escribe la tasa del pago. El
-                asistente solo ofrece la tasa cuando crea un único pago. Con la tasa manual, el
-                importe sugerido, los apuntes del pago y la parte de la factura que el pago liquida
-                se calculan con esa tasa.
+                En un pago de cliente o de proveedor en borrador, o en el asistente que abre el botón
+                <strong>Pagar</strong> o <strong>Registrar pago</strong> de la factura, activa <strong>Tasa manual</strong> y escribe la tasa
+                del pago. El asistente solo ofrece la tasa cuando crea un único pago. Con la tasa
+                manual, el importe sugerido, los apuntes del pago y la parte de la factura que el
+                pago liquida se calculan con esa tasa.
             </p>
             <ul>
                 <li>Cada documento tiene su propia tasa: un pago sin tasa manual usa la tasa del sistema de su fecha, aunque la factura tenga tasa manual.</li>
                 <li>Si la tasa del pago es distinta de la de la factura, Odoo registra la diferencia de cambio habitual al conciliarlos.</li>
                 <li>Un pago pendiente en otra moneda se muestra y se aplica a la factura con su propia tasa manual.</li>
+                <li>Al conciliar documentos de monedas distintas de la de referencia, se usa la tasa manual del pago; si no hay pago, la de la factura, y por último la de un asiento manual.</li>
             </ul>
             <h3 class="text-body">Recomendaciones</h3>
             <ul>
                 <li>Usa la tasa manual solo cuando la tasa del sistema no corresponda a la operación; con tasas de cambio al día no la necesitas.</li>
                 <li>Revisa el valor antes de confirmar: Odoo exige que sea positiva, pero no lo compara con ningún rango.</li>
+                <li>Solo los administradores de Contabilidad y de Ajustes pueden capturarla. Un usuario de facturación sí puede crear la nota de crédito de una factura con tasa manual, reversar un asiento con tasa manual y publicar el pago que un administrador capturó con tasa manual; esos documentos conservan la tasa.</li>
                 <li>No cambies la moneda de referencia de la compañía cuando ya existan documentos con tasa manual.</li>
                 <li>La tasa manual no cambia la cotización del dólar de la barra superior.</li>
             </ul>

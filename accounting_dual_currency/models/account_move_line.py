@@ -65,16 +65,60 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.date_maturity_secondary_currency = line.date_maturity or line.date
 
+    @api.depends("move_id.manual_rate", "move_id.manual_conversion_rate")
+    def _compute_currency_rate(self):
+        """Convert the items of a move at its manual rate, when it has one.
+
+        The items of an invoice already follow its ``invoice_currency_rate``. The items
+        of a journal entry read the rate of their date, so they are computed in the
+        context of the manual rate of their entry.
+        """
+        manual_moves = self.move_id.filtered(lambda move: move._get_manual_rate_spec())
+        manual_lines = self.filtered(lambda line: line.move_id in manual_moves)
+        super(AccountMoveLine, self - manual_lines)._compute_currency_rate()
+        for move, lines in manual_lines.grouped("move_id").items():
+            super(
+                AccountMoveLine, lines.with_context(**move._get_manual_rate_context())
+            )._compute_currency_rate()
+
+    @api.constrains("currency_id")
+    def _check_manual_rate_currency(self):
+        self.move_id._check_manual_rate_line_currencies()
+
+    def _has_own_reference_amount(self):
+        """Whether the item of an entry already states its amount in the reference currency.
+
+        An item of a journal entry expressed in the reference currency carries its
+        reference amount, and the rate it implies (balance / amount in currency) is the
+        one of whoever built the entry, for instance a withholding at the rate of the
+        invoice it settles. Converting its balance with the rate of the date would
+        replace that amount with another one. Invoices and payments keep converting:
+        their rate is the one of their document.
+        """
+        self.ensure_one()
+        move = self.move_id
+        return bool(
+            move.move_type == "entry"
+            and not move.origin_payment_id
+            and self.secondary_currency_id
+            and self.currency_id == self.secondary_currency_id
+            and self.currency_id != self.company_currency_id
+            and self.amount_currency * self.balance > 0
+        )
+
     @api.depends(
         "company_id.secondary_currency_id",
         "company_currency_id",
         "currency_id",
+        "amount_currency",
         "balance",
         "debit",
         "credit",
         "amount_residual",
         "price_unit",
         "price_subtotal",
+        "move_id.move_type",
+        "move_id.origin_payment_id",
         "move_id.invoice_date",
         "move_id.date",
         "move_id.reversed_entry_id.invoice_date",
@@ -131,6 +175,12 @@ class AccountMoveLine(models.Model):
                 rate_date,
                 False,
             )
+            if line._has_own_reference_amount():
+                ratio = line.amount_currency / line.balance
+                line.conversion_rate = 1.0 / ratio
+                line.balance_secondary_currency = line.amount_currency
+                line.debit_secondary_currency = line.debit * ratio
+                line.credit_secondary_currency = line.credit * ratio
             line.price_unit_secondary_currency = source_currency.with_context(
                 **conversion_context
             )._convert(

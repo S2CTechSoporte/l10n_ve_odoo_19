@@ -8,7 +8,7 @@ from odoo.tests import Form, new_test_user, tagged
 
 from .common import DualCurrencyTestCommon
 
-VENDOR_TYPES = "('in_invoice', 'in_refund', 'in_receipt')"
+MANUAL_RATE_GROUPS = "account.group_account_manager,base.group_system"
 
 
 @tagged("post_install", "-at_install")
@@ -340,18 +340,6 @@ class TestManualRateDocuments(DualCurrencyTestCommon):
                 with self._assert_error(ValidationError, "manual rate is only available"):
                     bill.write({"manual_rate": True, "manual_conversion_rate": 60.0})
 
-    def test_manual_rate_is_not_available_for_manual_journal_entries(self):
-        entry = self.env["account.move"].create(
-            {
-                "move_type": "entry",
-                "journal_id": self.misc_journal.id,
-                "date": self.rate_date_invoice,
-            }
-        )
-        self.assertFalse(entry.manual_rate_available)
-        with self._assert_error(ValidationError, "manual rate is only available"):
-            entry.write({"manual_rate": True, "manual_conversion_rate": 60.0})
-
     def test_manual_rate_must_be_positive(self):
         bill = self._create_draft_bill(self.usd, 100.0)
         for rate in (0.0, -60.0):
@@ -477,29 +465,18 @@ class TestManualRateDocuments(DualCurrencyTestCommon):
         manager = new_test_user(
             self.env, login="adc_manual_manager", groups="account.group_account_manager"
         )
-        for model, xmlid, side_condition in (
-            (
-                "account.move",
-                "account.view_move_form",
-                f"move_type not in {VENDOR_TYPES}",
-            ),
-            (
-                "account.payment",
-                "account.view_account_payment_form",
-                "partner_type != 'supplier'",
-            ),
-            (
-                "account.payment.register",
-                "account.view_account_payment_register_form",
-                "partner_type != 'supplier'",
-            ),
+        for model, xmlid, extra_condition in (
+            # The entry of a payment takes the rate of the payment.
+            ("account.move", "account.view_move_form", " or origin_payment_id"),
+            ("account.payment", "account.view_account_payment_form", ""),
+            ("account.payment.register", "account.view_account_payment_register_form", ""),
         ):
             with self.subTest(model=model):
                 arch = self._view_arch(model, xmlid, manager)
                 (flag,) = arch.xpath("//field[@name='manual_rate']")
                 self.assertEqual(
                     flag.get("invisible"),
-                    f"not manual_rate_available or {side_condition}",
+                    f"not manual_rate_available{extra_condition}",
                 )
                 (value,) = arch.xpath("//field[@name='manual_conversion_rate']")
                 self.assertEqual(value.get("digits"), "[12, 6]")
@@ -513,7 +490,10 @@ class TestManualRateDocuments(DualCurrencyTestCommon):
                 )
                 for label in arch.xpath("//label[@for='manual_conversion_rate']"):
                     self.assertIn("manual_rate_is_usd", label.get("invisible"))
-                    self.assertIn(side_condition, label.get("invisible"))
+                # Customers and vendors share the controls: only availability decides.
+                for node in (flag, value.getparent(), *arch.xpath("//label[@for='manual_conversion_rate']")):
+                    self.assertNotIn("move_type", node.get("invisible"))
+                    self.assertNotIn("partner_type", node.get("invisible"))
                 if model != "account.payment.register":
                     self.assertEqual(flag.get("readonly"), "state != 'draft'")
                     self.assertEqual(value.get("readonly"), "state != 'draft'")
@@ -521,7 +501,25 @@ class TestManualRateDocuments(DualCurrencyTestCommon):
                     for label in arch.xpath("//label[@for='manual_conversion_rate']"):
                         self.assertIn("state != 'draft'", label.get("invisible"))
 
-    def test_forms_restrict_the_manual_rate_to_accounting_managers(self):
+    def test_forms_show_the_manual_rate_to_settings_administrators(self):
+        # A settings administrator without the accounting manager group.
+        administrator = new_test_user(
+            self.env,
+            login="adc_manual_settings",
+            groups="base.group_system,account.group_account_invoice",
+        )
+        for model, xmlid in (
+            ("account.move", "account.view_move_form"),
+            ("account.payment", "account.view_account_payment_form"),
+            ("account.payment.register", "account.view_account_payment_register_form"),
+        ):
+            with self.subTest(model=model):
+                arch = self._view_arch(model, xmlid, administrator)
+                self.assertTrue(arch.xpath("//field[@name='manual_rate']"))
+                self.assertTrue(arch.xpath("//field[@name='manual_conversion_rate']"))
+                self.assertTrue(arch.xpath("//label[@for='manual_conversion_rate']"))
+
+    def test_forms_restrict_the_manual_rate_to_accounting_and_settings_administrators(self):
         for xmlid in (
             "accounting_dual_currency.account_move_form_dual_currency",
             "accounting_dual_currency.account_payment_form_dual_currency",
@@ -533,10 +531,10 @@ class TestManualRateDocuments(DualCurrencyTestCommon):
                     (node,) = arch.xpath(f"//field[@name='{name}']")
                     self.assertEqual(
                         (node.get("groups") or node.getparent().get("groups")),
-                        "account.group_account_manager",
+                        MANUAL_RATE_GROUPS,
                     )
                 for label in arch.xpath("//label[@for='manual_conversion_rate']"):
-                    self.assertEqual(label.get("groups"), "account.group_account_manager")
+                    self.assertEqual(label.get("groups"), MANUAL_RATE_GROUPS)
 
     def test_forms_hide_the_manual_rate_from_other_accounting_users(self):
         invoicing_user = new_test_user(

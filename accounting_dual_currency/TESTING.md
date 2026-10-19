@@ -116,7 +116,11 @@ Cada escenario debe comprobar:
    de la compañía y de referencia coinciden con los de la factura y la nota la cancela sin diferencia
    de cambio. Si la reversión no copia la tasa, la nota usa su propia fecha contable.
 3. Un asiento contable manual en USD conserva el débito y el crédito convertidos a moneda de
-   la compañía después de guardarlo, y cuadra en los campos de referencia en USD.
+   la compañía después de guardarlo, y cuadra en los campos de referencia en USD. Los apuntes
+   de un asiento que no es el de un pago, expresados en la moneda de referencia, toman su propio
+   importe en moneda como importe de referencia y la tasa que implican como tasa de referencia,
+   sea cual sea la tasa del sistema de su fecha; los apuntes sin importe en moneda, como los de
+   una diferencia de cambio, siguen convirtiendo su saldo.
 4. Los campos auxiliares de pago calculan los importes de compañía y de referencia tanto para
    pagos en CCY como en USD.
 5. Si la compañía no tiene moneda de referencia, los cálculos recurren de forma segura a la
@@ -219,7 +223,7 @@ ni cambian su resultado cuando la tasa manual está desactivada.
   tasa del sistema de su fecha, y una factura sin tasa manual conserva su comportamiento actual.
 - Los diez escenarios se ejecutan con facturas de proveedor (`in_invoice`, pagos salientes) y con
   facturas de cliente (`out_invoice`, pagos entrantes): la lógica del modelo no depende del lado
-  del documento, y la interfaz solo muestra el control en documentos de proveedor.
+  del documento, y la interfaz muestra el control en documentos de cliente y de proveedor.
 
 #### Matriz obligatoria de facturas y pagos con tasa manual
 
@@ -274,13 +278,17 @@ estas diferencias:
    las unidades de la moneda de la compañía por unidad de la referencia.
 4. **Disponibilidad.** La tasa manual solo está disponible si la compañía tiene una moneda de
    referencia distinta de la suya y el documento usa una de las dos monedas. No está disponible para
-   una tercera moneda, sin moneda de referencia, con la misma moneda como referencia ni en los
-   asientos contables manuales, y activarla en esos casos genera un error de validación.
-5. **Validaciones.** El valor debe ser positivo. Una factura publicada y un pago que no está en
-   borrador rechazan cambios de la tasa manual. Duplicar un documento no copia la tasa manual.
+   una tercera moneda (tampoco en un asiento manual cuyo diario tiene una tercera moneda), sin
+   moneda de referencia ni con la misma moneda como referencia, y activarla en esos casos genera un
+   error de validación. Un documento con tasa manual rechaza los apuntes en una tercera moneda,
+   al crearlos y al cambiar la moneda de un apunte.
+5. **Validaciones.** El valor debe ser positivo. Una factura o un asiento publicado y un pago que no
+   está en borrador rechazan cambios de la tasa manual. Duplicar un documento no copia la tasa manual.
 6. **Formularios.** El control se muestra a los administradores de Contabilidad
-   (`account.group_account_manager`) en los formularios de factura, de pago y del asistente de
-   pago, solo en documentos de proveedor; se oculta a los demás usuarios. La `invoice_currency_rate`
+   (`account.group_account_manager`) y de Ajustes (`base.group_system`) en los formularios de
+   factura, de asiento manual, de pago y del asistente de pago, para clientes y para proveedores
+   (solo decide la disponibilidad); se oculta a los demás usuarios, y el formulario del asiento de
+   un pago no lo muestra porque ese asiento toma la tasa del pago. La `invoice_currency_rate`
    nativa es de solo lectura mientras la tasa manual está en uso. Al marcar `manual_rate`, el valor se
    propone con la tasa del sistema de la fecha, y al cambiar a una moneda no disponible se desmarca.
 7. **Conversión estándar.** La tasa manual del contexto solo sustituye el par compañía/referencia
@@ -297,6 +305,25 @@ estas diferencias:
     crea un único pago. El asiento del pago conserva la tasa para calcular los importes de
     referencia de sus apuntes, y un pago pendiente de otra moneda se aplica a la factura, y se
     muestra en su widget de pagos pendientes, con su propia tasa manual.
+11. **Clientes.** Las facturas, notas de crédito y recibos de cliente, los cobros y el asistente
+    ofrecen y aplican la tasa manual igual que los de proveedor: valor por defecto con la tasa del
+    sistema, importes nativos y de referencia, liquidación sin diferencia de cambio cuando el cobro
+    usa la tasa de la factura, y con diferencia de cambio habitual cuando no.
+12. **Asientos manuales.** Un asiento manual (sin pago) con tasa manual convierte con ella el débito y
+    el crédito de los apuntes en moneda de referencia (`saldo = importe en moneda / tasa`) y los
+    importes de referencia de todos sus apuntes. Al capturar, cambiar o quitar la tasa de un asiento
+    en borrador, los apuntes en moneda de referencia se convierten de nuevo y el asiento debe quedar
+    cuadrado; si no, Odoo lo rechaza y nada cambia. Editar el importe en moneda de un apunte usa la
+    tasa del asiento. La reversa de un asiento, de un asiento de pago o de una factura conserva la
+    tasa y sus importes de referencia son exactamente los opuestos. En la conciliación, un pago
+    pesa más que una factura y esta más que un asiento manual, aunque el asiento sea posterior.
+13. **Permisos en servidor.** Solo los administradores de Contabilidad y de Ajustes pueden
+    capturar o cambiar la tasa manual de una factura, un asiento, un pago o el asistente, por
+    creación o escritura, y el entorno `sudo()` no está limitado. Un valor sin tasa manual activa
+    no tiene efecto, y escribir el valor actual no es un cambio. Un usuario de facturación sí
+    puede crear la nota de crédito de una factura con tasa manual, reversar un asiento con tasa
+    manual y publicar o editar el pago que un administrador capturó con tasa manual, pero no
+    puede crear un documento con otra tasa aunque indique el documento origen.
 
 #### Pruebas obligatorias de reportes con tasa manual
 
@@ -316,7 +343,7 @@ por lo que con tasa manual deben reflejar esa tasa en lugar de convertir con la 
 |---|---|---|
 | 1 | Nota de crédito en moneda de la compañía | Conserva la tasa manual de la factura original. |
 | 2 | Nota de crédito en USD | Conserva la tasa manual; sus importes de referencia son los de la factura. |
-| 3 | Asiento manual en USD | No admite tasa manual (la prueba verifica que no está disponible) y conserva su comportamiento. |
+| 3 | Asiento manual en USD | Admite tasa manual: convierte con ella el débito y el crédito de los apuntes en USD y sus importes de referencia, y el asiento cuadra; sin tasa manual conserva su comportamiento. Con una tercera moneda en sus apuntes, la tasa manual se rechaza. |
 | 4 | Campos auxiliares de pago | `amount_local`, `amount_ref` y `conversion_rate` del pago usan su tasa manual, en CCY y en USD. |
 | 5 | Sin moneda de referencia | La tasa manual no está disponible y los cálculos conservan su respaldo. |
 | 6 y 7 | Instalación y manifiesto | La tasa manual no añade dependencias ni activa monedas. |
@@ -375,7 +402,9 @@ ejercitan los manejadores de reportes instalados.
   totales y líneas desplegadas del Libro mayor de la empresa y del Balance general.
 - `tests/test_dual_currency_accounting_flows.py`: asientos contables manuales, notas de crédito,
   comportamiento de respaldo, flujos de factura y pago EUR/USD y USD/EUR, valores por defecto de
-  referencia y comprobaciones de dependencias independientes de la localización.
+  referencia, importes de referencia de los apuntes de un asiento expresados en la moneda de
+  referencia (con la tasa que implican y en su reversa) y comprobaciones de dependencias
+  independientes de la localización, incluida `l10n_ve_full`.
 - `tests/test_dual_currency_demo.py`: compañía de demostración en XML, validación de tasas y
   valores por defecto de referencia para varias monedas de la compañía.
 - `tests/test_manual_rate_invoice_payments.py`: la matriz obligatoria de diez escenarios con tasa
@@ -386,7 +415,18 @@ ejercitan los manejadores de reportes instalados.
 - `tests/test_manual_rate_documents.py`: débito y crédito nativos, importes de referencia, borradores,
   orientación de la tasa (880 se ve como 880) con compañías VES, USD, EUR y sin USD, pagos en cada
   par de monedas, disponibilidad y validaciones, formulario (valor por defecto y restablecimiento),
-  duplicado, bloqueo en documentos publicados, vistas y grupos, indicadores de tasa y barra superior.
+  duplicado, bloqueo en documentos publicados, vistas y grupos (administradores de Contabilidad y
+  de Ajustes, sin condiciones por tipo de documento ni de contacto), indicadores de tasa y barra
+  superior.
+- `tests/test_manual_rate_customers.py`: facturas, notas de crédito y recibos de cliente, formularios,
+  cobros, asistente de pago de clientes, liquidación con y sin diferencia de cambio y nota de crédito.
+- `tests/test_manual_rate_entries.py`: asientos manuales con tasa manual: importes nativos y de
+  referencia, asientos mixtos, cambio de tasa en borrador y cuadre, bloqueo al publicar, edición del
+  importe en moneda, terceras monedas (diario y apuntes), formulario en ambos órdenes de captura,
+  reversas (asiento, asiento de pago) y conciliación con facturas y pagos y su prioridad.
+- `tests/test_manual_rate_access.py`: permisos en servidor para usuarios de facturación, de
+  Contabilidad y de Ajustes (creación, escritura, importes sin efecto, `sudo()`), y documentos que
+  conservan la tasa de su origen (reversas, asiento de un pago que se publica o se edita).
 - `tests/test_manual_rate_credit_notes.py`: notas de crédito de facturas de proveedor y de cliente
   con tasa manual, en USD y en moneda de la compañía, y su conciliación sin diferencia de cambio.
 - `tests/test_manual_rate_payments.py`: pagos con tasa manual (apuntes, importes y sincronización
@@ -572,6 +612,9 @@ Para ejecutar solo las pruebas de tasa manual, usa las etiquetas
 `/accounting_dual_currency:TestManualRateDocuments`,
 `/accounting_dual_currency:TestManualRateCreditNotes`,
 `/accounting_dual_currency:TestManualRatePayments`,
+`/accounting_dual_currency:TestManualRateCustomers`,
+`/accounting_dual_currency:TestManualRateEntries`,
+`/accounting_dual_currency:TestManualRateAccess`,
 `/accounting_dual_currency:TestManualRateReports` y
 `/accounting_dual_currency:TestManualRateDemo`, separadas por comas, en cada comando.
 
@@ -623,3 +666,48 @@ El trabajo solo se considera completo cuando:
     manual no cambia los documentos, pagos ni reportes que no la activan.
 11. La prueba de la compañía de demostración con tasa manual se ejecuta y pasa en la base de datos con
     datos de demostración, y se omite de forma explícita en la que no los tiene.
+12. Pasan las pruebas de la tasa manual en documentos de cliente, en asientos manuales (importes,
+    cambio de tasa en borrador, terceras monedas, formulario, reversas y conciliación) y los
+    permisos en servidor, en ambas ejecuciones.
+
+### Retenciones (`l10n_ve_full` y `l10n_ve_withholding_muni`)
+
+Los módulos de retenciones y este no dependen entre sí, así que sus pruebas se ejecutan por
+separado y ninguna exige al otro módulo. El contrato entre ambos se verifica por sus extremos:
+
+- Este módulo prueba que la `invoice_currency_rate` estándar toma la tasa manual
+  (`tests/test_manual_rate_documents.py`) y que los apuntes de un asiento expresados en la
+  moneda de referencia conservan su propio importe como importe de referencia
+  (`tests/test_dual_currency_accounting_flows.py`), y que su manifiesto no depende de
+  `l10n_ve_full`.
+- `l10n_ve_full` prueba, con la `invoice_currency_rate` editada a mano en una factura en borrador,
+  que las retenciones convierten con la tasa de la factura, que el asiento queda en la moneda de
+  la factura a esa tasa y que concilia sin diferencia de cambio
+  (`l10n_ve_full/tests/test_withholding_invoice_rate.py`, con la compañía en USD y facturas en VES,
+  y con la compañía en VES y facturas en USD), y que su manifiesto no depende de este módulo.
+  `l10n_ve_withholding_muni` hace lo propio con la retención municipal
+  (`l10n_ve_withholding_muni/tests/test_municipal_withholding_rate.py`).
+
+Estos módulos necesitan una base con `l10n_ve_full` instalado (depende de `account_accountant`,
+`sale`, `purchase` y `stock`). Desde la raíz del espacio de trabajo, con la misma configuración:
+
+```bash
+./.venv/bin/python -X frozen_modules=off /opt/odoo/19.0/odoo/odoo-bin \
+    -c odoo.conf \
+    -d <base_con_l10n_ve_full> \
+    -u l10n_ve_full,l10n_ve_withholding_muni \
+    --without-demo=True \
+    --test-enable \
+    --test-tags /l10n_ve_full,/l10n_ve_withholding_muni \
+    --http-port=18020 \
+    --stop-after-init
+```
+
+Para comprobar el flujo completo con los tres módulos instalados (por ejemplo, una compañía en USD
+con referencia en VES y una factura en VES con tasa manual 880 frente a una tasa del sistema de
+800), instala `accounting_dual_currency` en una copia de esa base y ejecuta un guion de
+`odoo-bin shell` que cree la factura con `manual_rate`, genere la retención con
+`ret_and_reconcile` y compruebe que no hay asiento de diferencia de cambio, que el residual de
+la factura es igual en moneda del documento y de referencia, y que el Libro mayor de la empresa
+en moneda de referencia cuadra. No es una prueba permanente porque exigiría que ambos módulos
+estuvieran instalados.

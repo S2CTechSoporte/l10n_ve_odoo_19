@@ -2,10 +2,13 @@ from . import test_dual_currency_accounting_flows
 from . import test_dual_currency_aged_reports
 from . import test_dual_currency_demo
 from . import test_dual_currency_invoice_payments
+from . import test_manual_rate_access
 from . import test_manual_rate_conversion
 from . import test_manual_rate_credit_notes
+from . import test_manual_rate_customers
 from . import test_manual_rate_demo
 from . import test_manual_rate_documents
+from . import test_manual_rate_entries
 from . import test_manual_rate_invoice_payments
 from . import test_manual_rate_payments
 from . import test_manual_rate_reports
