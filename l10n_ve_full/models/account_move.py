@@ -374,6 +374,52 @@ class AccountMove(models.Model):
         self.company_type1 = self.partner_id.company_type
         return
 
+    def _wh_to_company_currency(self, amount):
+        """Convert an amount of the invoice currency into the company currency.
+
+        A withholding is born from its invoice and is settled against it, so it takes the
+        ``invoice_currency_rate`` of the invoice (the one it was posted with, whether it
+        comes from the rate table or was captured by hand) and not the rate of another
+        date. It is a standard field of Odoo: this module does not need to know who sets
+        it. Without a rate the rate of the date of the invoice is used.
+        """
+        self.ensure_one()
+        if self.currency_id == self.company_currency_id:
+            return amount
+        if self.invoice_currency_rate:
+            return self.company_currency_id.round(amount / self.invoice_currency_rate)
+        return self.currency_id._convert(
+            amount, self.company_currency_id, self.company_id, self.invoice_date or self.date)
+
+    def _wh_from_company_currency(self, amount):
+        """Convert an amount of the company currency into the invoice currency, at the
+        rate of the invoice (see ``_wh_to_company_currency``)."""
+        self.ensure_one()
+        if self.currency_id == self.company_currency_id:
+            return amount
+        if self.invoice_currency_rate:
+            return self.currency_id.round(amount * self.invoice_currency_rate)
+        return self.company_currency_id._convert(
+            amount, self.currency_id, self.company_id, self.invoice_date or self.date)
+
+    def _wh_get_line_currency_vals(self, balance):
+        """Return the currency values of a withholding journal item of this invoice.
+
+        An invoice in a foreign currency is settled by items expressed in that currency,
+        with the amount converted at the rate of the invoice: the withholding settles the
+        invoice at its own rate and Odoo does not record an exchange difference. An invoice
+        in the company currency keeps its items in the company currency.
+
+        :param balance: debit minus credit of the item, in the company currency
+        """
+        self.ensure_one()
+        if self.currency_id == self.company_currency_id or not self.invoice_currency_rate:
+            return {'currency_id': self.company_currency_id.id}
+        return {
+            'currency_id': self.currency_id.id,
+            'amount_currency': self._wh_from_company_currency(balance),
+        }
+
     def ret_and_reconcile(self, pay_amount, pay_account_id,
                           pay_journal_id, writeoff_acc_id,
                           writeoff_journal_id, date,
@@ -430,6 +476,11 @@ class AccountMove(models.Model):
         if module_dual_currency:
             l2[0][2]['amount_residual_fcurrency'] = direction * ((deb if deb > 0 else cred) / invoice.tax_today)
         lines += l2
+
+        # The withholding settles the invoice at the rate of the invoice.
+        for line in lines:
+            line[2].update(invoice._wh_get_line_currency_vals(
+                (line[2].get('debit') or 0.0) - (line[2].get('credit') or 0.0)))
 
         move = {'ref': name + 'de '+ str(invoice.name),
                 'line_ids': lines,

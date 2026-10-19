@@ -53,24 +53,20 @@ class AccountWhIvaLineTax(models.Model):
     @api.depends('inv_tax_id')
     def _get_base_amount(self):
         """ Return withholding amount
+
+        The amounts of the invoice are converted into the company currency at the rate of
+        the invoice, not at the rate of the date of the withholding.
         """
         for record in self:
-
-            f_xc = self.env['account.ut'].sxc(
-                record.move_id.currency_id.id,
-                record.move_id.company_id.currency_id.id,
-                record.wh_vat_line_id.retention_id.date)
-            if record.move_id.currency_id == record.move_id.company_id.currency_id:
-                record.base = f_xc(record.base)
-                record.amount = f_xc((record.amount))
-            else:
+            invoice = record.move_id
+            if invoice.currency_id != invoice.company_id.currency_id:
                 module_dual_currency = self.env['ir.module.module'].sudo().search([('name','=','account_dual_currency'),('state','=','installed')])
                 if module_dual_currency:
-                    record.base = record.base * record.move_id.tax_today
-                    record.amount = record.amount * record.move_id.tax_today
+                    record.base = record.base * invoice.tax_today
+                    record.amount = record.amount * invoice.tax_today
                 else:
-                    record.base = f_xc(record.base)
-                    record.amount = f_xc((record.amount))
+                    record.base = invoice._wh_to_company_currency(record.base)
+                    record.amount = invoice._wh_to_company_currency(record.amount)
             if record.id_tax:
                 busq = self.env['account.tax'].search([('id', '=', record.id_tax)])
                 record.name = busq.name

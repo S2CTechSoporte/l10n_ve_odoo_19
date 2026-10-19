@@ -37,15 +37,9 @@ class RepComprobanteIslr(models.AbstractModel):
             document = partner_id.vat
 
         if data['form'].state == 'done':
-            if data['form'].invoice_ids.invoice_id.currency_id.id == data['form'].company_id.currency_id.id:
-                total_doc = data['form'].invoice_ids.invoice_id.amount_total
-            elif data['form'].invoice_ids.invoice_id.currency_id != data['form'].company_id.currency_id.id:
-                tasa = data['form'].invoice_ids.invoice_id.currency_bs_rate
-                if tasa:
-                    total_doc = data['form'].invoice_ids.invoice_id.amount_total * tasa
-                else:
-                    tasa = self.obtener_tasa(data['form'].invoice_ids.invoice_id)
-                    total_doc = data['form'].invoice_ids.invoice_id.amount_total * tasa
+            # Total of the document in the company currency, at the rate of the invoice
+            invoice = data['form'].invoice_ids.invoice_id
+            total_doc = invoice._wh_to_company_currency(invoice.amount_total)
 
             # code_code = ''
             # for code in data['form'].concept_ids.iwdi_id.islr_xml_id:

@@ -96,12 +96,9 @@ class AccountWhIslrDocInvoices(models.Model):
         """ Return all amount relating to the invoices lines
         """
         res = {}
-        ut_obj = self.env['account.ut']
         for ret_line in self.browse(iwdi_brw.id):
-            f_xc = ut_obj.sxc(
-                ret_line.invoice_id.company_id.currency_id.id,
-                ret_line.invoice_id.currency_id.id,
-                ret_line.islr_wh_doc_id.date_uid)
+            # The amounts in the currency of the invoice use the rate of the invoice
+            f_xc = ret_line.invoice_id._wh_from_company_currency
             res[ret_line.id] = {
                 'amount_islr_ret': 0.0,
                 'base_ret': 0.0,
@@ -199,11 +196,9 @@ class AccountWhIslrDocInvoices(models.Model):
         wh_concept = 0.0
 
 
-        # Using a clousure to make this call shorter
-        f_xc = ut_obj.sxc(
-            iwdl_id.invoice_id.currency_id.id,
-            iwdl_id.invoice_id.company_id.currency_id.id,
-            iwdl_id.invoice_id.date)
+        # Using a clousure to make this call shorter: the amounts of the invoice are
+        # converted at the rate of the invoice, not at the rate of a date
+        f_xc = iwdl_id.invoice_id._wh_to_company_currency
         #PROVEEDORES
         if iwdl_id.invoice_id.move_type in ('in_invoice', 'in_refund'):
             for line in iwdl_id.xml_ids:
